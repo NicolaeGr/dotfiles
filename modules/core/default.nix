@@ -5,7 +5,7 @@
   # Move from here
   programs.zsh.enable = true;
 
-  imports = [ ./users.nix ];
+  imports = [ ./users.nix ./fonts ];
 
   i18n.defaultLocale = "en_US.UTF-8";
   console = {

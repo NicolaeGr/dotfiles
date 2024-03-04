@@ -12,7 +12,7 @@
       home = "/home/pruple";
       shell = pkgs.zsh;
 
-      extraGroups = [ "wheel" "networkmanager" "audio" "video" "input" "storage" "users" "power" "libvirt" "docker" ];
+      extraGroups = [ "wheel" "networkmanager" "audio" "video" "render" "input" "storage" "users" "power" "libvirt" "docker" ];
     };
 
     nicolae = {
@@ -20,7 +20,7 @@
       home = "/home/nicolae";
       shell = pkgs.zsh;
 
-      extraGroups = [ "wheel" "networkmanager" "audio" "video" "input" "storage" "users" "power" "libvirt" "docker" ];
+      extraGroups = [ "wheel" "networkmanager" "audio" "video" "render" "input" "storage" "users" "power" "libvirt" "docker" ];
     };
   };
 

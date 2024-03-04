@@ -22,6 +22,7 @@
       nixosConfigurations = {
         # odin = nixpkgs.lib.nixosSystem {
         #   specialArgs = {
+        #     hostName = "odin";
         #     inherit inputs system;
         #   };
 
@@ -38,6 +39,7 @@
 
         zion = nixpkgs.lib.nixosSystem {
           specialArgs = {
+            hostName = "zion";
             inherit inputs system;
           };
 
@@ -46,7 +48,10 @@
 
             home-manager.nixosModules.home-manager
 
+            ./modules/hardware/nvidia
+            ./modules/hardware/bluetooth
             ./modules/hyprland
+
 
             ./hosts/zion
           ];
