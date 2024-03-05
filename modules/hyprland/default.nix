@@ -54,7 +54,7 @@
   ];
 
   # Hyprlock
-  environment.systemPackages = with pkgs; [ hyprlock hyprshot];
+  environment.systemPackages = with pkgs; [ hyprlock hyprshot hypridle ];
 
   services.xserver.libinput.enable = true;
 }

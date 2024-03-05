@@ -1,6 +1,13 @@
 {
   imports = [ ./waybar ./hyprlock ];
 
+  home.file = {
+    "hypridle.conf" = {
+      target = ".config/hypr/hypridle.conf";
+      source = ./hypridle.conf;
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
@@ -90,7 +97,8 @@
         "$mod, B, exec, firefox"
         "$mod, T, exec, $terminal"
         "$mod, Q, killactive,"
-        "$mod, L, exit,"
+        "$mod, L, exec, hyprlock"
+        "$mod+Shift, L, exec, hyprlock"
         "$mod, F, exec, $fileManager"
         "$mod, V, togglefloating,"
         "$mod, X, exec, $menu"
@@ -133,6 +141,7 @@
       
       bindl = [
         ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        "$mod+Shift, L, exec, sleep 0.1 && systemctl suspend"
       ];
 
       bindel = [
