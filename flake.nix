@@ -48,8 +48,8 @@
 
             home-manager.nixosModules.home-manager
 
-            ./modules/hardware/nvidia
             ./modules/hardware
+            ./modules/hardware/nvidia
             ./modules/hyprland
 
 
