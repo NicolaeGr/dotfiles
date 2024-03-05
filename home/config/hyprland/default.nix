@@ -1,4 +1,6 @@
 {
+  import = [ ./waybar ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
@@ -121,9 +123,25 @@
 
         "$mod, mouse_down, workspace, e+1"
         "$mod, mouse_up, workspace, e-1"
+      ];
 
+      bindm = [
         "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizeactive"
+        "$mod, mouse:273, resizewindow"
+        "$mod SHIFT, mouse:273, resizewindow 1"
+      ];
+      
+      bindl = [
+        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+      ];
+
+      bindel = [
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        ", XF86MonBrightnessUp, exec, light -A 10"
+        ", XF86MonBrightnessDown, exec, light -U 10"
+
+        ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
       ];
     };
   };

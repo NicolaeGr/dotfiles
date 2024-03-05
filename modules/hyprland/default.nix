@@ -14,7 +14,11 @@
     xdg-desktop-portal-hyprland
   ];
 
-  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
+  
   services.xserver.enable = true;
 
   security.polkit.enable = true;
@@ -34,8 +38,23 @@
       };
     };
   };
-
+  
+  # TODO: Move light to it's own file
   programs.light.enable = true;
+  security.sudo.extraRules = [
+    {
+      groups = [ "wheel" ];
+      commands = [
+        {
+          options = [ "NOPASSWD" ];
+          command = "${pkgs.light}/bin/light";
+        }
+      ];
+    }
+  ];
+
+  # Hyprlock
+  environment.systemPackages = with pkgs; [ hyprlock hyprshot];
 
   services.xserver.libinput.enable = true;
 }

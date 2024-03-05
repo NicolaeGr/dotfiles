@@ -7,13 +7,13 @@
     inherit hostName;
   };
 
-  services.create_ap = {
-    enable = true;
-    settings = {
-      INTERNET_IFACE = "wlp4s0";
-      WIFI_IFACE = "wlan0";
-      SSID = hostName;
-      PASSPHRASE = "nutiodau";
-    };
-  };
+  #  services.create_ap = {
+  #   enable = true;
+  #   settings = {
+  #     INTERNET_IFACE = "wlp4s0";
+  #     WIFI_IFACE = "wlan0";
+  #     SSID = hostName;
+  #     PASSPHRASE = "nutiodau";
+  #   };
+  # };
 }
