@@ -1,5 +1,5 @@
 {
-  imports = [ ./waybar ./hyprlock ];
+  imports = [ ./waybar ./hyprlock ./rafi ];
 
   home.file = {
     "hypridle.conf" = {
