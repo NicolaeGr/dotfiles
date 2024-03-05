@@ -1,4 +1,4 @@
-{ lib, fetchzip, fetchFromGitHub, makeFont }:
+{ lib, fetchzip, ... }:
 # make a package for the gabarito font. will fetch from github.
 # https://github.com/naipefoundry/gabarito/releases/tag/v1.000
 # file name is  gabarito-fonts.zip 
@@ -8,9 +8,9 @@ let
 in
 fetchzip {
   inherit version;
-  
+
   url = "https://github.com/naipefoundry/gabarito/releases/download/v${version}/gabarito-fonts.zip";
-  sha256 = "09wm6rxz7c1y8qbcn74kpn5h71b1n9hmp9x3fzi3jl3h1iivr0l4";
+  sha256 = "pqpeINEkPi/YkczhH6uVEnyF0EFhRmb2nbuAu7HAL9o=";
   name = "gabarito-fonts";
 
   postFetch = ''
