@@ -15,10 +15,25 @@
 
   hardware.nvidia = {
     modesetting.enable = true;
+
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+
+      nvidiaBusId = "PCI:1:0:0";
+      amdgpuBusId = "PCI:5:0:0";
+    };
+
     powerManagement.enable = false;
     powerManagement.finegrained = false;
+
     open = true;
     nvidiaSettings = true;
+
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
+
+  environment.systemPackages = with pkgs; [ glmark2 ];
 }

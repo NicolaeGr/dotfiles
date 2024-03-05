@@ -24,6 +24,7 @@
     nixpkgs-fmt
     xorg.xbacklight
     auto-cpufreq
+    lshw
 
     # Editors
     vim
