@@ -1,5 +1,5 @@
 {
-  import = [ ./waybar ];
+  imports = [ ./waybar ./hyprlock ];
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -142,6 +142,9 @@
         ", XF86MonBrightnessDown, exec, light -U 10"
 
         ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+        ", Print, exec, hyprshot -m region -o Pictures/Screenshots"
+        "Alt, Print, exec, hyprshot -m window -o Pictures/Screenshots"
+        "$mod, Print, exec, hyprshot -m output -o Pictures/Screenshots"
       ];
     };
   };
