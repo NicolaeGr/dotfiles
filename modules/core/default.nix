@@ -81,6 +81,10 @@
     onlyoffice-bin
 
     nvtop-amd
+
+    # Auto Mount
+    udisks2
+    udiskie
   ];
 
   services.auto-cpufreq.enable = true;

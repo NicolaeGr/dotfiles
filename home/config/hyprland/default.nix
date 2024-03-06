@@ -11,7 +11,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
-      # exec-once = [ "waybar && firefox" ];
+      # exec-once = [ "waybar" ];
 
       monitor = ",highres,auto,1";
 

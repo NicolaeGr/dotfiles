@@ -18,7 +18,7 @@
     enable = true;
     wayland.enable = true;
   };
-  
+
   services.xserver.enable = true;
 
   security.polkit.enable = true;
@@ -38,7 +38,7 @@
       };
     };
   };
-  
+
   # TODO: Move light to it's own file
   programs.light.enable = true;
   security.sudo.extraRules = [
@@ -54,7 +54,23 @@
   ];
 
   # Hyprlock
-  environment.systemPackages = with pkgs; [ hyprlock hyprshot hypridle ];
+  environment.systemPackages = with pkgs; [ hyprlock hyprshot hypridle gnome.nautilus ];
 
   services.xserver.libinput.enable = true;
+
+
+  # TODO: Move to it's own file
+  services.gvfs.enable = true;
+  # nixpkgs.overlays = [
+  #   (self: super: {
+  #     gnome = super.gnome.overrideScope' (gself: gsuper: {
+  #       nautilus = gsuper.nautilus.overrideAttrs (nsuper: {
+  #         buildInputs = nsuper.buildInputs ++ (with gst_all_1; [
+  #           gst-plugins-good
+  #           gst-plugins-bad
+  #         ]);
+  #       });
+  #     });
+  #   })
+  # ];
 }
