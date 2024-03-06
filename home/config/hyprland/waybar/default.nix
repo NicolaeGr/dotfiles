@@ -120,7 +120,7 @@
         cpu = {
           format = "&#8239; {usage}%";
           tooltip = false;
-          on-click = "kitty -e 'htop'";
+          on-click = "kitty -e 'btop'";
         };
 
         memory = {
