@@ -1,5 +1,5 @@
 { config, pkgs, username, ... }: {
-  imports = [ ./../config/hyprland ];
+  imports = [ ./../config ./../config/hyprland ];
 
   home.username = "pruple";
   home.homeDirectory = "/home/pruple";

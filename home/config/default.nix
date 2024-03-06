@@ -1,3 +1,5 @@
 {
-  # home manager config that is used for all users
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
 }
