@@ -14,7 +14,6 @@
         modules-left = [
           "custom/wmname"
           "hyprland/workspaces"
-          "sway/mode"
           "cpu"
           "custom/separator"
           "memory"
