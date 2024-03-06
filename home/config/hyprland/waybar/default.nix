@@ -1,19 +1,18 @@
 {
   programs.waybar = {
     enable = true;
-    systemd.enable = true;
+    # systemd.enable = true;
 
     settings = [
       {
         layer = "top";
         position = "top";
         height = 33;
-        width = 1350;
-        margin = "3, 0, 2, 0";
+        # width = 1350;
+        margin = "6, 20, 2, 20";
 
         modules-left = [
           "custom/wmname"
-          "sway/workspaces"
           "hyprland/workspaces"
           "sway/mode"
           "cpu"
@@ -26,11 +25,13 @@
         ];
 
         modules-center = [
-          "tray"
+          "clock"
           "mpd"
         ];
 
         modules-right = [
+          "tray"
+          "custom/separator"
           "idle_inhibitor"
           "custom/separator"
           "backlight"
@@ -38,8 +39,6 @@
           "battery"
           "custom/separator"
           "pulseaudio"
-          "custom/separator"
-          "clock"
         ];
 
         # "sway/workspaces" = {
@@ -70,15 +69,15 @@
         "hyprland/workspaces" = {
           format = "{icon}";
           format-icons = {
-            "1" = "";
-            "2" = "";
-            "3" = "";
-            "4" = "";
-            "5" = "";
-            "6" = "";
-            "7" = "";
-            "8" = "";
-            "9" = "";
+            "1" = "1";
+            "2" = "2";
+            "3" = "3";
+            "4" = "4";
+            "5" = "5";
+            "6" = "6";
+            "7" = "7";
+            "8" = "8";
+            "9" = "9";
             "urgent" = "";
             "focused" = "";
             "default" = "";
@@ -120,14 +119,14 @@
         };
 
         cpu = {
-          format = "&#8239;{usage}%";
+          format = "&#8239; {usage}%";
           tooltip = false;
           on-click = "kitty -e 'htop'";
         };
 
         memory = {
           interval = 30;
-          format = " {used:0.2f}GB";
+          format = "  {used:0.2f} GB";
           max-length = 10;
           tooltip = false;
           warning = 70;
@@ -136,7 +135,7 @@
 
         temperature = {
           critical-threshold = 80;
-          format = "{icon}&#8239;{temperatureC}°C";
+          format = "{icon}&#8239;{temperatureC} °C";
           format-icons = [ "" "" "" ];
         };
 
@@ -152,7 +151,7 @@
             warning = 30;
             critical = 15;
           };
-          format = "{icon}&#8239;{capacity}%";
+          format = "{icon}&#8239; {capacity}%";
           format-charging = "&#8239;{capacity}%";
           format-plugged = "&#8239;{capacity}%";
           format-alt = "{icon} {time}";
@@ -160,10 +159,10 @@
         };
 
         network = {
-          format-wifi = "&#8239;({signalStrength}%)";
-          format-ethernet = "&#8239;{ifname}: {ipaddr}/{cidr}";
-          format-linked = "&#8239;{ifname} (No IP)";
-          format-disconnected = "✈&#8239;Disconnected";
+          format-wifi = "&#8239;  ({signalStrength}%)";
+          format-ethernet = "&#8239; {ifname}: {ipaddr}/{cidr}";
+          format-linked = "&#8239; {ifname} (No IP)";
+          format-disconnected = "✈&#8239; Disconnected";
           format-alt = "{ifname}: {ipaddr}/{cidr}";
           tooltip-format = "{essid}: {ipaddr}";
         };
@@ -235,7 +234,7 @@
     ];
 
     style = ''
-           @define-color critical #ff0000; /* critical color */
+      @define-color critical #ff0000; /* critical color */
       @define-color warning #f3f809;  /* warning color */
       @define-color fgcolor #ffffff;  /* foreground color */
       @define-color bgcolor #303030;  /* background color */
@@ -258,13 +257,12 @@
       }
 
       window#waybar {
-
           background-color: rgba(34, 36, 54, 0.6);
-          /* border-bottom: 0px solid rgba(100, 114, 125, 0.5); */
+          border-bottom: 0px solid rgba(100, 114, 125, 0.5);
           color: #ffffff;
           transition-property: background-color;
           transition-duration: .5s;
-          border-radius: 4px;
+          border-radius: 6px;
       }
 
       window#waybar.hidden {
@@ -289,6 +287,7 @@
 
       #workspaces button:hover {
           background: rgba(0, 0, 0, 0.2);
+          color: #ffffff;
       }
 
       #workspaces button.focused {
