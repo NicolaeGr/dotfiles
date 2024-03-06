@@ -10,6 +10,8 @@ in
     noto-fonts-cjk
     noto-fonts-emoji
 
+    font-awesome
+
     fira-code
     fira-code-symbols
 
