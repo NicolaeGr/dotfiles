@@ -1,4 +1,4 @@
-{
+{ pkgs, ... }: {
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
@@ -16,6 +16,6 @@
   qt = {
     enable = true;
     platformTheme = "gnome";
-    style = "adwaita-dark";
+    style.name = "adwaita-dark";
   };
 }
