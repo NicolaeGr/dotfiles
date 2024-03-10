@@ -3,5 +3,5 @@
     allowUnfree = true;
   };
 
-  imports = [ ./xdg.nix ./zsh ];
+  imports = [ ./xdg.nix ./zsh ./theme];
 }
