@@ -1,0 +1,7 @@
+{
+  xdg = {
+    mime = {
+      enable = true;
+    };
+  };
+}

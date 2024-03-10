@@ -5,7 +5,12 @@
   # Move from here
   programs.zsh.enable = true;
 
-  imports = [ ./users.nix ./fonts ];
+  imports = [
+    ./xdg.nix
+    ./users.nix
+    ./fonts
+    ./terminal
+  ];
 
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
@@ -25,6 +30,10 @@
     xorg.xbacklight
     auto-cpufreq
     lshw
+
+    # temp
+    tigervnc
+    ngrok
 
     # Editors
     vim
