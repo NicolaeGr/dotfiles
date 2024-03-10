@@ -1,7 +1,8 @@
 {
   programs.waybar = {
     enable = true;
-    # systemd.enable = true;
+    systemd.enable = true;
+    systemd.target = "hyprland-session.target";
 
     settings = [
       {
@@ -93,10 +94,6 @@
           tooltip = false;
         };
 
-        "sway/mode" = {
-          format = "<span style=\"italic\">{}</span>";
-        };
-
         idle_inhibitor = {
           format = "{icon}";
           format-icons = {
@@ -150,10 +147,10 @@
             warning = 30;
             critical = 15;
           };
-          format = "{icon}&#8239; {capacity}%";
+          format = "{icon}&#8239;  {capacity}%";
           format-charging = "&#8239;{capacity}%";
-          format-plugged = "&#8239;{capacity}%";
-          format-alt = "{icon} {time}";
+          format-plugged = "&#8239; {capacity}%";
+          format-alt = "{icon}  {time}";
           format-icons = [ "" "" "" "" "" ];
         };
 
@@ -161,7 +158,7 @@
           format-wifi = "&#8239;  ({signalStrength}%)";
           format-ethernet = "&#8239; {ifname}: {ipaddr}/{cidr}";
           format-linked = "&#8239; {ifname} (No IP)";
-          format-disconnected = "✈&#8239; Disconnected";
+          format-disconnected = "✈&#8239; No Net";
           format-alt = "{ifname}: {ipaddr}/{cidr}";
           tooltip-format = "{essid}: {ipaddr}";
         };

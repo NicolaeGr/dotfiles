@@ -11,8 +11,6 @@
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
-      exec-once = [ "waybar"];
-
       monitor = ",highres,auto,1";
 
       "$mod" = "SUPER";
@@ -138,7 +136,7 @@
         "$mod, mouse:273, resizewindow"
         "$mod SHIFT, mouse:273, resizewindow 1"
       ];
-      
+
       bindl = [
         ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
         "$mod+Shift, L, exec, sleep 0.1 && systemctl suspend"
