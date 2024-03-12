@@ -1,7 +1,14 @@
-{
+{ ... }: {
   nixpkgs.config = {
     allowUnfree = true;
   };
 
-  imports = [ ./xdg.nix ./zsh ./theme ./flatpak];
+  imports = [
+    ./xdg.nix
+    ./zsh
+    ./theme
+
+    # ./flatpak
+  ];
 }
+

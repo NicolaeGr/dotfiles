@@ -1,4 +1,4 @@
-{ inputs, pkgs, system, ... }: {
+{ inputs, pkgs, system, nix-flatpak, ... }: {
 
   users.users = {
     # root = {
@@ -25,14 +25,19 @@
   };
 
   home-manager = {
+
+
     extraSpecialArgs = {
       inherit system;
     };
 
     users = {
       pruple = {
-        imports = [ 
-          ./../../home/pruple ];
+        imports = [
+          # nix-flatpak.homeManagerModules.nix-flatpak
+
+          ./../../home/pruple
+        ];
 
         home.stateVersion = "23.11";
 
@@ -41,6 +46,7 @@
 
       nicolae = {
         imports = [
+          # nix-flatpak.homeManagerModules.nix-flatpak
 
           ./../../home/nicolae
         ];
