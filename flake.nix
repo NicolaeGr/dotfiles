@@ -8,9 +8,18 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    envycontrol.url = github:bayasdev/envycontrol;
   };
 
-  outputs = { self, nixpkgs, home-manager }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-flatpak, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -43,13 +52,14 @@
         zion = nixpkgs.lib.nixosSystem {
           specialArgs = {
             hostName = "zion";
-            inherit inputs system;
+            inherit inputs system nix-flatpak;
           };
 
           modules = [
             ./modules/core
 
             home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
 
             ./modules/hardware
             ./modules/hardware/nvidia

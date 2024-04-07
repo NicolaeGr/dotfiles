@@ -42,7 +42,6 @@
         "xdg-data/themes"
         "xdg-data/icons"
         "xdg-data/fonts"
-        ""
       ];
 
       Environment = {

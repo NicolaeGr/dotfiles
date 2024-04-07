@@ -1,16 +1,18 @@
-{ inputs, lib, pkgs, ... }: {
+{ inputs, lib, pkgs, nixpkgs, ... }: {
 
   system.stateVersion = "23.11";
-
-  # Move from here
-  programs.zsh.enable = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nixpkgs.config.allowUnfree = true;
 
   imports = [
     ./xdg.nix
     ./users.nix
     ./fonts
     ./terminal
+
+    ./flatpak
   ];
+
 
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
@@ -19,25 +21,19 @@
     useXkbConfig = true;
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  services.printing.enable = true;
-
-  nixpkgs.config.allowUnfree = true;
-
   environment.systemPackages = with pkgs; [
     nixpkgs-fmt
     xorg.xbacklight
     auto-cpufreq
     lshw
 
-    # temp
-    tigervnc
-    ngrok
 
     # Editors
     vim
     neovim
+
+    # temp
+    ngrok
 
     # Utils
     neofetch
@@ -94,6 +90,8 @@
     # Auto Mount
     udisks2
     udiskie
+
+    inputs.envycontrol.packages.x86_64-linux.default
   ];
 
   services.auto-cpufreq.enable = true;
@@ -106,4 +104,5 @@
 
   services.openssh.enable = true;
 
+  services.printing.enable = true;
 }

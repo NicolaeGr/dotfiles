@@ -54,7 +54,7 @@
   ];
 
   # Hyprlock
-  environment.systemPackages = with pkgs; [ hyprlock hyprshot hypridle gnome.nautilus ];
+  environment.systemPackages = with pkgs; [ hyprlock hyprshot hypridle gnome.nautilus kanshi];
 
   services.xserver.libinput.enable = true;
 

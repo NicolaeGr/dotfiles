@@ -1,12 +1,6 @@
 { inputs, pkgs, system, nix-flatpak, ... }: {
 
   users.users = {
-    # root = {
-    #   isSystemUser = true;
-    #   home = "/root";
-    #   shell = pkgs.zsh;
-    # };
-
     pruple = {
       isNormalUser = true;
       home = "/home/pruple";
@@ -25,17 +19,13 @@
   };
 
   home-manager = {
-
-
     extraSpecialArgs = {
-      inherit system;
+      inherit system inputs;
     };
 
     users = {
       pruple = {
         imports = [
-          # nix-flatpak.homeManagerModules.nix-flatpak
-
           ./../../home/pruple
         ];
 
@@ -46,8 +36,6 @@
 
       nicolae = {
         imports = [
-          # nix-flatpak.homeManagerModules.nix-flatpak
-
           ./../../home/nicolae
         ];
 

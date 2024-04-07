@@ -76,8 +76,6 @@
             "5" = "5";
             "6" = "6";
             "7" = "7";
-            "8" = "8";
-            "9" = "9";
             "urgent" = "";
             "focused" = "";
             "default" = "";
@@ -156,7 +154,7 @@
 
         network = {
           format-wifi = "&#8239;  ({signalStrength}%)";
-          format-ethernet = "&#8239; {ifname}: {ipaddr}/{cidr}";
+          format-ethernet = "&#8239;{ifname}";
           format-linked = "&#8239; {ifname} (No IP)";
           format-disconnected = "✈&#8239; No Net";
           format-alt = "{ifname}: {ipaddr}/{cidr}";

@@ -7,8 +7,7 @@
     ./xdg.nix
     ./zsh
     ./theme
-
-    # ./flatpak
   ];
+
 }
 
