@@ -1,0 +1,129 @@
+:root {
+    --cust-autohide-delay: 200ms;
+    --cust-autohide-duration: 200ms;
+    --cust-toolbar-color: #3b3f52;
+    --toolbar-field-background-color: #3b3f52 !important;
+}
+
+:root[privatebrowsingmode] {
+    --cust-toolbar-color: #1e0032;
+}
+
+#appcontent>#tabbrowser-tabbox>#tabbrowser-tabpanels>.deck-selected>.browserContainer>.browserStack>browser {
+    border-radius: 8px !important;
+    margin: 6px !important;
+    margin-top: 0px !important;
+    background-color: #12161b !important;
+}
+
+.browserStack {
+    z-index: 3 !important;
+    background-color: var(--cust-toolbar-color) !important;
+}
+
+.browserContainer {
+    background-color: var(--lwt-accent-color-inactive,
+            var(--lwt-accent-color)) !important;
+    background-image: var(--lwt-header-image), var(--lwt-additional-images) !important;
+    background-repeat: no-repeat, var(--lwt-background-tiling) !important;
+    background-position: right top, var(--lwt-background-alignment) !important;
+}
+
+#titlebar,
+.titlebar-buttonbox-container,
+#sidebar-header,
+#forward-button,
+#back-button,
+#reload-button,
+#stop-button {
+    display: none !important;
+}
+
+#sidebar-splitter {
+    width: 0px !important;
+
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+#navigator-toolbox,
+#navigator-toolbox toolbar,
+#sidebar-box,
+browser#sidebar,
+#urlbar-background {
+    background-color: var(--cust-toolbar-color) !important;
+    transition: all var(--cust-autohide-duration) !important;
+    transition-delay: var(--cust-autohide-delay) !important;
+}
+
+/* Hide the toolbar when not hovered */
+#navigator-toolbox {
+    width: 100dvw !important;
+    height: 12px !important;
+
+    border-bottom: none !important;
+}
+
+#nav-bar {
+    transform: translateY(-100%) !important;
+
+    z-index: 10 !important;
+}
+
+/* in fullscreen mode */
+:root[sizemode="fullscreen"] #navigator-toolbox,
+#navigator-toolbox[inFullscreen] {
+    min-height: 12px !important;
+    margin-top: 0px !important;
+}
+
+:root[sizemode="fullscreen"] #nav-bar,
+#navigator-toolbox[inFullscreen] #nav-bar {
+    transform: translateY(-100%) !important;
+}
+
+/* on hover or focus-within */
+#navigator-toolbox:hover,
+#navigator-toolbox:focus-within {
+    height: 40px !important;
+}
+
+/* also show the toolbox when we have an opened appmenu popup */
+#mainPopupSet:has(> #appMenu-popup:hover)~toolbox,
+#mainPopupSet:has(> [side="top"][panelopen="true"])~toolbox {
+    height: 40px !important;
+}
+
+#navigator-toolbox:hover #nav-bar,
+#navigator-toolbox:focus-within #nav-bar {
+    transform: translateY(0) !important;
+}
+
+#mainPopupSet:has(> #appMenu-popup:hover)~toolbox #nav-bar,
+#mainPopupSet:has(> [side="top"][panelopen="true"])~toolbox #nav-bar {
+    transform: translateY(0) !important;
+}
+
+/* Don't hide the toolbar if the window is not fully created */
+:root:not([sessionrestored]) #navigator-toolbox {
+    height: 40px !important;
+}
+
+:root:not([sessionrestored]) #nav-bar {
+    transform: translateY(0) !important;
+}
+
+/* Don't hide the toolbar if we are in customize mode */
+:root[customizing] #navigator-toolbox {
+    height: 40px !important;
+}
+
+:root[customizing] #nav-bar {
+    transform: translateY(0) !important;
+}
+
+#navigator-toolbox[inFullscreen]>#PersonalToolbar,
+#PersonalToolbar[collapsed="true"] {
+    display: none !important;
+}

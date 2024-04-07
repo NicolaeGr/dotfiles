@@ -1,4 +1,4 @@
-{ config, pkgs, username, ... }: {
+{ config, pkgs, username, inputs, ... }: {
   imports = [ ./../config ./../config/hyprland ];
 
   home.username = "nicolae";
@@ -15,4 +15,12 @@
   };
 
   home.file = { };
+
+  programs.firefox = {
+    enable = true;
+
+    profiles.default = import ./../config/firefox {
+      inherit pkgs inputs;
+    };
+  };
 }
