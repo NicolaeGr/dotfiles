@@ -5,7 +5,6 @@
   home.homeDirectory = "/home/pruple";
 
   home.packages = with pkgs; [
-    firefox
     steam
   ];
 

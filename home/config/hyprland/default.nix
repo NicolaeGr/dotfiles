@@ -1,4 +1,4 @@
-{
+{ pkgs, ... }: {
   imports = [ ./waybar ./hyprlock ./rofi ];
 
   home.file = {
@@ -7,6 +7,27 @@
       source = ./hypridle.conf;
     };
   };
+
+  systemd.user.services.hypridle = {
+    Unit = {
+      Description = "Hyprland's idle daemon";
+      Documentation = "https://wiki.hyprland.org/Hypr-Ecosystem/hypridle";
+      PartOf = "hyprland-session.target";
+      After = [ "hyprland-session.target" ];
+      ConditionEnvironment = "WAYLAND_DISPLAY";
+    };
+
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.hypridle}/bin/hypridle";
+      Restart = "on-failure";
+    };
+
+    Install = {
+      WantedBy = [ "hyprland-session.target" ];
+    };
+  };
+
 
   wayland.windowManager.hyprland = {
     enable = true;

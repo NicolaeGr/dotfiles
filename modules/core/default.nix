@@ -43,25 +43,6 @@
     unzip
     p7zip
 
-    # Hyprland
-    polkit
-    sddm
-
-    waybar
-    kitty
-
-    rofi-wayland
-
-    dunst
-    libnotify
-
-    swww
-
-    (waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-    })
-    )
-
     # System Monitor
     htop
     btop
@@ -74,6 +55,9 @@
     # Auto Mount
     udisks2
     udiskie
+
+    #Browser
+    firefox
   ];
 
   services.auto-cpufreq.enable = true;

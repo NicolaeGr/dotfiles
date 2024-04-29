@@ -18,6 +18,22 @@
         "type": "github"
       }
     },
+    "fine-cmdline-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1700512774,
+        "narHash": "sha256-w9wwjClkOWk3wCgEiZIFLZRJ/gAfX38x2LnVRaelKD8=",
+        "owner": "VonHeikemen",
+        "repo": "fine-cmdline.nvim",
+        "rev": "dd676584145d62b30d7e8dbdd011796a8f0a065f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "VonHeikemen",
+        "repo": "fine-cmdline.nvim",
+        "type": "github"
+      }
+    },
     "firefox-addons": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -76,6 +92,22 @@
         "type": "github"
       }
     },
+    "lualine-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1712310396,
+        "narHash": "sha256-WcH2dWdRDgMkwBQhcgT+Z/ArMdm+VbRhmQftx4t2kNI=",
+        "owner": "nvim-lualine",
+        "repo": "lualine.nvim",
+        "rev": "0a5a66803c7407767b799067986b4dc3036e1983",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-lualine",
+        "repo": "lualine.nvim",
+        "type": "github"
+      }
+    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1708781964,
@@ -125,8 +157,10 @@
     "root": {
       "inputs": {
         "envycontrol": "envycontrol",
+        "fine-cmdline-nvim": "fine-cmdline-nvim",
         "firefox-addons": "firefox-addons",
         "home-manager": "home-manager",
+        "lualine-nvim": "lualine-nvim",
         "nix-flatpak": "nix-flatpak",
         "nixpkgs": "nixpkgs_2"
       }

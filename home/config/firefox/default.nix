@@ -1,4 +1,8 @@
-{ inputs, pkgs, ... }: {
+{ inputs, pkgs, id, ... }: {
+  id = id;
+
+  search.force = true;
+  search.default = "Startpage - English";
   search.engines = {
     "Nix Packages" = {
       urls = [{
@@ -24,7 +28,6 @@
       definedAliases = [ "@mynixos" "@nix" ];
     };
   };
-  search.force = true;
 
   settings = {
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;

@@ -16,7 +16,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    envycontrol.url = github:bayasdev/envycontrol;
+    envycontrol.url = "github:bayasdev/envycontrol";
+
+    # NEOVIM PLUGINS
+    fine-cmdline-nvim = {
+      url = "github:VonHeikemen/fine-cmdline.nvim";
+      flake = false;
+    };
+
+    lualine-nvim = {
+      url = "github:nvim-lualine/lualine.nvim";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nix-flatpak, ... }@inputs:

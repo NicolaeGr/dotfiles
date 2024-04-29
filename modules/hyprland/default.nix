@@ -39,7 +39,30 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ hyprlock hyprshot hypridle kanshi ];
+  environment.systemPackages = with pkgs; [
+    polkit
+    sddm
+
+    waybar
+    (waybar.overrideAttrs (oldAttrs: {
+      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+    }))
+
+    kitty
+
+    rofi-wayland
+
+    dunst
+    libnotify
+
+    swww
+
+    hyprlock
+    hyprshot
+    hypridle
+
+    kanshi
+  ];
 
   services.xserver.libinput.enable = true;
 }

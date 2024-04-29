@@ -8,6 +8,8 @@
     ./zsh
     ./theme
     ./git.nix
+
+    ./neovim
   ];
 
   programs.gpg = {
