@@ -25,8 +25,16 @@
       "org.gnome.Calculator"
       "org.gnome.Cheese"
       "org.gnome.Loupe"
+      {
+        appId = "org.gnome.NautilusDevel";
+        origin = "gnome-nightly";
+      }
+
+      "org.gnome.baobab"
 
       "com.github.tchx84.Flatseal"
+
+      "io.missioncenter.MissionCenter"
 
       "org.gtk.Gtk3theme.adw-gtk3"
       "org.gtk.Gtk3theme.adw-gtk3-dark"

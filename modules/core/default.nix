@@ -7,10 +7,12 @@
   imports = [
     ./xdg.nix
     ./users.nix
+    ./backlight.nix
     ./fonts
     ./terminal
 
     ./flatpak
+    ./dev
   ];
 
 
@@ -23,17 +25,8 @@
 
   environment.systemPackages = with pkgs; [
     nixpkgs-fmt
-    xorg.xbacklight
     auto-cpufreq
     lshw
-
-
-    # Editors
-    vim
-    neovim
-
-    # temp
-    ngrok
 
     # Utils
     neofetch
@@ -41,10 +34,8 @@
     curl
     git
     man
-    ripgrep
     jq
-    eza
-    fzf
+    dust
 
     # Archive
     zip
@@ -71,27 +62,18 @@
     })
     )
 
-    # Programming
-    gcc
-    rustup
-    glow
+    # System Monitor
+    htop
     btop
-    iotop
-    iftop
-
-    vscodium
+    nethogs
 
     # Work
     obsidian
     onlyoffice-bin
 
-    nvtop-amd
-
     # Auto Mount
     udisks2
     udiskie
-
-    inputs.envycontrol.packages.x86_64-linux.default
   ];
 
   services.auto-cpufreq.enable = true;
@@ -105,4 +87,6 @@
   services.openssh.enable = true;
 
   services.printing.enable = true;
+
+  services.gvfs.enable = true;
 }

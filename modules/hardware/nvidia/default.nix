@@ -1,10 +1,17 @@
-{ config, pkgs, username, ... }: {
+{ config, pkgs, username, inputs, ... }: {
 
   environment.sessionVariables = rec {
     WLD_NO_HARDWARE_CURSORS = "1";
 
     NIXOS_OZONE_WL = "1";
   };
+
+  environment.systemPackages = with pkgs; [
+    inputs.envycontrol.packages.x86_64-linux.default
+    nvtop-amd
+
+    glmark2
+  ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.opengl = {
@@ -34,6 +41,4 @@
 
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
-
-  environment.systemPackages = with pkgs; [ glmark2 ];
 }

@@ -1,4 +1,4 @@
-{ ... }: {
+{ config, ... }: {
   nixpkgs.config = {
     allowUnfree = true;
   };
@@ -7,7 +7,12 @@
     ./xdg.nix
     ./zsh
     ./theme
+    ./git.nix
   ];
 
+  programs.gpg = {
+    enable = true;
+    homedir = "${config.xdg.dataHome}/gnupg";
+  };
 }
 

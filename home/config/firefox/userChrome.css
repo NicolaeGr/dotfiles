@@ -9,7 +9,8 @@
     --cust-toolbar-color: #1e0032;
 }
 
-#appcontent>#tabbrowser-tabbox>#tabbrowser-tabpanels>.deck-selected>.browserContainer>.browserStack>browser {
+#appcontent>#tabbrowser-tabbox>#tabbrowser-tabpanels>.deck-selected>.browserContainer>.browserStack>browser,
+.browserStack > browser {
     border-radius: 8px !important;
     margin: 6px !important;
     margin-top: 0px !important;

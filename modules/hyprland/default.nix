@@ -39,38 +39,7 @@
     };
   };
 
-  # TODO: Move light to it's own file
-  programs.light.enable = true;
-  security.sudo.extraRules = [
-    {
-      groups = [ "wheel" ];
-      commands = [
-        {
-          options = [ "NOPASSWD" ];
-          command = "${pkgs.light}/bin/light";
-        }
-      ];
-    }
-  ];
-
-  # Hyprlock
-  environment.systemPackages = with pkgs; [ hyprlock hyprshot hypridle gnome.nautilus kanshi];
+  environment.systemPackages = with pkgs; [ hyprlock hyprshot hypridle kanshi ];
 
   services.xserver.libinput.enable = true;
-
-
-  # TODO: Move to it's own file
-  services.gvfs.enable = true;
-  # nixpkgs.overlays = [
-  #   (self: super: {
-  #     gnome = super.gnome.overrideScope' (gself: gsuper: {
-  #       nautilus = gsuper.nautilus.overrideAttrs (nsuper: {
-  #         buildInputs = nsuper.buildInputs ++ (with gst_all_1; [
-  #           gst-plugins-good
-  #           gst-plugins-bad
-  #         ]);
-  #       });
-  #     });
-  #   })
-  # ];
 }
