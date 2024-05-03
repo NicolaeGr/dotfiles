@@ -73,6 +73,7 @@
             nix-flatpak.nixosModules.nix-flatpak
 
             ./modules/hardware
+            ./modules/hardware/amd_cpu
             ./modules/hardware/nvidia
             ./modules/hyprland
 

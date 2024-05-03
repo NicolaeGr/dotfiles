@@ -1,4 +1,5 @@
-{ config, pkgs, username, inputs, ... }: {
+{ lib, config, pkgs, username, inputs, ... }:
+{
 
   environment.sessionVariables = rec {
     WLD_NO_HARDWARE_CURSORS = "1";
@@ -18,6 +19,14 @@
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
+
+    extraPackages = with pkgs; [
+      amdvlk
+    ];
+
+    extraPackages32 = with pkgs; [
+      driversi686Linux.amdvlk
+    ];
   };
 
   hardware.nvidia = {
@@ -36,9 +45,17 @@
     powerManagement.enable = false;
     powerManagement.finegrained = false;
 
-    open = true;
+    open = false;
     nvidiaSettings = true;
 
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
+  # Cooling management
+  services.thermald.enable = lib.mkDefault true;
+
+  # tlp defaults to "powersave", which doesn't exist on this laptop
+  services.tlp.settings = {
+    CPU_SCALING_GOVERNOR_ON_BAT = "schedutil";
   };
 }
