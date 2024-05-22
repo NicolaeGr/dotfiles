@@ -37,6 +37,8 @@
     jq
     dust
 
+    mission-center
+
     # Archive
     zip
     xz
@@ -58,6 +60,10 @@
 
     #Browser
     firefox
+    telegram-desktop
+
+    steam
+    r2modman
   ];
 
   services.auto-cpufreq.enable = true;

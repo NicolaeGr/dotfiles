@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-############ Variables ############
 enable_battery=false
 battery_charging=false
 

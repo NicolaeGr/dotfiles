@@ -17,6 +17,7 @@
     };
 
     envycontrol.url = "github:bayasdev/envycontrol";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # NEOVIM PLUGINS
     fine-cmdline-nvim = {
@@ -30,7 +31,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-flatpak, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-flatpak, nixos-hardware, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -72,8 +73,9 @@
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
 
+            nixos-hardware.nixosModules.lenovo-ideapad-15arh05
             ./modules/hardware
-            ./modules/hardware/amd_cpu
+            # ./modules/hardware/amd_cpu
             ./modules/hardware/nvidia
             ./modules/hyprland
 

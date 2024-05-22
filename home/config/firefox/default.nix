@@ -27,7 +27,15 @@
       icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
       definedAliases = [ "@mynixos" "@nix" ];
     };
+    "Bing".metaData.hidden = true;
+    "eBay".metaData.hidden = true;
+    "Google".metaData.hidden = true;
+    "Wikipedia (en)".metaData.alias = "@w";
   };
+
+  # add bookmarks for:
+  # - https://adrianroselli.com/
+  # - https://www.youtube.com/watch?v=UopANFTGexA
 
   settings = {
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;

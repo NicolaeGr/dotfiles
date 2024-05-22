@@ -1,7 +1,5 @@
 { lib, fetchzip, ... }:
-# make a package for the gabarito font. will fetch from github.
 # https://github.com/naipefoundry/gabarito/releases/tag/v1.000
-# file name is  gabarito-fonts.zip 
 
 let
   version = "1.000";

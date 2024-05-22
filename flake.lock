@@ -123,6 +123,22 @@
         "type": "github"
       }
     },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1714746424,
+        "narHash": "sha256-Jdyw7VcM+jQ0uSXgjFj8UdXZ229yOvPNlYkKyKyHA4s=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "3f017311191fe6d501ca2496a835d012f656ee9c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1712449641,
@@ -162,6 +178,7 @@
         "home-manager": "home-manager",
         "lualine-nvim": "lualine-nvim",
         "nix-flatpak": "nix-flatpak",
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2"
       }
     }

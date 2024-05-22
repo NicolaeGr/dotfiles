@@ -1,5 +1,5 @@
 { lib, ... }:
 {
   imports = [ ./audio ./bluetooth ./network ];
-  services.fstrim.enable = lib.mkDefault true;
+  # services.fstrim.enable = lib.mkDefault true;
 }

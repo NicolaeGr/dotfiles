@@ -4,9 +4,9 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
-    ];
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
@@ -14,25 +14,29 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/bfd2c5ea-a7c2-46cc-8f72-b422e33466fc";
+    {
+      device = "/dev/disk/by-uuid/bfd2c5ea-a7c2-46cc-8f72-b422e33466fc";
       fsType = "btrfs";
       options = [ "subvol=root" ];
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/bfd2c5ea-a7c2-46cc-8f72-b422e33466fc";
+    {
+      device = "/dev/disk/by-uuid/bfd2c5ea-a7c2-46cc-8f72-b422e33466fc";
       fsType = "btrfs";
       options = [ "subvol=home" ];
     };
 
   fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/bfd2c5ea-a7c2-46cc-8f72-b422e33466fc";
+    {
+      device = "/dev/disk/by-uuid/bfd2c5ea-a7c2-46cc-8f72-b422e33466fc";
       fsType = "btrfs";
       options = [ "subvol=nix" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/C4DA-72D9";
+    {
+      device = "/dev/disk/by-uuid/C4DA-72D9";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };

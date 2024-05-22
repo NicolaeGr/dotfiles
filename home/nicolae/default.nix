@@ -22,6 +22,7 @@
       inherit pkgs inputs;
       id = 0;
     };
+
     profiles.school = import ./../config/firefox {
       inherit pkgs inputs;
       id = 1;

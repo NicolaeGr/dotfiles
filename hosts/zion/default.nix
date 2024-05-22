@@ -6,6 +6,10 @@
       inputs.home-manager.nixosModules.home-manager
     ];
 
+  services.tlp.enable = lib.mkForce false;
+  boot.kernelModules = [ "acpi_call" ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "amdgpu.backlight=0" ];
