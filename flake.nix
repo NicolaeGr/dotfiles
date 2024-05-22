@@ -1,8 +1,10 @@
 {
-  description = "My First Flake";
+  # inspider by emergent mind's setup
+  description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-23.11";
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -11,12 +13,15 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    nur.url = "github:nix-community/nur";
+
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     envycontrol.url = "github:bayasdev/envycontrol";
+    hardware.url = "github:nixos/nixos-hardware";
 
     # NEOVIM PLUGINS
     fine-cmdline-nvim = {
@@ -30,55 +35,49 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-flatpak, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        config = {
-          allowUnfree = true;
-          allowUnfreePredicate = (_: true);
-        };
-      };
+      inherit (self) outputs;
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+        #"aarch64-darwin"
+      ];
+      inherit (nixpkgs) lib;
+      configVars = import ./vars { inherit inputs lib; };
+      configLib = import ./lib { inherit lib; };
+      # specialArgs = { inherit inputs outputs configVars configLib nixpkgs; };
     in
     {
+      # nixosModules = import ./modules/nixos;
+      # homeManagerModules = import ./modules/home-manager;
+
+      overlays = import ./overlays { inherit inputs outputs; };
+
+      packages = forAllSystems
+        (system:
+          let pkgs = nixpkgs.legacyPackages.${system};
+          in import ./pkgs { inherit pkgs; }
+        );
+
+      formatter = forAllSystems
+        (system:
+          nixpkgs.legacyPackages.${system}.nixpkgs-fmt
+        );
+
       nixosConfigurations = {
-        # odin = nixpkgs.lib.nixosSystem {
-        #   specialArgs = {
-        #     hostName = "odin";
-        #     inherit inputs system;
-        #   };
-
-        #   modules = [
-        #     home-manager.nixosModules.home-manager
-
-        #     ./modules/core
-
-        #     ./hosts/odin
-        #   ];
-
-        #   system.stateVersion = "23.11";
-        # };
-
-        zion = nixpkgs.lib.nixosSystem {
+        odin = lib.nixosSystem rec {
           specialArgs = {
-            hostName = "zion";
-            inherit inputs system nix-flatpak;
+            hostName = "odin";
+            inherit inputs outputs configVars configLib nixpkgs;
           };
 
           modules = [
-            ./modules/core
-
             home-manager.nixosModules.home-manager
-            nix-flatpak.nixosModules.nix-flatpak
+            {
+              home-manager.extraSpecialArgs = specialArgs;
+            }
 
-            ./modules/hardware
-            ./modules/hardware/amd_cpu
-            ./modules/hardware/nvidia
-            ./modules/hyprland
-
-
-            ./hosts/zion
+            ./hosts/odin
           ];
         };
       };
