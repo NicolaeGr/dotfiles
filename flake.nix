@@ -1,5 +1,4 @@
 {
-  # inspider by emergent mind's setup
   description = "A very basic flake";
 
   inputs = {
@@ -7,9 +6,11 @@
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 

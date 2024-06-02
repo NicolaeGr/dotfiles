@@ -1,14 +1,24 @@
-{ configLib, outputs, ... }: {
+{ options, config, lib, configLib, outputs, ... }: {
 
   imports = [
-    (configLib.relativeToRoot "modules/home-manager")
+    ./../../modules/home-manager
   ];
 
-
-  home.username = "nicolae";
-
-  home.sessionVariables = {
-    EDITOR = "nvim";
+  options = {
+    homePath = lib.mkOption {
+      type = lib.types.path;
+      default = "/home/nicolae";
+    };
   };
 
+  config = {
+    programs.zsh.enable = true;
+
+    home.username = "nicolae";
+
+    home.sessionVariables = {
+      EDITOR = "nvim";
+    };
+
+  };
 }
