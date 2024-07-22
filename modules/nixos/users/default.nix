@@ -5,7 +5,7 @@
     ./pruple.nix
   ];
 
-  users.nicolae.enable = true;
+  users.guest.enable = true;
 
   #users.defaultUserShell = lib.mkMerge [
   #  (lib.mkIf config.zsh.enable pkgs.zsh)
