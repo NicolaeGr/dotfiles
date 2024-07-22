@@ -1,49 +1,24 @@
-{ config, pkgs, username, inputs, ... }: {
-  imports = [ ./../config ./../config/hyprland ];
+{ options, config, lib, configLib, outputs, ... }: {
 
-  home.username = "nicolae";
-  home.homeDirectory = "/home/nicolae";
-
-  home.packages = with pkgs; [
+  imports = [
+    ./../../modules/home-manager
   ];
 
-  home.sessionVariables = {
-    EDITOR = "nvim";
-    NIXOS_OZONE_WL = "1";
-    WLD_NO_HARDWARE_CURSORS = "1";
+  options = {
+    homePath = lib.mkOption {
+      type = lib.types.path;
+      default = "/home/nicolae";
+    };
   };
 
-  home.file = { };
+  config = {
+    programs.zsh.enable = true;
 
-  programs.firefox = {
-    enable = true;
+    home.username = "nicolae";
 
-    profiles.default = import ./../config/firefox {
-      inherit pkgs inputs;
-      id = 0;
-    };
-    profiles.school = import ./../config/firefox {
-      inherit pkgs inputs;
-      id = 1;
+    home.sessionVariables = {
+      EDITOR = "nvim";
     };
 
-    policies = {
-      DisableTelemetry = true;
-      DisableFirefoxStudies = true;
-      EnableTrackingProtection = {
-        Value = true;
-        Locked = true;
-        Cryptomining = true;
-        Fingerprinting = true;
-      };
-      DisablePocket = true;
-      DisableFirefoxAccounts = true;
-      DisableAccounts = true;
-      DontCheckDefaultBrowser = true;
-      DisplayBookmarksToolbar = "never";
-
-      Preferences = { };
-    };
   };
 }
-
