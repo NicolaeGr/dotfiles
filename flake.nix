@@ -82,6 +82,22 @@
             ./hosts/odin
           ];
         };
+
+        axilon = lib.nixosSystem rec {
+          specialArgs = {
+            hostName = "axilon";
+            inherit inputs outputs configVars configLib nixpkgs;
+          };
+
+          modules = [
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.extraSpecialArgs = specialArgs;
+            }
+
+            ./hosts/axilon
+          ];
+        };
       };
     };
 }
