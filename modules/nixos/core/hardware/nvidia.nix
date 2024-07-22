@@ -15,9 +15,8 @@
 
     environment.systemPackages = with pkgs; [
       inputs.envycontrol.packages.x86_64-linux.default
-      nvtop
-      # nvtop-amd
-      # nvtop-nvidia
+      nvtopPackages.full
+
 
       glmark2
       glxinfo

@@ -12,6 +12,7 @@
     ./dev
     ./flatpak
     ./hardware
+    ./virt
   ];
 
   # Activate modules that need to be on by default.
@@ -70,6 +71,7 @@
   ];
 
   services.auto-cpufreq.enable = true;
+  services.fwupd.enable = true;
 
   programs.mtr.enable = true;
   programs.gnupg.agent = {

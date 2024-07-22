@@ -1,4 +1,8 @@
-{ inputs, options, config, lib, pkgs, ... }: {
+{ inputs, options, config, lib, pkgs, ... }:
+let
+  pkgs-unstable = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+in
+{
 
   options = {
     hyprland.enable = lib.mkEnableOption {
@@ -12,6 +16,7 @@
       enable = true;
       # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
       package = pkgs.unstable.hyprland;
+      # package = pkgs.hyprland;
 
       xwayland.enable = true;
     };
@@ -19,20 +24,20 @@
     hardware = {
       opengl = {
         enable = true;
-        # package = pkgs.unstable.mesa.drivers;
+        # package = pkgs-unstable.mesa.drivers;
 
         driSupport32Bit = true;
-        # package32 = pkgs.unstable.pkgsi686Linux.mesa.drivers;
+        # package32 = pkgs-unstable.pkgsi686Linux.mesa.drivers;
       };
     };
 
     xdg.portal.enable = true;
     xdg.portal.extraPortals = with pkgs; [
-      # xdg-desktop-portal-gtk
+      xdg-desktop-portal-gtk
       # xdg-desktop-portal-hyprland
     ];
 
-    services.xserver.displayManager.sddm = {
+    services.displayManager.sddm = {
       enable = true;
       wayland.enable = true;
     };
@@ -61,28 +66,34 @@
       polkit
       sddm
 
-      waybar
-      (waybar.overrideAttrs (oldAttrs: {
-        mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-      }))
+      unstable.waybar
+      # (unstable.waybar.overrideAttrs (oldAttrs: {
+      #   mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+      # }))
 
       kitty
 
-      rofi-wayland
+      unstable.rofi-wayland
 
       dunst
       libnotify
 
       swww
 
-      unstable.hyprlock
-      unstable.hyprshot
-      unstable.hypridle
-      unstable.hyprcursor
+      hyprlock
+      hyprshot
+      hypridle
+      hyprcursor
 
       unstable.kanshi
+
+      unstable.gnome-calculator
+      unstable.nautilus
+      unstable.cheese
+      unstable.baobab
+      unstable.loupe
     ];
 
-    services.xserver.libinput.enable = true;
+    services.libinput.enable = true;
   };
 }

@@ -34,6 +34,7 @@
 
       # DevOps
       docker
+      docker-compose
 
       # Databases
       sqlite
@@ -49,9 +50,11 @@
 
       # Web
       chromium
-      insomnia
+      unstable.insomnia
 
       direnv
     ];
+
+    programs.adb.enable = true;
   };
 }

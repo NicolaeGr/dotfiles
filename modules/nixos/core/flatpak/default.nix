@@ -14,6 +14,11 @@
 
     services.flatpak = {
       enable = true;
+      uninstallUnmanaged = true;
+      update.auto = {
+        enable = true;
+        onCalendar = "weekly";
+      };
 
       remotes = [
         {
@@ -31,37 +36,30 @@
       ];
 
       packages = [
-        "org.gnome.Calculator"
-        "org.gnome.Cheese"
-        "org.gnome.Loupe"
-        {
-          appId = "org.gnome.NautilusDevel";
-          origin = "gnome-nightly";
-        }
-
-        "org.gnome.baobab"
-
-        "com.github.tchx84.Flatseal"
-
-        "org.gtk.Gtk3theme.adw-gtk3"
-        "org.gtk.Gtk3theme.adw-gtk3-dark"
+        "com.gitlab.tipp10.tipp10"
       ];
 
-      update.auto = {
-        enable = true;
-        onCalendar = "weekly";
-      };
+      overrides = {
+        global = {
+          Context = {
+            filesystems = [
+              "xdg-data/themes:ro"
+              "xdg-data/icons:ro"
+              "xdg-data/fonts:ro"
+              "xdg-config/gtkrc:ro"
+              "xdg-config/gtkrc-2.0:ro"
+              "xdg-config/gtk-2.0:ro"
+              "xdg-config/gtk-3.0:ro"
+              "xdg-config/gtk-4.0:ro"
+              "nix"
+            ];
+            sockets = [ "wayland" "!x11" "!fallback-x11" ];
+          };
 
-      overrides.global = {
-        Context.filesystems = [
-          "xdg-data/themes"
-          "xdg-data/icons"
-          "xdg-data/fonts"
-        ];
-
-        Environment = {
-          "GTK_THEME" = "adw-gtk3-dark";
-          "QT_STYLE_OVERRIDE" = "adwaita";
+          Environment = {
+            "GTK_THEME" = "adw-gtk3-dark";
+            "QT_STYLE_OVERRIDE" = "adwaita";
+          };
         };
       };
     };

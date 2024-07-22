@@ -37,8 +37,7 @@
       home.stateVersion = "23.11";
     };
 
-    environment.systemPackages = with pkgs;[
-      heroic
-    ];
+    profiles.work.enable = true;
+
   };
 }

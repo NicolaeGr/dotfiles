@@ -14,7 +14,13 @@
     ];
 
     xdg = {
-      mime.enable = true;
+      mime = {
+        enable = true;
+        defaultApplications = {
+          "text/plain" = [ "codium.desktop" ];
+          "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
+        };
+      };
     };
   };
 }

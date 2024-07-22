@@ -5,6 +5,8 @@
     ./hyprland
     ./gnome
 
+    ./profiles
+
     ./users
   ];
 }

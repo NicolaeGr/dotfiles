@@ -1,6 +1,8 @@
-{ options, config, lib, pkgs, ... }: {
+{ inputs, options, config, lib, pkgs, ... }: {
 
   imports = [
+    inputs.hyprland.homeManagerModules.default
+
     ./hyprlock
     ./hypridle
     ./waybar
@@ -16,6 +18,7 @@
   };
 
   config = lib.mkIf config.hyprland.enable {
+
     hyprland.hypridle.enable = true;
     hyprland.hyprlock.enable = true;
     hyprland.rofi.enable = true;
@@ -26,13 +29,25 @@
       WLD_NO_HARDWARE_CURSORS = "1";
     };
 
+    home.pointerCursor = {
+      gtk.enable = true;
+      # x11.enable = true;
+      name = "phinger-cursors";
+      package = pkgs.phinger-cursors;
+      size = 16;
+    };
+
+
     wayland.windowManager.hyprland = {
       enable = true;
+      systemd.variables = [ "--all" ];
+
+
       settings = {
         exec-once = [ ];
         monitor = [
           "eDP-1,highres,100x0,1"
-          "HDMI-A-1,1920 x1080@120,100x-1080,1"
+          "HDMI-A-1,2560x1440@59.95,-220x-1440,1"
         ];
 
         "$mod" = "SUPER";
@@ -55,12 +70,12 @@
           };
         };
 
-        # cursor = {
-        # no_hardware_cursors = "yes";
-        # inactive_timeout = 0;
-        # no_warps = true;
-        # enable_hyprcursor = "yes";
-        # };
+        cursor = {
+          no_hardware_cursors = "yes";
+          inactive_timeout = 0;
+          no_warps = true;
+          enable_hyprcursor = "yes";
+        };
 
         general = {
           "gaps_in" = 5;
@@ -73,13 +88,10 @@
           "layout" = "dwindle";
 
           "allow_tearing" = false;
-          "cursor_inactive_timeout" = 0;
-          "no_cursor_warps" = "yes";
         };
 
         misc = {
           disable_hyprland_logo = "yes";
-          hide_cursor_on_touch = "no";
         };
 
         decoration = {
@@ -117,8 +129,6 @@
 
         dwindle = {
           pseudotile = "yes";
-
-          # preserve_split = "yes";
         };
 
 
@@ -200,6 +210,12 @@
           ", Print, exec, hyprshot -m region -o Pictures/Screenshots"
           "Alt, Print, exec, hyprshot -m window -o Pictures/Screenshots"
           "$mod, Print, exec, hyprshot -m output -o Pictures/Screenshots"
+        ];
+
+        windowrulev2 = [
+          "float,stayfocused,focus,center,class:(Rofi),title:(rofi - drun)"
+          # make Picture-in-Picture windows float and be 506 by 284 and always on active workspace, 1492,64
+          # "float,stayfocused,center,class:(firefox),title:(Picture-in-Picture),size:(506,284),workspace:(1)"
         ];
       };
     };

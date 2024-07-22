@@ -12,7 +12,12 @@
     sound.enable = true;
     hardware.pulseaudio.enable = false;
 
-    environment.systemPackages = with pkgs; [ pulseaudio ];
+    environment.systemPackages = with pkgs; [
+      pulseaudio
+      pipewire
+      wireplumber
+      pavucontrol
+    ];
 
     services.pipewire = {
       enable = true;

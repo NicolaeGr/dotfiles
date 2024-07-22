@@ -23,7 +23,6 @@
           margin = "6, 20, 2, 20";
 
           modules-left = [
-            "custom/wmname"
             "hyprland/workspaces"
             "cpu"
             "custom/separator"
@@ -50,26 +49,6 @@
             "custom/separator"
             "pulseaudio"
           ];
-
-          # "sway/workspaces" = {
-          #   disable-scroll = true;
-          #   all-outputs = true;
-          #   format = "{icon}";
-          #   format-icons = {
-          #     "1" = "";
-          #     "2" = "";
-          #     "3" = "";
-          #     "4" = "";
-          #     "5" = "";
-          #     "6" = "";
-          #     "7" = "";
-          #     "8" = "";
-          #     "9" = "";
-          #     "urgent" = "";
-          #     "focused" = "";
-          #     "default" = "";
-          #   };
-          # };
 
           "custom/wmname" = {
             format = "";
@@ -173,7 +152,7 @@
 
           pulseaudio = {
             format = "{icon} {volume}% {format_source}";
-            format-bluetooth = "{icon} {volume}% {format_source}";
+            format-bluetooth = "{icon}  {volume}% {format_source}";
             format-bluetooth-muted = " {format_source}";
             format-muted = "  {format_source}";
             format-source = " {volume}%";

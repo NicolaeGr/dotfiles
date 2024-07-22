@@ -1,4 +1,4 @@
-{ inputs, outputs, config, lib, configLib, ... }: {
+{ inputs, outputs, config, lib, configLib, pkgs, ... }: {
   imports = [
     inputs.hardware.nixosModules.lenovo-ideapad-15arh05
     ./hardware-configuration.nix
@@ -11,7 +11,7 @@
   devMode.enable = true;
   nvidia.enable = true;
   hyprland.enable = true;
-  gnome.enable = true;
+  # gnome.enable = true;
 
   services.tlp.enable = lib.mkForce false;
   boot.kernelModules = [ "acpi_call" ];
@@ -19,5 +19,13 @@
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelParams = [ "amdgpu.backlight=0" ];
+  boot.kernelParams = [
+    "amdgpu.backlight=0"
+    "nvidia_drm.fbdev=1"
+  ];
+
+  environment.systemPackages = with pkgs; [
+    discord
+    telegram-desktop
+  ];
 }
