@@ -1,4 +1,4 @@
-{ options, config, lib, pkgs ... }: {
+{ options, config, lib, pkgs, ... }: {
   options = {
     users.guest.enable = lib.mkEnableOption {
       default = false;
