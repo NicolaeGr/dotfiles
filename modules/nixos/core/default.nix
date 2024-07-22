@@ -16,11 +16,11 @@
   ];
 
   # Activate modules that need to be on by default.
-  backlight.enable = lib.mkDefault true;
-  xdg.enable = lib.mkDefault true;
-  fonts.enable = lib.mkDefault true;
-  zsh.enable = lib.mkDefault true;
-  flatpak.enable = lib.mkDefault true;
+  backlight.enable = true;
+  xdg.enable = true;
+  fonts.enable = true;
+  zsh.enable = true;
+  flatpak.enable = true;
 
   # Global config #
   console = {

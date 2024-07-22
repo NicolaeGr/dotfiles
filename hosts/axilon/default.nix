@@ -7,6 +7,7 @@
 
   devMode.enable = true;
   hyprland.enable = true;
+  flatpak.enable = lib.mkDefault false;
 
   services.tlp.enable = lib.mkForce false;
   boot.kernelModules = [ "acpi_call" ];
