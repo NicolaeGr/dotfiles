@@ -1,4 +1,4 @@
-{ inputs, options, config, lib, pkgs, ... }: {
+{ inputs, hostName, options, config, lib, pkgs, ... }: {
 
   imports = [
     inputs.hyprland.homeManagerModules.default
@@ -45,10 +45,18 @@
 
       settings = {
         exec-once = [ ];
-        monitor = [
-          "eDP-1,highres,100x0,1"
-          "HDMI-A-1,2560x1440@59.95,-220x-1440,1"
-        ];
+
+        monitor =
+          if (hostName == "odin") then [
+            "eDP-1,highres,100x0,1"
+            "HDMI-A-1,2560x1440@59.95,0x0,1"
+          ] else if (hostName == "axilon") then [
+            "eDP-1,highres,365x1440,1"
+            "HDMI-A-1,2560x1440@59.95,0x0,1"
+            "DP-1,1920x1080@60.00000,2285x1440,1"
+          ] else [
+            "eDP-1,highres,100x0,1"
+          ];
 
         "$mod" = "SUPER";
         "$terminal" = "kitty";
