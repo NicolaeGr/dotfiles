@@ -7,61 +7,62 @@
     };
   };
 
-  # config = lib.mkIf config.flatpak.enable {
-  #   environment.systemPackages = with pkgs; [
-  #     flatpak
-  #   ];
+  config = lib.mkIf config.flatpak.enable {
+    environment.systemPackages = with pkgs; [
+      flatpak
+    ];
 
-  #   services.flatpak = {
-  #     enable = true;
-  #     uninstallUnmanaged = true;
-  #     update.auto = {
-  #       enable = true;
-  #       onCalendar = "weekly";
-  #     };
+    services.flatpak = {
+      enable = true;
+      uninstallUnmanaged = true;
+      update.auto = {
+        enable = true;
+        onCalendar = "weekly";
+      };
 
-  #     remotes = [
-  #       {
-  #         name = "flathub";
-  #         location = "https://flathub.org/repo/flathub.flatpakrepo";
-  #       }
-  #       {
-  #         name = "flathub-beta";
-  #         location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
-  #       }
-  #       {
-  #         name = "gnome-nightly";
-  #         location = "https://nightly.gnome.org/gnome-nightly.flatpakrepo";
-  #       }
-  #     ];
+      remotes = [
+        {
+          name = "flathub";
+          location = "https://flathub.org/repo/flathub.flatpakrepo";
+        }
+        {
+          name = "flathub-beta";
+          location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
+        }
+        {
+          name = "gnome-nightly";
+          location = "https://nightly.gnome.org/gnome-nightly.flatpakrepo";
+        }
+      ];
 
-  #     packages = [
-  #       "com.gitlab.tipp10.tipp10"
-  #     ];
+      packages = [
+        "com.gitlab.tipp10.tipp10"
+        "com.jetbrains.Rider"
+      ];
 
-  #     overrides = {
-  #       global = {
-  #         Context = {
-  #           filesystems = [
-  #             "xdg-data/themes:ro"
-  #             "xdg-data/icons:ro"
-  #             "xdg-data/fonts:ro"
-  #             "xdg-config/gtkrc:ro"
-  #             "xdg-config/gtkrc-2.0:ro"
-  #             "xdg-config/gtk-2.0:ro"
-  #             "xdg-config/gtk-3.0:ro"
-  #             "xdg-config/gtk-4.0:ro"
-  #             "nix"
-  #           ];
-  #           sockets = [ "wayland" "!x11" "!fallback-x11" ];
-  #         };
+      overrides = {
+        global = {
+          Context = {
+            filesystems = [
+              "xdg-data/themes:ro"
+              "xdg-data/icons:ro"
+              "xdg-data/fonts:ro"
+              "xdg-config/gtkrc:ro"
+              "xdg-config/gtkrc-2.0:ro"
+              "xdg-config/gtk-2.0:ro"
+              "xdg-config/gtk-3.0:ro"
+              "xdg-config/gtk-4.0:ro"
+              "nix"
+            ];
+            sockets = [ "wayland" "!x11" "!fallback-x11" ];
+          };
 
-  #         Environment = {
-  #           "GTK_THEME" = "adw-gtk3-dark";
-  #           "QT_STYLE_OVERRIDE" = "adwaita";
-  #         };
-  #       };
-  #     };
-  #   };
-  # };
+          Environment = {
+            "GTK_THEME" = "adw-gtk3-dark";
+            "QT_STYLE_OVERRIDE" = "adwaita";
+          };
+        };
+      };
+    };
+  };
 }

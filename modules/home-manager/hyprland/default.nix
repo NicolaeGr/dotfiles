@@ -222,6 +222,7 @@
 
         windowrulev2 = [
           "float,stayfocused,focus,center,class:(Rofi),title:(rofi - drun)"
+          " decorate off, class:^(jetbrains-rider)$"
           # make Picture-in-Picture windows float and be 506 by 284 and always on active workspace, 1492,64
           # "float,stayfocused,center,class:(firefox),title:(Picture-in-Picture),size:(506,284),workspace:(1)"
         ];

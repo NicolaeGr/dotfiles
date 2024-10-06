@@ -24,6 +24,8 @@
       tldr
       tokei
       ngrok
+      gnumake
+      nodePackages.prettier
 
       # Languages
       gcc
@@ -31,6 +33,11 @@
       nodejs
       python3
       go
+
+      # Package Managers
+      nodePackages.pnpm
+      nodePackages.yarn
+
 
       # DevOps
       docker

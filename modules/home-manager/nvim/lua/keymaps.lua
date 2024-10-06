@@ -1,47 +1,12 @@
-local Utils = {}
+local Utils = require('utils')
 
-function Utils.map(mode, lhs, rhs)
-    vim.api.nvim_set_keymap(mode, lhs, rhs, { silent = true })
-end
-
-function Utils.noremap(mode, lhs, rhs)
-    vim.api.nvim_set_keymap(mode, lhs, rhs, { noremap = true, silent = true })
-end
-
-function Utils.exprnoremap(mode, lhs, rhs)
-    vim.api.nvim_set_keymap(mode, lhs, rhs, { noremap = true, silent = true, expr = true })
-end
-
--- Useful mode-specific shortcuts
--- Modes: 
--- 'n' = NORMAL
--- 'i' = INSERT
--- 'x' = 'VISUAL'
--- 'v' = VISUAL + SELECT
--- 't' = TERMINAL
-
-function Utils.nmap(lhs, rhs) Utils.map('n', lhs, rhs) end
-
-function Utils.xmap(lhs, rhs) Utils.map('x', lhs, rhs) end
-
-function Utils.nnoremap(lhs, rhs) Utils.noremap('n', lhs, rhs) end
-
-function Utils.vnoremap(lhs, rhs) Utils.noremap('v', lhs, rhs) end
-
-function Utils.xnoremap(lhs, rhs) Utils.noremap('x', lhs, rhs) end
-
-function Utils.inoremap(lhs, rhs) Utils.noremap('i', lhs, rhs) end
-
-function Utils.tnoremap(lhs, rhs) Utils.noremap('t', lhs, rhs) end
-
-function Utils.exprnnoremap(lhs, rhs) Utils.exprnoremap('n', lhs, rhs) end
-
-function Utils.exprinoremap(lhs, rhs) Utils.exprnoremap('i', lhs, rhs) end
-
+-- local exprnnoremap = Utils.exprnnoremap
 local nnoremap = Utils.nnoremap
 local vnoremap = Utils.vnoremap
 local xnoremap = Utils.xnoremap
 local inoremap = Utils.inoremap
+
+-- local tnoremap = Utils.tnoremap
 -- local nmap = Utils.nmap
 -- local xmap = Utils.xmap
 
@@ -108,9 +73,19 @@ vim.keymap.set('v', '<leader>pd', ':Lspsaga peek_type_definition', { desc = '[P]
 -- Copilot complete with tav
 -- inoremap('<TAB>', 'copilot#Accept("<CR>")')
 -- vim.keymap.set("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+-- Copilot complete with ctrl+tab
+inoremap('<C-TAB>', 'copilot#Accept("<CR>")')
 
 vim.keymap.set('i', '<M-.>', '<Plug>(copilot-next)')
 vim.keymap.set('i', '<M-,>', '<Plug>(copilot-previous)')
+
+
+
+
+
+
+
+
 
 -- -- Switch buffers (needs nvim-bufferline)
 -- nnoremap('<TAB>', ':BufferLineCycleNext<CR>')

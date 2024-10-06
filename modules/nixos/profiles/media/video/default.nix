@@ -8,7 +8,7 @@
 
   config = lib.mkIf config.profiles.media.video.enable {
     environment.systemPackages = with pkgs; [
-      vls
+      vlc
       mpv
       ffmpeg
 

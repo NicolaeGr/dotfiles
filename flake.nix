@@ -10,7 +10,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+    hyprland= {
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
@@ -24,16 +27,9 @@
     envycontrol.url = "github:bayasdev/envycontrol";
     hardware.url = "github:nixos/nixos-hardware";
 
-    # NEOVIM PLUGINS
-    fine-cmdline-nvim = {
-      url = "github:VonHeikemen/fine-cmdline.nvim";
-      flake = false;
-    };
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
 
-    lualine-nvim = {
-      url = "github:nvim-lualine/lualine.nvim";
-      flake = false;
-    };
+    ags.url = "github:Aylur/ags";
   };
 
 

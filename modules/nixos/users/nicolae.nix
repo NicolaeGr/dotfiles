@@ -31,13 +31,15 @@
 
     home-manager.users.nicolae = {
       imports = [
-        #(configLib.relativeToRoot "home/nicolae")
         ./../../../home/nicolae
       ];
       home.stateVersion = "23.11";
     };
 
+
+
     profiles.work.enable = true;
+    profiles.media.enable = true;
 
   };
 }

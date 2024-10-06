@@ -10,17 +10,4 @@
       config.allowUnfree = true;
     };
   };
-
-  vimPlugins = final: prev: {
-    vimPlugins = prev.vimPlugins // {
-      fine-cmdline-nvim = prev.vimUtils.buildVimPlugin {
-        name = "fine-cmdline.nvim";
-        src = inputs.fine-cmdline-nvim;
-      };
-      cust_lualine-nvim = prev.vimUtils.buildVimPlugin {
-        name = "lualine.nvim";
-        src = inputs.lualine-nvim;
-      };
-    };
-  };
 }

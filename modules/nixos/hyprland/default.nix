@@ -14,8 +14,8 @@ in
   config = lib.mkIf config.hyprland.enable {
     programs.hyprland = {
       enable = true;
-      # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-      package = pkgs.unstable.hyprland;
+      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+      # package = pkgs.unstable.hyprland;
       # package = pkgs.hyprland;
 
       xwayland.enable = true;
@@ -24,10 +24,12 @@ in
     hardware = {
       opengl = {
         enable = true;
-        # package = pkgs-unstable.mesa.drivers;
+        # package = pkgs.unstable.mesa;
+        package = pkgs-unstable.mesa.drivers;
 
         driSupport32Bit = true;
-        # package32 = pkgs-unstable.pkgsi686Linux.mesa.drivers;
+        # package32 = pkgs.unstable.pkgsi686Linux.mesa;
+        package32 = pkgs-unstable.pkgsi686Linux.mesa.drivers;
       };
     };
 
@@ -64,7 +66,7 @@ in
 
     environment.systemPackages = with pkgs; [
       polkit
-      sddm
+      unstable.sddm
 
       unstable.waybar
       # (unstable.waybar.overrideAttrs (oldAttrs: {
@@ -92,6 +94,8 @@ in
       unstable.cheese
       unstable.baobab
       unstable.loupe
+
+      unstable.libinput
     ];
 
     services.libinput.enable = true;
