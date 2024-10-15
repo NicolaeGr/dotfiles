@@ -65,7 +65,7 @@ vim.diagnostic.config {
 }
 
 -- Copilot settings
-vim.g.copilot_no_tab_map = false
+vim.g.copilot_no_tab_map = true
 vim.g.copilot_assume_mapped = true
 
 vim.g.copilot_filetypes = {
@@ -75,3 +75,7 @@ vim.g.copilot_filetypes = {
 
 -- Do not source the default filetype.vim
 vim.g.did_load_filetypes = 1
+
+-- Prevent file selector from opening when opening a new folder
+vim.g.nvim_tree_disable_netrw = 0
+vim.opt.autochdir = false

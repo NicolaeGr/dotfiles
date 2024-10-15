@@ -1,4 +1,9 @@
 return {
+    {
+        'nvim-neo-tree/neo-tree.nvim',
+        enabled = false
+    },
+
     -- Improved File Types
     "nathom/filetype.nvim",
 

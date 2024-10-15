@@ -1,8 +1,4 @@
-{ inputs, options, config, lib, pkgs, ... }:
-let
-  pkgs-unstable = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-in
-{
+{ inputs, options, config, lib, pkgs, ... }: {
 
   options = {
     hyprland.enable = lib.mkEnableOption {
@@ -14,29 +10,20 @@ in
   config = lib.mkIf config.hyprland.enable {
     programs.hyprland = {
       enable = true;
-      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-      # package = pkgs.unstable.hyprland;
-      # package = pkgs.hyprland;
-
       xwayland.enable = true;
     };
 
     hardware = {
       opengl = {
         enable = true;
-        # package = pkgs.unstable.mesa;
-        package = pkgs-unstable.mesa.drivers;
 
         driSupport32Bit = true;
-        # package32 = pkgs.unstable.pkgsi686Linux.mesa;
-        package32 = pkgs-unstable.pkgsi686Linux.mesa.drivers;
       };
     };
 
     xdg.portal.enable = true;
     xdg.portal.extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
-      # xdg-desktop-portal-hyprland
     ];
 
     services.displayManager.sddm = {
@@ -66,26 +53,20 @@ in
 
     environment.systemPackages = with pkgs; [
       polkit
-      unstable.sddm
-
-      unstable.waybar
-      # (unstable.waybar.overrideAttrs (oldAttrs: {
-      #   mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-      # }))
 
       kitty
 
-      unstable.rofi-wayland
+      rofi-wayland
 
       dunst
       libnotify
 
       swww
+      waybar
 
       hyprlock
       hyprshot
       hypridle
-      hyprcursor
 
       unstable.kanshi
 
@@ -94,8 +75,6 @@ in
       unstable.cheese
       unstable.baobab
       unstable.loupe
-
-      unstable.libinput
     ];
 
     services.libinput.enable = true;

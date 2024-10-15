@@ -32,5 +32,5 @@
     telegram-desktop
   ];
 
-
+  profiles.gaming.apps.jc.enable = true;
 }

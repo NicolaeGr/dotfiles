@@ -17,7 +17,6 @@
     extraLuaConfig = ''
       require ('options')
       require ('keymaps')
-      require ('commands')
 
       require ("lazy").setup ({
         spec = {
@@ -35,6 +34,8 @@
           missing = false,
         },
       })
+
+      require ('commands')
     '';
   };
 

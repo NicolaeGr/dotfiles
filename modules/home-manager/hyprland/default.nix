@@ -1,8 +1,6 @@
 { inputs, hostName, options, config, lib, pkgs, ... }: {
 
   imports = [
-    inputs.hyprland.homeManagerModules.default
-
     ./hyprlock
     ./hypridle
     ./waybar
@@ -42,7 +40,6 @@
       enable = true;
       systemd.variables = [ "--all" ];
 
-
       settings = {
         exec-once = [ ];
 
@@ -61,7 +58,7 @@
         "$mod" = "SUPER";
         "$terminal" = "kitty";
         "$menu" = "rofi -show drun";
-        "$fileManager" = "dolphin";
+        "$fileManager" = "nautilus";
 
         env = [
           "XCURSOR_SIZE,24"
@@ -82,7 +79,7 @@
           no_hardware_cursors = "yes";
           inactive_timeout = 0;
           no_warps = true;
-          enable_hyprcursor = "yes";
+          enable_hyprcursor = "no";
         };
 
         general = {
@@ -195,6 +192,8 @@
 
           "$mod, Tab , cyclenext, "
           "$mod, Tab, bringactivetotop, "
+
+          "$mod&Alt, F, fullscreen,"
         ];
 
         bindm = [
@@ -222,7 +221,7 @@
 
         windowrulev2 = [
           "float,stayfocused,focus,center,class:(Rofi),title:(rofi - drun)"
-          " decorate off, class:^(jetbrains-rider)$"
+          # " decorate off, class:^(jetbrains-rider)$"
           # make Picture-in-Picture windows float and be 506 by 284 and always on active workspace, 1492,64
           # "float,stayfocused,center,class:(firefox),title:(Picture-in-Picture),size:(506,284),workspace:(1)"
         ];

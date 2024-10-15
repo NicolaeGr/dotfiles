@@ -19,6 +19,7 @@
       phinger-cursors
 
       gradience
+      dconf
     ];
 
     dconf.settings = {

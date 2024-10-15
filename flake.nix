@@ -10,12 +10,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland= {
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.4.1";
 
     nur.url = "github:nix-community/nur";
 
@@ -27,7 +22,10 @@
     envycontrol.url = "github:bayasdev/envycontrol";
     hardware.url = "github:nixos/nixos-hardware";
 
-    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ags.url = "github:Aylur/ags";
   };

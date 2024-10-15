@@ -1,6 +1,7 @@
 { options, config, lib, pkgs, ... }: {
   imports = [
     ./steam
+    ./jc
   ];
 
   options = {

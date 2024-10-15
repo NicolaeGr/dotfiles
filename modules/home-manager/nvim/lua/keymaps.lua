@@ -70,11 +70,7 @@ vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit Terminal Mode' })
 vim.keymap.set('n', '<leader>ca', ':Lspsaga code_action<CR>', { desc = '[C]ode [A]ction' })
 vim.keymap.set('v', '<leader>pd', ':Lspsaga peek_type_definition', { desc = '[P]eek Type [D]efinition' })
 
--- Copilot complete with tav
--- inoremap('<TAB>', 'copilot#Accept("<CR>")')
--- vim.keymap.set("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
--- Copilot complete with ctrl+tab
-inoremap('<C-TAB>', 'copilot#Accept("<CR>")')
+vim.keymap.set("i", "<C-CR>", 'copilot#Accept("<CR>")', { expr = true, replace_keycodes = false })
 
 vim.keymap.set('i', '<M-.>', '<Plug>(copilot-next)')
 vim.keymap.set('i', '<M-,>', '<Plug>(copilot-previous)')

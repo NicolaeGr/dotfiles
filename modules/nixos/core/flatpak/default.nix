@@ -8,10 +8,6 @@
   };
 
   config = lib.mkIf config.flatpak.enable {
-    environment.systemPackages = with pkgs; [
-      flatpak
-    ];
-
     services.flatpak = {
       enable = true;
       uninstallUnmanaged = true;
@@ -38,6 +34,7 @@
       packages = [
         "com.gitlab.tipp10.tipp10"
         "com.jetbrains.Rider"
+        "io.github.zen_browser.zen"
       ];
 
       overrides = {
