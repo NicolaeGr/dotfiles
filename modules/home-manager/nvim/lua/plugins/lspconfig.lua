@@ -100,7 +100,7 @@ return {
         'MunifTanjim/prettier.nvim',
         dependencies = {
             {
-                'nvimtools/none-ls.nvim',
+                'jose-elias-alvarez/null-ls.nvim',
                 config = function()
                     local on_attach = function(client, bufnr)
                         if client.supports_method("textDocument/formatting") then

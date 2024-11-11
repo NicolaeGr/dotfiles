@@ -13,6 +13,13 @@
       # protontricks.enable = true;
       gamescopeSession.enable = true;
     };
+
+    hardware.xpadneo.enable = true;
+
+    environment.systemPackages = with pkgs; [
+      gamemode
+      mangohud
+    ];
   };
 }
 

@@ -75,7 +75,3 @@ vim.g.copilot_filetypes = {
 
 -- Do not source the default filetype.vim
 vim.g.did_load_filetypes = 1
-
--- Prevent file selector from opening when opening a new folder
-vim.g.nvim_tree_disable_netrw = 0
-vim.opt.autochdir = false

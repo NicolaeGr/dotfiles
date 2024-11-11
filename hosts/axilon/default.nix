@@ -16,10 +16,5 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  environment.systemPackages = with pkgs; [
-    discord
-    telegram-desktop
-  ];
-
   users.nicolae.enable = true;
 }

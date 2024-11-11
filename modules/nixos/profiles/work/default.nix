@@ -5,7 +5,10 @@
     environment.systemPackages = with pkgs;  [
       teams-for-linux
       slack
+
       unstable.jetbrains.dataspell
+      unstable.jetbrains.idea-community
+      unstable.geckodriver
     ];
   };
 }

@@ -18,8 +18,4 @@
       allowUnfreePredicate = (_: true);
     };
   };
-
-  # setup keyboard layout to be us with alt being romanian
-  # home.keyboard.layout = "us";
-  # home.keyboard.variant = "alt-intl";
 }

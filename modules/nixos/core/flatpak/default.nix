@@ -33,11 +33,12 @@
 
       packages = [
         "com.gitlab.tipp10.tipp10"
-        "com.jetbrains.Rider"
+        # "com.jetbrains.Rider"
         "io.github.zen_browser.zen"
       ];
 
       overrides = {
+        # "com.jetbrains.Rider" = { };
         global = {
           Context = {
             filesystems = [

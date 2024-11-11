@@ -1,6 +1,12 @@
 { pkgs, inputs, ... }: {
+  home.packages = with pkgs; [
+    pkgs.firefoxpwa
+  ];
+
+
   programs.firefox = {
     enable = true;
+    nativeMessagingHosts = [ pkgs.firefoxpwa ];
 
     profiles.default = import ./profile.nix {
       inherit pkgs inputs;

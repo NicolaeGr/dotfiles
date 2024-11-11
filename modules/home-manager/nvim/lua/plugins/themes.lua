@@ -12,9 +12,7 @@ return {
             fm.setup {
                 glow = true,
                 theme = 'retrowave',
-                colors = function(_, color)
-                    local d = color.darken
-
+                colors = function(_, d)
                     return {
                         bg = '#241f31',
                         alt_bg = d('#190920', 20),

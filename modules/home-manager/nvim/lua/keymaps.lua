@@ -76,13 +76,6 @@ vim.keymap.set('i', '<M-.>', '<Plug>(copilot-next)')
 vim.keymap.set('i', '<M-,>', '<Plug>(copilot-previous)')
 
 
-
-
-
-
-
-
-
 -- -- Switch buffers (needs nvim-bufferline)
 -- nnoremap('<TAB>', ':BufferLineCycleNext<CR>')
 -- nnoremap('<S-TAB>', ':BufferLineCyclePrev<CR>')

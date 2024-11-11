@@ -3,7 +3,6 @@ vim.cmd([[
   autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) | bdelete | execute 'Telescope find_files' | endif
 ]])
 
-
 -- Format code on save
 vim.cmd([[autocmd BufWritePre * silent! :Format]])
 

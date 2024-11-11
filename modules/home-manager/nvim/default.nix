@@ -10,32 +10,11 @@
     vimdiffAlias = true;
     withNodeJs = true;
 
-    plugins = with pkgs.vimPlugins; [
-      lazy-nvim
-    ];
-
     extraLuaConfig = ''
-      require ('options')
-      require ('keymaps')
-
-      require ("lazy").setup ({
-        spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-          { import = "plugins" },
-        },
-        performance = {
-          reset_packpath = false,
-          rtp = {
-            reset = false,
-          }
-        },
-        install = {
-          -- Safeguard in case we forget to install a plugin with Nix
-          missing = false,
-        },
-      })
-
-      require ('commands')
+      require('options')
+      require('keymaps')
+      require('commands')
+      require('config.lazy')
     '';
   };
 

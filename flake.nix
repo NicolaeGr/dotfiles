@@ -41,12 +41,8 @@
       inherit (nixpkgs) lib;
       configVars = import ./vars { inherit inputs lib; };
       configLib = import ./lib { inherit lib; };
-      # specialArgs = { inherit inputs outputs configVars configLib nixpkgs; };
     in
     {
-      # nixosModules = import ./modules/nixos;
-      # homeManagerModules = import ./modules/home-manager;
-
       overlays = import ./overlays { inherit inputs outputs; };
 
       packages = forAllSystems
