@@ -125,6 +125,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    envycontrol = {
+      url = "github:bayasdev/envycontrol";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stylix = {
       url = "github:danth/stylix/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -29,19 +29,11 @@
         4173
         4174
         4175
-
-        # Minecraft
-        25565
-        25566
       ];
       allowedUDPPorts = [
         53
         67
         68
-
-        # Minecraft
-        25565
-        25566
       ];
     };
 

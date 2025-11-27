@@ -55,6 +55,7 @@
             [
               "eDP-1,highres,100x0,1"
               # "HDMI-A-1,2560x1440@59.95,0x0,1"
+              "HDMI-A-1,preferred,auto,1,mirror,eDP-1"
             ]
           else if (hostName == "axilon") then
             [

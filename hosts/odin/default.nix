@@ -11,6 +11,7 @@
     ./hardware-configuration.nix
 
     ./fs.nix
+    ./virt.nix
   ]
   ++ (map configLib.relativeToRoot [
     "hosts/_common/core"

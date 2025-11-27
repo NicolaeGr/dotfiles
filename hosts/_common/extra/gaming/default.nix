@@ -84,6 +84,8 @@
       mangohud
       prismlauncher
       heroic
+      bottles
+      lutris
     ];
   };
 }

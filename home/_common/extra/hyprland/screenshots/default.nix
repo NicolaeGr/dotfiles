@@ -12,9 +12,8 @@
   };
 
   home.packages = with pkgs; [
-    grim
-    imagemagick
-    slurp
+    hyprshot
     satty
+    libnotify
   ];
 }

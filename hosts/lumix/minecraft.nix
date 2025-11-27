@@ -39,4 +39,13 @@ in
     createHome = false;
   };
   users.groups.minecraft = { };
+
+  networking.firewall.allowedTCPPorts = [
+    25565
+    25566
+  ];
+  networking.firewall.allowedUDPPorts = [
+    25565
+    25566
+  ];
 }

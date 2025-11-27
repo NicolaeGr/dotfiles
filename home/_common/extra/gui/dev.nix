@@ -17,7 +17,8 @@
       unstable.vscode
       unstable.chromium
       unstable.epiphany
-      unstable.jetbrains.idea-ultimate
+      unstable.jetbrains.idea-community
+      unstable.gitkraken
     ];
   };
 }

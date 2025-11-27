@@ -68,6 +68,26 @@
         "type": "github"
       }
     },
+    "envycontrol": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1757901893,
+        "narHash": "sha256-8+zSstGZtZXiv5aUju83y+27RbT5WVYdv9uhkQ0PJR8=",
+        "owner": "bayasdev",
+        "repo": "envycontrol",
+        "rev": "cbfa94b5d40a8046f4e188bcc9ff01df77ebf7e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bayasdev",
+        "repo": "envycontrol",
+        "type": "github"
+      }
+    },
     "firefox-addons": {
       "inputs": {
         "nixpkgs": [
@@ -437,6 +457,7 @@
     },
     "root": {
       "inputs": {
+        "envycontrol": "envycontrol",
         "firefox-addons": "firefox-addons",
         "hardware": "hardware",
         "home-manager": "home-manager",
