@@ -31,6 +31,24 @@ in
       group = "users";
     };
 
+    services.lidarr = {
+      enable = true;
+      openFirewall = true;
+
+      dataDir = "${baseDir}/lidarr";
+
+      user = "deploy";
+      group = "users";
+    };
+
+    services.navidrome = {
+      enable = true;
+      openFirewall = true;
+
+      user = "deploy";
+      group = "users";
+    };
+
     services.prowlarr = {
       enable = true;
       openFirewall = true;
