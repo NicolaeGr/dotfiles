@@ -14,7 +14,7 @@
 
   services.samba = {
     enable = true;
-    security = "user";
+    global.security = "user";
     extraConfig = ''
       map to guest = Bad User
       obey pam restrictions = Yes
