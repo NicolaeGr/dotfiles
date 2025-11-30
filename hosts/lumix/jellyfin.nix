@@ -45,6 +45,13 @@ in
       enable = true;
       openFirewall = true;
 
+      settings = {
+        Address = "0.0.0.0";
+        Port = 4533;
+        MusicFolder = "/storage/media/music";
+        DataFolder = "${baseDir}/navidrome";
+      };
+
       user = "deploy";
       group = "users";
     };
