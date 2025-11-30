@@ -14,11 +14,11 @@
 
   services.samba = {
     enable = true;
-    settings.global.security = "user";
-    extraConfig = ''
-      map to guest = Bad User
-      obey pam restrictions = Yes
-    '';
+    settings.global = {
+      security = "user";
+      "map to guest" = "Bad User";
+      "obey pam restrictions" = "Yes";
+    };
 
     shares."storage" = {
       path = "/storage/smb";
