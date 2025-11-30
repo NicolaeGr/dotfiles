@@ -47,6 +47,7 @@ in
         "docker"
         "adbusers"
         "vboxusers"
+        "sambashare"
       ] config;
 
       openssh.authorizedKeys.keys = lib.lists.forEach pubKeys (key: builtins.readFile key);

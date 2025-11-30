@@ -11,6 +11,7 @@
     ./cloudflare.nix
     ./jellyfin.nix
     ./fast-ceiti.nix
+    ./smb.nix
 
     inputs.vscode-server.nixosModules.default
 
