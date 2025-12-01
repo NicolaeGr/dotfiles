@@ -30,8 +30,8 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = lib.mkForce [ 445 ];
-  networking.firewall.allowedUDPPorts = lib.mkForce [
+  networking.firewall.allowedTCPPorts = [ 445 ];
+  networking.firewall.allowedUDPPorts = [
     137
     138
   ];

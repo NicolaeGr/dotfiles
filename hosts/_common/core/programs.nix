@@ -30,5 +30,6 @@
     glances
     nethogs
     dua
+    samba
   ];
 }
