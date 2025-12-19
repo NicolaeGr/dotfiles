@@ -12,6 +12,7 @@
     ./jellyfin.nix
     ./fast-ceiti.nix
     ./smb.nix
+    ./wireguard.nix
 
     inputs.vscode-server.nixosModules.default
 

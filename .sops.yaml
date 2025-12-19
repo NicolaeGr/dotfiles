@@ -17,3 +17,9 @@ creation_rules:
           - *nicolae
           - *odin
           - *lumix
+  - path_regex: secrets/wireguard.yaml$
+    key_groups:
+      - age:
+          - *nicolae
+          - *odin
+          - *lumix

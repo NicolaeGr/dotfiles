@@ -9,7 +9,7 @@
 
   config = lib.mkMerge [
     {
-      # Config
+      extra.wireguard.enable = false;
     }
 
     (lib.mkIf config.extra.gui.enable {

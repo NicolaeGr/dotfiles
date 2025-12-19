@@ -43,6 +43,8 @@
     gimp
     avahi
     gitkraken
+
+    unstable.android-studio
   ];
 
   services.udev.extraRules = ''

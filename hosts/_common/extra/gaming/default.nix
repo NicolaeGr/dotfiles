@@ -84,7 +84,7 @@
 
       mangohud
       prismlauncher
-      heroic
+      unstable.heroic
       bottles
       lutris
     ];
