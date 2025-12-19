@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  configLib,
+  ...
+}:
 {
   options = {
     extra.wireguard.enable = lib.mkEnableOption {
