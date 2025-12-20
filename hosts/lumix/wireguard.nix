@@ -1,6 +1,15 @@
-{ config, ... }:
+{
+  config,
+  configLib,
+  ...
+}:
 {
   extra.wireguard.enable = true;
+
+  sops.secrets.lumix_wg_private_key = {
+    sopsFile = (configLib.relativeToRoot "secrets/wireguard.yaml");
+    format = "yaml";
+  };
 
   networking.wireguard.interfaces.wg0 = {
     listenPort = config.extra.wireguard.listenPort;

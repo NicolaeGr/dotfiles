@@ -1,6 +1,15 @@
-{ config, ... }:
+{
+  config,
+  configLib,
+  ...
+}:
 {
   extra.wireguard.enable = true;
+
+  sops.secrets.odin_wg_private_key = {
+    sopsFile = (configLib.relativeToRoot "secrets/wireguard.yaml");
+    format = "yaml";
+  };
 
   networking.wireguard.interfaces.wg0 = {
     ips = [ "10.100.0.2/24" ];

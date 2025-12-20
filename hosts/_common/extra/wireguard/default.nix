@@ -23,13 +23,10 @@
     networking.firewall.trustedInterfaces = [ "wg0" ];
     networking.firewall.checkReversePath = false;
 
-    sops.secrets.lumix_wg_private_key = {
-      sopsFile = (configLib.relativeToRoot "secrets/wireguard.yaml");
-      format = "yaml";
-    };
-    sops.secrets.odin_wg_private_key = {
-      sopsFile = (configLib.relativeToRoot "secrets/wireguard.yaml");
-      format = "yaml";
+    boot.kernel.sysctl = {
+      "net.ipv4.conf.all.rp_filter" = 0;
+      "net.ipv4.conf.default.rp_filter" = 0;
+      "net.ipv4.conf.wg0.rp_filter" = 0;
     };
   };
 }
