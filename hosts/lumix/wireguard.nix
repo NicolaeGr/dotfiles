@@ -4,7 +4,7 @@
 
   networking.wireguard.interfaces.wg0 = {
     ips = [ "10.100.0.1/24" ];
-    listenPort = 8017;
+    listenPort = 25566;
 
     privateKeyFile = config.sops.secrets.lumix_wg_private_key.path;
 
