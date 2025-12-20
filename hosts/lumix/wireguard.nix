@@ -1,10 +1,9 @@
-{ config, lib, ... }:
+{ config, ... }:
 {
   extra.wireguard.enable = true;
 
   networking.wireguard.interfaces.wg0 = {
-    ips = [ "10.100.0.1/24" ];
-    listenPort = 25566;
+    listenPort = config.extra.wireguard.listenPort;
 
     privateKeyFile = config.sops.secrets.lumix_wg_private_key.path;
 

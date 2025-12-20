@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 {
   extra.wireguard.enable = true;
 
@@ -10,7 +10,7 @@
     peers = [
       {
         publicKey = "uT3bM9N2xsDmlMMmIf4mS6PysWUxEcwAfTv3j7x1unc=";
-        endpoint = "electrolit.biz:25566";
+        endpoint = "electrolit.biz:${toString config.extra.wireguard.listenPort}";
 
         allowedIPs = [
           "10.100.0.0/24"

@@ -10,10 +10,16 @@
       description = "Enable Wireguard support";
       default = false;
     };
+
+    extra.wireguard.listenPort = lib.mkOption {
+      type = lib.types.int;
+      default = 25566;
+      description = "The UDP port Wireguard should listen on.";
+    };
   };
 
   config = lib.mkIf config.extra.wireguard.enable {
-    networking.firewall.allowedUDPPorts = [ 8017 ];
+    networking.firewall.allowedUDPPorts = [ config.extra.wireguard.listenPort ];
     networking.firewall.trustedInterfaces = [ "wg0" ];
     networking.firewall.checkReversePath = false;
 
