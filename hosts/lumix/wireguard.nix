@@ -21,6 +21,10 @@
         publicKey = "DoB3CnXKA7eo+YR7FHzdk9SBzDde4mZBRWWubrSxfTU=";
         allowedIPs = [ "10.100.0.2/32" ];
       }
+      {
+        publicKey = "EGHSJN6pS4o7Jhx0+yBzOUUwNrDyiGFyJLdrnSYOIRA=";
+        allowedIPs = [ "10.100.0.3/32" ];
+      }
     ];
   };
 

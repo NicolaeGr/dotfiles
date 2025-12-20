@@ -9,6 +9,7 @@
 
   config = lib.mkMerge [
     {
+      # Config
     }
 
     (lib.mkIf config.extra.gui.enable {
