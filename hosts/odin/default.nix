@@ -12,6 +12,7 @@
 
     ./fs.nix
     ./virt.nix
+    ./wireguard.nix
   ]
   ++ (map configLib.relativeToRoot [
     "hosts/_common/core"

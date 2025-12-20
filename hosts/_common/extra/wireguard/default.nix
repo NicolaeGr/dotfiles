@@ -14,6 +14,7 @@
 
   config = lib.mkIf config.extra.wireguard.enable {
     networking.firewall.allowedUDPPorts = [ 8017 ];
+    networking.firewall.trustedInterfaces = [ "wg0" ];
 
     sops.secrets.lumix_wg_private_key = {
       sopsFile = (configLib.relativeToRoot "secrets/wireguard.yaml");
