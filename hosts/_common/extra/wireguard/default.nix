@@ -19,14 +19,16 @@
   };
 
   config = lib.mkIf config.extra.wireguard.enable {
-    # networking.firewall.allowedUDPPorts = [ config.extra.wireguard.listenPort ];
-    # networking.firewall.trustedInterfaces = [ "wg0" ];
-    # networking.firewall.checkReversePath = false;
+    networking.wg-quick.interfaces.wg0 = {
+      postUp = ''
+        sysctl -w net.ipv4.conf.all.rp_filter=0
+        sysctl -w net.ipv4.conf.default.rp_filter=0
+        sysctl -w net.ipv4.conf.wg0.rp_filter=0
+      '';
 
-    # boot.kernel.sysctl = {
-    #   "net.ipv4.conf.all.rp_filter" = 0;
-    #   "net.ipv4.conf.default.rp_filter" = 0;
-    #   "net.ipv4.conf.wg0.rp_filter" = 0;
-    # };
+      postDown = ''
+        sysctl -w net.ipv4.conf.wg0.rp_filter=2
+      '';
+    };
   };
 }
