@@ -46,6 +46,7 @@
     gitkraken
 
     unstable.android-studio
+    unstable.gnome-builder
   ];
 
   services.udev.extraRules = ''

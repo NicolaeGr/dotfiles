@@ -9,7 +9,6 @@
   };
 
   config = lib.mkIf config.extra.hyprland.waybar.enable {
-
     programs.waybar = {
       enable = true;
       systemd.enable = true;
