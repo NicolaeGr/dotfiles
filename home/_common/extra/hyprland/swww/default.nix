@@ -1,6 +1,11 @@
-{ lib, config, ... }:
 {
-
+  lib,
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
+{
   options = {
     extra.hyprland.swww.enable = lib.mkEnableOption {
       default = false;
@@ -19,11 +24,23 @@
       source = ./bg2.jpg;
     };
 
-    services.swww.enable = true;
+    home.file."rain.gif" = {
+      target = ".config/hypr/backgrounds/rain.gif";
+      source = ./rain.gif;
+    };
+
+    home.file."galaxy.jpg" = {
+      target = ".config/hypr/backgrounds/galaxy.jpg";
+      source = ./galaxy.jpg;
+    };
+
+    home.packages = with pkgs; [
+      swww
+    ];
 
     wayland.windowManager.hyprland.settings.exec-once = [
-      "swww init"
-      "swww img ${config.home.homeDirectory}/.config/hypr/backgrounds/bg2.jpg"
+      "swww-daemon &"
+      "swww img ${config.home.homeDirectory}/.config/hypr/backgrounds/galaxy.jpg"
     ];
   };
 }

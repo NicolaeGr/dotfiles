@@ -135,6 +135,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
+    awww.url = "git+https://codeberg.org/LGFae/awww";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
     spicetify-nix = {

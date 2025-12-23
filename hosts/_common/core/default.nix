@@ -42,6 +42,7 @@
     };
 
     programs.mtr.enable = true;
+    services.upower.enable = true;
 
     programs.gnupg.agent.enable = true;
     programs.ssh.extraConfig = ''

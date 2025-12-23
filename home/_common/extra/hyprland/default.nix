@@ -239,7 +239,7 @@
           "$mod+Shift, L, exec, hyprlock"
           "$mod, F, exec, $fileManager"
           "$mod, V, togglefloating,"
-          "$mod, X, exec, $menu"
+          "$mod, X,pppppp exec, $menu"
           "$mod, P, pseudo,"
           "$mod, J, togglesplit,"
 
@@ -274,7 +274,7 @@
               "$mod, code:1${toString i}, workspace, ${toString ws}"
               "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
             ]
-          ) 9
+          ) 10
         ));
 
         bindm = [
