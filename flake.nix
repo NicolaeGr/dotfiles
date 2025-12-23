@@ -154,5 +154,9 @@
     };
 
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+    nosh = {
+      url = "github:NicolaeGr/nosh";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

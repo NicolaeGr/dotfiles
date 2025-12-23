@@ -9,6 +9,8 @@
 {
 
   imports = [
+    inputs.nosh.homeManagerModules.nosh
+
     ./screenshots
     ./hyprlock
     ./hypridle
@@ -30,6 +32,9 @@
     extra.hyprland.rofi.enable = true;
     extra.hyprland.swww.enable = true;
     extra.hyprland.waybar.enable = true;
+
+    programs.nosh.enable = true;
+    programs.nosh.startAfter = [ "hyprland-session.target" ];
 
     home.packages = with pkgs; [
       dunst
@@ -239,7 +244,7 @@
           "$mod+Shift, L, exec, hyprlock"
           "$mod, F, exec, $fileManager"
           "$mod, V, togglefloating,"
-          "$mod, X,pppppp exec, $menu"
+          "$mod, X, exec, $menu"
           "$mod, P, pseudo,"
           "$mod, J, togglesplit,"
 

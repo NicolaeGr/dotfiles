@@ -10,7 +10,7 @@
 
   config = lib.mkIf config.extra.hyprland.waybar.enable {
     programs.waybar = {
-      enable = true;
+      enable = false;
       systemd.enable = true;
       systemd.target = "hyprland-session.target";
 

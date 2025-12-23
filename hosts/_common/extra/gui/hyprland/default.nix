@@ -1,16 +1,26 @@
 {
+  inputs,
   config,
   lib,
   pkgs,
   ...
 }:
 {
+  imports = [
+    inputs.nosh.nixosModules.nosh
+  ];
+
   options = {
     extra.gui.hyprland.enable = lib.mkEnableOption "Enable Hyprland";
   };
 
   config = lib.mkIf config.extra.gui.hyprland.enable {
-    home-manager.sharedModules = [ ({ extra.hyprland.enable = true; }) ];
+    home-manager.sharedModules = [
+      ({
+        extra.hyprland.enable = true;
+      })
+    ];
+    services.nosh.enable = true;
 
     services.displayManager = {
       sessionPackages = with pkgs; [ hyprland ];

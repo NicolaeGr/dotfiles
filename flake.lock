@@ -1,5 +1,26 @@
 {
   "nodes": {
+    "astal": {
+      "inputs": {
+        "nixpkgs": [
+          "nosh",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1762527355,
+        "narHash": "sha256-d5zsOdWeHZFP5Pc/QkgsX3UKkVDmcwY8nSJJJszMwVM=",
+        "owner": "aylur",
+        "repo": "astal",
+        "rev": "5baeb660214bcafc9ae0b733a1bc84f5fa6078f4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aylur",
+        "repo": "astal",
+        "type": "github"
+      }
+    },
     "awww": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -459,6 +480,27 @@
         "type": "indirect"
       }
     },
+    "nosh": {
+      "inputs": {
+        "astal": "astal",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1766477822,
+        "narHash": "sha256-2XBmMtenJk1liZwngkY3THnrCwnr6LQJxJwz+uE/o+Q=",
+        "owner": "NicolaeGr",
+        "repo": "nosh",
+        "rev": "215afcfe400a70104bf245dbbb69ed0a2743d407",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NicolaeGr",
+        "repo": "nosh",
+        "type": "github"
+      }
+    },
     "nur": {
       "inputs": {
         "flake-parts": [
@@ -519,6 +561,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-stable": "nixpkgs-stable",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nosh": "nosh",
         "pre-commit-hooks": "pre-commit-hooks",
         "rose-pine-hyprcursor": "rose-pine-hyprcursor",
         "sops-nix": "sops-nix",
