@@ -488,11 +488,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1766477822,
-        "narHash": "sha256-2XBmMtenJk1liZwngkY3THnrCwnr6LQJxJwz+uE/o+Q=",
+        "lastModified": 1767001521,
+        "narHash": "sha256-LGlRlg0GXcxBbcjyjBkbYu5LCr9MMYiTYex0873dLlo=",
         "owner": "NicolaeGr",
         "repo": "nosh",
-        "rev": "215afcfe400a70104bf245dbbb69ed0a2743d407",
+        "rev": "3c66ed74d1651de3184896aaf7fb22b0ee2bbb0e",
         "type": "github"
       },
       "original": {

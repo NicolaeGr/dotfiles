@@ -9,14 +9,12 @@
 {
 
   imports = [
-    inputs.nosh.homeManagerModules.nosh
-
     ./screenshots
     ./hyprlock
     ./hypridle
-    ./waybar
     ./rofi
     ./swww
+    ./nosh
   ];
 
   options = {
@@ -31,13 +29,9 @@
     extra.hyprland.hyprlock.enable = true;
     extra.hyprland.rofi.enable = true;
     extra.hyprland.swww.enable = true;
-    extra.hyprland.waybar.enable = true;
-
-    programs.nosh.enable = true;
-    programs.nosh.startAfter = [ "hyprland-session.target" ];
+    extra.hyprland.nosh.enable = true;
 
     home.packages = with pkgs; [
-      dunst
       libnotify
     ];
 
@@ -208,6 +202,14 @@
           "center,       class:^(com.gabm.satty)$"
 
           #
+          # ========== Picture-in-Picture ==========
+          #
+          "float,        title:^(Picture-in-Picture)$"
+          "size 30% 30%, title:^(Picture-in-Picture)$"
+          "center,       title:^(Picture-in-Picture)$"
+          "pin,         title:^(Picture-in-Picture)$"
+
+          #
           # ========== Always opaque ==========
           #
           "opaque, class:^([Gg]imp)$"
@@ -294,10 +296,10 @@
         ];
 
         bindel = [
-          ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-          ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-          ", XF86MonBrightnessUp, exec, light -A 10"
-          ", XF86MonBrightnessDown, exec, light -U 10"
+          ", XF86AudioRaiseVolume, exec, nosh volume-up"
+          ", XF86AudioLowerVolume, exec, nosh volume-down"
+          ", XF86MonBrightnessUp, exec, nosh brightness-up"
+          ", XF86MonBrightnessDown, exec, nosh brightness-down"
 
           ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
           ", Print, exec, $HOME/.config/hypr/scripts/screenshot_utils.sh region"

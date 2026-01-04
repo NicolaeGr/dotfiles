@@ -27,7 +27,7 @@
         size = 24;
       };
 
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+      base16Scheme = ./theme.yaml;
 
       targets.qt.enable = true;
       targets.vscode.enable = lib.mkDefault false;
