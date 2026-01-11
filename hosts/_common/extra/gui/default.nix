@@ -35,10 +35,9 @@
       enable32Bit = true;
 
       extraPackages = with pkgs; [
-        amdvlk
         vulkan-tools
         mesa
-        vaapiVdpau
+        libva-vdpau-driver
       ];
     };
 

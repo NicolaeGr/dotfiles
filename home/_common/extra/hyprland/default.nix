@@ -12,7 +12,6 @@
     ./screenshots
     ./hyprlock
     ./hypridle
-    ./rofi
     ./swww
     ./nosh
   ];
@@ -27,7 +26,6 @@
   config = lib.mkIf config.extra.hyprland.enable {
     extra.hyprland.hypridle.enable = true;
     extra.hyprland.hyprlock.enable = true;
-    extra.hyprland.rofi.enable = true;
     extra.hyprland.swww.enable = true;
     extra.hyprland.nosh.enable = true;
 
@@ -67,7 +65,6 @@
 
         "$mod" = "SUPER";
         "$terminal" = "kitty";
-        "$menu" = "rofi -show drun";
         "$fileManager" = "nautilus";
 
         #
@@ -168,17 +165,14 @@
           pseudotile = true;
         };
 
-        gestures = {
-          workspace_swipe = true;
-          workspace_swipe_fingers = 3;
-        };
+        gesture = [
+          "3, horizontal, workspace"
+        ];
 
         #
         # ========== Window Rules ==========
         #
         windowrule = [
-          "float,stayfocused,focus,center,class:(Rofi),title:(rofi - drun)"
-
           # Dialogs
           "float, title:^(Open File)(.*)$"
           "float, title:^(Select a File)(.*)$"
@@ -246,7 +240,6 @@
           "$mod+Shift, L, exec, hyprlock"
           "$mod, F, exec, $fileManager"
           "$mod, V, togglefloating,"
-          "$mod, X, exec, $menu"
           "$mod, P, pseudo,"
           "$mod, J, togglesplit,"
 

@@ -21,15 +21,21 @@
     programs.nosh.enable = true;
     programs.nosh.startAfter = [ "hyprland-session.target" ];
 
-    wayland.windowManager.hyprland.settings.bindel =
+    wayland.windowManager.hyprland.settings =
       let
-        nosh_cmd = "${inputs.nosh.packages.${pkgs.system}.default}/bin/nosh";
+        nosh_cmd = "${inputs.nosh.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/nosh";
       in
-      [
-        ", XF86AudioRaiseVolume, exec, ${nosh_cmd} volume-up"
-        ", XF86AudioLowerVolume, exec, ${nosh_cmd} volume-down"
-        ", XF86MonBrightnessUp, exec, ${nosh_cmd} brightness-up"
-        ", XF86MonBrightnessDown, exec, ${nosh_cmd} brightness-down"
-      ];
+      {
+        bind = [
+          "$mod, X, exec, ${nosh_cmd} app-launcher"
+        ];
+
+        bindel = [
+          ", XF86AudioRaiseVolume, exec, ${nosh_cmd} volume-up"
+          ", XF86AudioLowerVolume, exec, ${nosh_cmd} volume-down"
+          ", XF86MonBrightnessUp, exec, ${nosh_cmd} brightness-up"
+          ", XF86MonBrightnessDown, exec, ${nosh_cmd} brightness-down"
+        ];
+      };
   };
 }

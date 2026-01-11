@@ -3,7 +3,6 @@
   environment.systemPackages = with pkgs; [
     # Editors
     vim
-    neovim
 
     # Tools
     uget

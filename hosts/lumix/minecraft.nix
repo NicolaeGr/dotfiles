@@ -5,7 +5,8 @@
   ...
 }:
 let
-  mcManager = inputs.minecraft-manager.packages.${pkgs.system}.minecraft-app-manager;
+  system = pkgs.stdenv.hostPlatform.system;
+  mcManager = inputs.minecraft-manager.packages.${system}.minecraft-app-manager;
 in
 {
 

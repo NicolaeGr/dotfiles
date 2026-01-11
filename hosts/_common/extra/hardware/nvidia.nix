@@ -16,7 +16,7 @@
       nvtopPackages.full
 
       glmark2
-      glxinfo
+      mesa-demos
     ];
   };
 }

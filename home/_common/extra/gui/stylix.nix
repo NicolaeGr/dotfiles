@@ -23,7 +23,7 @@
 
       cursor = {
         name = "hyprcursor-rose-pine";
-        package = inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default;
+        package = inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default;
         size = 24;
       };
 
@@ -34,6 +34,7 @@
       targets.firefox.enable = true;
       targets.firefox.colorTheme.enable = true;
       targets.firefox.profileNames = [ "firefox.default" ];
+      targets.neovim.enable = false;
     };
   };
 }
