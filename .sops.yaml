@@ -4,6 +4,7 @@ keys:
   - &hosts:
     - &odin age1h4xqpcnqlv4xa9382ek0wsp4emslflnmtlqnsas6ppm426alwuvqrc5jax
     - &lumix age108gwn9u0lrdvyu7l5vaq2hqfkz4grccd2q5zkuf8ez0waqznsy2qlvt0z2
+    - &zoln age1ytu59kcucfs65hgy7xqfeqtegpsdvw8mhw63ldnh49x3ldwwh5hq5yv7q7
 creation_rules:
   - path_regex: secrets/secrets.yaml$
     key_groups:
@@ -11,6 +12,7 @@ creation_rules:
           - *nicolae
           - *odin
           - *lumix
+          - *zoln
   - path_regex: secrets/cloudflare_cred.json$
     key_groups:
       - age:

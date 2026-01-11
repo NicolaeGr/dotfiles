@@ -56,7 +56,7 @@ age-key:
 
 rekey:
 	@echo "[*] Rekeying secrets..."
-	cd ../nix-secrets && ( \
+	cd secrets && ( \
 		sops updatekeys -y secrets.yaml && \
 		(pre-commit run --all-files || true) && \
 		git add -u && (git commit -m 'chore: rekey' || true) && git push \
