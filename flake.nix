@@ -80,6 +80,27 @@
             ];
           };
 
+        zoln =
+          let
+            hostSpecialArgs = specialArgs // {
+              hostName = "zoln";
+            };
+          in
+          lib.nixosSystem {
+            specialArgs = hostSpecialArgs;
+
+            modules = [
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = hostSpecialArgs;
+              }
+
+              ./hosts/zoln
+            ];
+          };
+
         lumix =
           let
             hostSpecialArgs = specialArgs // {
