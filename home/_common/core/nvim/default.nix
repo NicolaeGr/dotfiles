@@ -76,6 +76,15 @@ in
           # Theme
           catppuccin-nvim
           mini-icons
+
+          #Cmp
+          nvim-cmp
+          cmp-nvim-lsp
+          cmp-buffer
+          cmp-path
+          nvim-snippets
+          friendly-snippets
+
         ];
 
       extraPackages = with pkgs; [
@@ -84,6 +93,9 @@ in
         # LazyVim defaults
         stylua
         shfmt
+
+        # LSP servers
+        nixd # Nix
       ];
 
       extraLuaConfig = lib.mkIf (nvimLuaDir != null) ''

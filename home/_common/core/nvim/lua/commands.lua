@@ -1,6 +1,4 @@
 -- Format code on save
-vim.cmd('syntax off')
-
 vim.cmd([[autocmd BufWritePre * silent! :Format]])
 
 -- Format code on paste

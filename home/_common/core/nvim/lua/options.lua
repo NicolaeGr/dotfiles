@@ -70,7 +70,11 @@ vim.g.copilot_assume_mapped = true
 
 vim.g.copilot_filetypes = {
   ["*"] = true,
-  ["svelte"] = true,
 }
 
 vim.cmd.colorscheme 'catppuccin-mocha'
+
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99

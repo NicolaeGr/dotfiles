@@ -1,6 +1,26 @@
 local flakeRoot = vim.g.flake_root
 local configCwd = flakeRoot or vim.fn.stdpath('config')
-local configCommand = ":lua Snacks.dashboard.pick('files', {cwd = '" .. configCwd .. "'})"
+
+local function open_config()
+  require("telescope.builtin").find_files({
+    cwd = configCwd,
+    attach_mappings = function(prompt_bufnr, map)
+      local actions = require("telescope.actions")
+      local action_state = require("telescope.actions.state")
+
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        if selection then
+          vim.cmd('cd ' .. configCwd)
+          vim.notify('Opened config folder at ' .. configCwd, vim.log.levels.INFO)
+          vim.cmd('edit ' .. selection.value)
+        end
+      end)
+      return true
+    end
+  })
+end
 
 return {
   {
@@ -29,7 +49,7 @@ return {
             { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
             { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
             { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-            { icon = " ", key = "c", desc = "Config", action = configCommand },
+            { icon = " ", key = "c", desc = "Config", action = open_config },
             { icon = " ", key = "s", desc = "Restore Session", section = "session" },
             { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
             { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },

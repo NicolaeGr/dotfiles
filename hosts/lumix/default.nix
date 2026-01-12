@@ -13,9 +13,9 @@
     ./fast-ceiti.nix
     ./smb.nix
     ./wireguard.nix
+    ./router.nix
 
     inputs.vscode-server.nixosModules.default
-
   ]
   ++ (map configLib.relativeToRoot [
     "hosts/_common/core"
