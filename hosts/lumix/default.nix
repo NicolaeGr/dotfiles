@@ -40,7 +40,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  services.vscode-server.enable = true;
+  services.vscode-server = {
+    enable = true;
+    enableFHS = true;
+  };
 
   services.netdata = {
     enable = true;
