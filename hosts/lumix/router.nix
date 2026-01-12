@@ -28,11 +28,6 @@
   # Open firewall for forwarding traffic between interfaces
   networking.firewall = {
     trustedInterfaces = [ "enp2s0" ];
-    extraCommands = ''
-      # Allow forwarding from LAN to WAN
-      iptables -A FORWARD -i enp2s0 -o enp3s0 -j ACCEPT
-      iptables -A FORWARD -i enp3s0 -o enp2s0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-    '';
   };
 
   # Optional: DHCP server for devices connecting to enp2s0
