@@ -30,44 +30,7 @@
     trustedInterfaces = [ "enp2s0" ];
   };
 
-  # Optional: DHCP server for devices connecting to enp2s0
-  services.kea = {
-    dhcp4 = {
-      enable = true;
-      settings = {
-        interfaces-config = {
-          interfaces = [ "enp2s0" ];
-        };
-        lease-database = {
-          type = "memfile";
-          persist = true;
-          name = "/var/lib/kea/dhcp4.leases";
-        };
-        subnet4 = [
-          {
-            subnet = "192.168.1.0/24";
-            pools = [
-              {
-                pool = "192.168.1.100 - 192.168.1.200";
-              }
-            ];
-            option-data = [
-              {
-                name = "routers";
-                data = "192.168.1.1";
-              }
-              {
-                name = "domain-name-servers";
-                data = "192.168.1.1, 8.8.8.8, 1.1.1.1";
-              }
-            ];
-          }
-        ];
-      };
-    };
-  };
-
-  # Optional: DNS forwarding for LAN clients
+  # DHCP and DNS server for LAN clients using dnsmasq
   services.dnsmasq = {
     enable = true;
     settings = {
@@ -81,6 +44,13 @@
         "1.1.1.1"
       ];
       listen-address = "192.168.1.1";
+
+      # DHCP configuration
+      dhcp-range = "192.168.1.100,192.168.1.200,24h";
+      dhcp-option = [
+        "option:router,192.168.1.1"
+        "option:dns-server,192.168.1.1"
+      ];
     };
   };
 
