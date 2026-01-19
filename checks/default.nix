@@ -1,7 +1,7 @@
 {
   inputs,
   system,
-  stdenv,
+  pkgs,
   ...
 }:
 {
@@ -31,9 +31,9 @@
         enable = true;
         name = "destroyed-symlinks";
         description = "detects symlinks which are changed to regular files with a content of a path which that symlink was pointing to.";
-        package = inputs.pre-commit-hooks.checks.${stdenv.hostPlatform.system}.pre-commit-hooks;
+        package = inputs.pre-commit-hooks.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-hooks;
         entry = "${
-          inputs.pre-commit-hooks.checks.${stdenv.hostPlatform.system}.pre-commit-hooks
+          inputs.pre-commit-hooks.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-hooks
         }/bin/destroyed-symlinks";
         types = [ "symlink" ];
       };

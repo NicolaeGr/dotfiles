@@ -1,65 +1,28 @@
 { ... }:
 {
-  # Configure enp2s0 as LAN interface with static IP
-  networking.interfaces.enp2s0 = {
-    useDHCP = false;
-    ipv4.addresses = [
-      {
-        address = "192.168.1.1";
-        prefixLength = 24;
-      }
-    ];
-  };
+  networking.networkmanager.unmanaged = [
+    "enp2s0"
+    "enp3s0"
+  ];
 
-  # Enable IP forwarding (required for routing)
-  boot.kernel.sysctl = {
-    "net.ipv4.ip_forward" = 1;
-    "net.ipv6.conf.all.forwarding" = 0;
-  };
-
-  # Configure NAT to route traffic from enp2s0 through enp3s0
-  networking.nat = {
-    enable = true;
-    externalInterface = "enp3s0"; # WAN interface (has internet)
-    internalInterfaces = [ "enp2s0" ]; # LAN interface
-    internalIPs = [ "192.168.1.0/24" ];
-  };
-
-  # Open firewall for forwarding traffic between interfaces
-  networking.firewall = {
-    trustedInterfaces = [ "enp2s0" ];
-  };
-
-  # DHCP and DNS server for LAN clients using dnsmasq
-  services.dnsmasq = {
-    enable = true;
-    settings = {
-      interface = "enp2s0";
-      bind-interfaces = true;
-      domain-needed = true;
-      bogus-priv = true;
-      no-resolv = true;
-      server = [
-        "8.8.8.8"
-        "1.1.1.1"
-      ];
-      listen-address = "192.168.1.1";
-
-      # DHCP configuration
-      dhcp-range = "192.168.1.100,192.168.1.200,24h";
-      dhcp-option = [
-        "option:router,192.168.1.1"
-        "option:dns-server,192.168.1.1"
+  networking.bridges = {
+    "br0" = {
+      interfaces = [
+        "enp2s0"
+        "enp3s0"
       ];
     };
   };
 
-  # Open DNS port on the LAN interface
-  networking.firewall.interfaces.enp2s0 = {
-    allowedTCPPorts = [ 53 ];
-    allowedUDPPorts = [
-      53
-      67
-    ];
+  networking.interfaces.br0 = {
+    useDHCP = true;
+  };
+
+  networking.interfaces.enp2s0.useDHCP = false;
+  networking.interfaces.enp3s0.useDHCP = false;
+
+  networking.firewall = {
+    enable = true;
+    trustedInterfaces = [ "br0" ];
   };
 }

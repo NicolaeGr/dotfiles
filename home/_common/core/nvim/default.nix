@@ -27,6 +27,8 @@ in
       enable = true;
       vimAlias = true;
       vimdiffAlias = true;
+      withNodeJs = true;
+      withPython3 = true;
 
       plugins =
         let
@@ -84,10 +86,10 @@ in
           cmp-path
           nvim-snippets
           friendly-snippets
-
         ];
 
       extraPackages = with pkgs; [
+        tree-sitter
         gcc # needed for nvim-treesitter
 
         # LazyVim defaults
@@ -127,11 +129,6 @@ in
         })
       '';
     };
-
-  home.packages = with pkgs; [
-    wl-clipboard
-    lua-language-server
-  ];
 
   home.file.".config/nvim/lua" = lib.mkIf (nvimLuaDir != null) {
     source = config.lib.file.mkOutOfStoreSymlink nvimLuaDir;

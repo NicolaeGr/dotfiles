@@ -12,16 +12,4 @@ return {
       },
     },
   },
-    {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    lazy = true,
-    opts = {
-      enable_autocmd = false,
-    },
-  },
-  {
-    "folke/ts-comments.nvim",
-    event = "VeryLazy",
-    opts = {},
-    },
 }

@@ -22,6 +22,26 @@ local function open_config()
   })
 end
 
+local function list_lua_roots()
+  local roots = {}
+  for _, f in ipairs(vim.api.nvim_get_runtime_file("lua/*", true)) do
+    local m = f:match(".*/lua/([^/]+)")
+    if m then
+      roots[m] = true
+    end
+  end
+
+  local keys = vim.tbl_keys(roots)
+  table.sort(keys)
+
+  vim.notify(
+    "Lua roots:\n" .. table.concat(keys, "\n"),
+    vim.log.levels.INFO,
+    { title = "Lua runtime" }
+  )
+end
+
+
 return {
   {
     "folke/snacks.nvim",
@@ -45,16 +65,24 @@ return {
           -- stylua: ignore
           ---@type snacks.dashboard.Item[]
           keys = {
+            { key = "L", desc = "List Lua modules", action = list_lua_roots },
             { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
             { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
             { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
             { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-            { icon = " ", key = "c", desc = "Config", action = open_config },
+            { icon = " ", key = "c", desc = "Config", action = open_config },
             { icon = " ", key = "s", desc = "Restore Session", section = "session" },
-            { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
             { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },
+        },
+        sections = {
+          { section = "header" },
+          { section = "keys", padding = 1 },
+          { title = "Projects" },
+          { section = "projects", cwd = true, padding = 1 },
+          { title = "Recent" },
+          { section = "recent_files", cwd = true, limit = 8, padding = 1 },
         },
       },
       indent = { enabled = true },
