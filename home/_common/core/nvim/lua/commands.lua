@@ -1,15 +1,21 @@
--- Format code on save
-vim.cmd([[autocmd BufWritePre * silent! :Format]])
-
--- Format code on paste
-vim.cmd([[autocmd TextYankPost * silent! :Format]])
+-- Formatting
+--vim.api.nvim_create_autocmd("BufWritePre", {
+--	pattern = "*",
+--	callback = function(args)
+--		require("conform").format({
+--			bufnr = args.buf,
+--			async = false,
+--			timeout_ms = 1000,
+--		})
+--	end,
+--})
 
 -- Toggle highlight
 -- vim.cmd([[command! HiLiToggle (g:hlsearch ? ':nohls' : ':set hls')]])
 
 -- Remove trailing whitespaces
 -- (if a file requires trailing spaces, exclude its type using the regex)
-vim.cmd [[autocmd BufWritePre * %s/\s\+$//e ]]
+vim.cmd([[autocmd BufWritePre * %s/\s\+$//e ]])
 
 -- Automatically load zshrc file
 vim.cmd([[set shellcmdflag=-lic]])

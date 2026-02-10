@@ -98,6 +98,9 @@ in
 
         # LSP servers
         nixd # Nix
+
+        # Formatting tools
+        libclang # C/C++
       ];
 
       extraLuaConfig = lib.mkIf (nvimLuaDir != null) ''

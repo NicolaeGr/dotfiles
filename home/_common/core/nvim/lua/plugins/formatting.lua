@@ -1,8 +1,10 @@
 return {
 	{
 		"stevearc/conform.nvim",
-		lazy = true,
-		cmd = "ConformInfo",
+		dependencies = {
+			{ "neovim/nvim-lspconfig" },
+			-- { "nvim-lua/plenary.nvim" },
+		},
 		keys = {
 			{
 				"<leader>cf",
@@ -24,9 +26,35 @@ return {
 				desc = "Format injected langs only",
 			},
 		},
-		opts = function()
-			---@type conform.setupOpts
-			local opts = {
+		event = { "BufWritePre" },
+		cmd = { "ConformInfo" },
+		config = function()
+			vim.api.nvim_create_user_command("FormatDisable", function(args)
+				if args.bang then
+					-- FormatDisable! will disable formatting just for this buffer
+					vim.b.disable_autoformat = true
+				else
+					vim.g.disable_autoformat = true
+				end
+			end, {
+				desc = "Disable autoformat-on-save",
+				bang = true,
+			})
+
+			vim.api.nvim_create_user_command("FormatEnable", function()
+				vim.b.disable_autoformat = false
+				vim.g.disable_autoformat = false
+			end, {
+				desc = "Re-enable autoformat-on-save",
+			})
+
+			require("conform").setup({
+				format_on_save = function(bufnr)
+					if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+						return
+					end
+					return { timeout_ms = 3000, lsp_fallback = true }
+				end,
 				default_format_opts = {
 					timeout_ms = 3000,
 					async = false, -- not recommended to change
@@ -34,11 +62,32 @@ return {
 					lsp_format = "fallback", -- not recommended to change
 				},
 				formatters_by_ft = {
-					lua = { "stylua" },
+					bash = { "shfmt" },
 					sh = { "shfmt" },
+					lua = { "stylua" },
+					go = { "goimports", "gofumpt", "goimports-reviser" },
+
+					javascript = { "prettierd", "prettier", stop_after_first = true },
+					typescript = { "prettierd", "prettier", stop_after_first = true },
+					javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+					typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+					vue = { "prettierd", "prettier", stop_after_first = true },
+					css = { "prettierd", "prettier", stop_after_first = true },
+					scss = { "prettierd", "prettier", stop_after_first = true },
+					less = { "prettierd", "prettier", stop_after_first = true },
+					html = { "prettierd", "prettier", stop_after_first = true },
+					json = { "prettierd", "prettier", stop_after_first = true },
+					jsonc = { "prettierd", "prettier", stop_after_first = true },
+					yaml = { "prettierd", "prettier", stop_after_first = true },
+					markdown = { "prettierd", "prettier", stop_after_first = true },
+					["markdown.mdx"] = { "prettierd", "prettier", stop_after_first = true },
+					graphql = { "prettierd", "prettier", stop_after_first = true },
+					handlebars = { "prettierd", "prettier", stop_after_first = true },
+
+					c = { "clang-format" },
+					cpp = { "clang-format" },
 				},
-				-- The options you set here will be merged with the builtin formatters.
-				-- You can also define any custom formatters here.
+
 				---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
 				formatters = {
 					injected = { options = { ignore_errors = true } },
@@ -54,8 +103,7 @@ return {
 					--   prepend_args = { "-i", "2", "-ci" },
 					-- },
 				},
-			}
-			return opts
+			})
 		end,
 	},
 }
