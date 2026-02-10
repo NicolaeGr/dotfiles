@@ -37,7 +37,7 @@
       enable = true;
 
       systemd = {
-        enable = true;
+        enable = false;
         variables = [ "--all" ];
       };
 
@@ -51,14 +51,11 @@
           if (hostName == "odin") then
             [
               "eDP-1,highres,100x0,1"
-              # "HDMI-A-1,2560x1440@59.95,0x0,1"
               "HDMI-A-1,preferred,auto,1,mirror,eDP-1"
             ]
-          else if (hostName == "axilon") then
+          else if (hostName == "zoln") then
             [
-              "eDP-1,highres,365x1440,1"
-              "HDMI-A-1,2560x1440@59.95,0x0,1"
-              "DP-1,1920x1080@60.00000,2285x1440,1"
+              "DP-1,2560x1440@180,0x0,1"
             ]
           else
             [ "eDP-1,highres,100x0,1" ];
@@ -88,7 +85,7 @@
         };
 
         input = {
-          kb_layout = "us,ro";
+          kb_layout = "ro,ru";
           kb_options = "grp:alt_shift_toggle,lv3:ralt_switch";
 
           natural_scroll = false;

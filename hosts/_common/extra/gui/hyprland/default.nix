@@ -20,15 +20,16 @@
         extra.hyprland.enable = true;
       })
     ];
+
+    programs.hyprland = {
+      enable = true;
+      withUWSM = true;
+      xwayland.enable = true;
+    };
     services.nosh.enable = true;
 
     services.displayManager = {
       sessionPackages = with pkgs; [ hyprland ];
-      sddm.settings = {
-        General = {
-          DefaultSession = "hyprland.desktop";
-        };
-      };
     };
 
     systemd = {
@@ -49,7 +50,6 @@
 
     programs.seahorse.enable = true;
     services.gnome.gnome-keyring.enable = true;
-    security.pam.services.sddm.enableGnomeKeyring = true;
     environment.systemPackages = with pkgs; [
       seahorse
       gnome-keyring

@@ -19,7 +19,7 @@
 
   config = lib.mkIf config.extra.hyprland.nosh.enable {
     programs.nosh.enable = true;
-    programs.nosh.startAfter = [ "hyprland-session.target" ];
+    programs.nosh.startAfter = [ "wayland-session@Hyprland.target" ];
 
     wayland.windowManager.hyprland.settings =
       let

@@ -25,8 +25,8 @@
       Unit = {
         Description = "Hyprland's idle daemon";
         Documentation = "https://wiki.hyprland.org/Hypr-Ecosystem/hypridle";
-        PartOf = "hyprland-session.target";
-        After = [ "hyprland-session.target" ];
+        PartOf = "wayland-session@Hyprland.target";
+        After = [ "wayland-session@Hyprland.target" ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
@@ -37,7 +37,7 @@
       };
 
       Install = {
-        WantedBy = [ "hyprland-session.target" ];
+        WantedBy = [ "wayland-session@Hyprland.target" ];
       };
     };
 

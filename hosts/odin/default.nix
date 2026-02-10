@@ -1,6 +1,5 @@
 {
   inputs,
-  config,
   configLib,
   pkgs,
   ...
@@ -8,6 +7,7 @@
 {
   imports = [
     inputs.hardware.nixosModules.lenovo-ideapad-15arh05
+    inputs.envycontrol.packages.x86_64-linux.default
     ./hardware-configuration.nix
 
     ./fs.nix

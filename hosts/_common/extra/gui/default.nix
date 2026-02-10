@@ -23,6 +23,7 @@
       # Auto Mount
       udisks2
       udiskie
+      gparted
 
       #Amd GPU
       libva
@@ -55,12 +56,16 @@
 
     services.displayManager = {
       enable = true;
-      sddm = {
+      gdm = {
         enable = true;
-        wayland = {
-          enable = true;
-        };
+        autoSuspend = false;
       };
+    };
+
+    services.xserver.enable = true;
+    services.xserver.xkb = {
+      layout = "ro";
+      variant = "";
     };
   };
 }

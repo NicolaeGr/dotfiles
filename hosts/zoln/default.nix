@@ -1,5 +1,4 @@
 {
-  inputs,
   config,
   configLib,
   pkgs,
@@ -47,4 +46,20 @@
   services.udev.extraRules = ''
     KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
   '';
+
+  boot.blacklistedKernelModules = [
+    "amdgpu"
+    "nouveau"
+  ];
+
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia = {
+    open = true;
+    nvidiaSettings = true;
+    modesetting.enable = true;
+    powerManagement.enable = true;
+
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
 }
