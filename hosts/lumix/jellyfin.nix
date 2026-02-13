@@ -1,6 +1,12 @@
-{ pkgs, ... }:
+{
+  config,
+  pkgs,
+  hostName,
+  ...
+}:
 let
   baseDir = "/storage/jellyfin";
+  landingPage = builtins.readFile ./page.html;
 in
 {
   config = {
@@ -146,6 +152,87 @@ in
 
           # access_log /var/log/nginx/access.log stripsecrets;
         '';
+      };
+
+      "${hostName}.local" = {
+        locations."/" = {
+          return = "200 '${landingPage}'";
+          extraConfig = ''
+            default_type text/html;
+          '';
+        };
+
+        locations."/jellyfin" = {
+          proxyPass = "http://127.0.0.1:8096";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_buffering off;
+          '';
+        };
+
+        locations."/radarr" = {
+          proxyPass = "http://127.0.0.1:7878";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
+
+        locations."/sonarr" = {
+          proxyPass = "http://127.0.0.1:8989";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
+
+        locations."/lidarr" = {
+          proxyPass = "http://127.0.0.1:8686";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
+
+        locations."/prowlarr" = {
+          proxyPass = "http://127.0.0.1:9696";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
+
+        locations."/bazarr" = {
+          proxyPass = "http://127.0.0.1:6767";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
+
+        locations."/qbittorrent" = {
+          proxyPass = "http://127.0.0.1:8020";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+          '';
+        };
       };
     };
   };
