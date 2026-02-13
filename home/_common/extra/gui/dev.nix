@@ -13,7 +13,6 @@
 
   config = lib.mkIf (config.extra.dev.enable && config.extra.gui.enable) {
     home.packages = with pkgs; [
-      fs
       unstable.chromium
       unstable.epiphany
       unstable.jetbrains.idea-oss
