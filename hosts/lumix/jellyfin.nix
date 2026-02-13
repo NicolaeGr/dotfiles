@@ -50,7 +50,7 @@ in
     };
 
     services.navidrome = {
-      enable = true;
+      enable = false;
       openFirewall = true;
 
       settings = {
