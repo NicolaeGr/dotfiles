@@ -162,69 +162,52 @@ in
           '';
         };
 
-        locations."/jellyfin" = {
-          proxyPass = "http://127.0.0.1:8096";
+        locations."~ ^/radarr($|.*)" = {
+          proxyPass = "http://127.0.0.1:7878$1$is_args$args";
           extraConfig = ''
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_buffering off;
+            proxy_set_header X-Forwarded-Host $http_host;
           '';
         };
 
-        locations."/radarr" = {
-          proxyPass = "http://127.0.0.1:7878";
+        locations."~ ^/sonarr($|.*)" = {
+          proxyPass = "http://127.0.0.1:8989$1$is_args$args";
           extraConfig = ''
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
           '';
         };
 
-        locations."/sonarr" = {
-          proxyPass = "http://127.0.0.1:8989";
+        locations."~ ^/lidarr($|.*)" = {
+          proxyPass = "http://127.0.0.1:8686$1$is_args$args";
           extraConfig = ''
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
           '';
         };
 
-        locations."/lidarr" = {
-          proxyPass = "http://127.0.0.1:8686";
+        locations."~ ^/prowlarr($|.*)" = {
+          proxyPass = "http://127.0.0.1:9696$1$is_args$args";
           extraConfig = ''
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
           '';
         };
 
-        locations."/prowlarr" = {
-          proxyPass = "http://127.0.0.1:9696";
-          extraConfig = ''
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          '';
-        };
-
-        locations."/bazarr" = {
-          proxyPass = "http://127.0.0.1:6767";
-          extraConfig = ''
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          '';
-        };
-
-        locations."/qbittorrent" = {
-          proxyPass = "http://127.0.0.1:8020";
+        locations."~ ^/bazarr($|.*)" = {
+          proxyPass = "http://127.0.0.1:6767$1$is_args$args";
           extraConfig = ''
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
