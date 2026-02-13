@@ -13,6 +13,11 @@
   ];
 
   config = {
+    services.avahi = {
+      enable = true;
+      nssmdns = true;
+    };
+
     boot.loader = {
       systemd-boot = {
         enable = true;
