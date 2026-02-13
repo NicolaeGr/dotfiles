@@ -154,7 +154,7 @@ in
         '';
       };
 
-      "${hostName}.local" = {
+      virtualHosts."${hostName}.local" = {
         locations."/" = {
           return = "200 '${landingPage}'";
           extraConfig = ''
