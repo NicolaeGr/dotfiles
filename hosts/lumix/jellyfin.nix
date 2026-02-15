@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   hostName,
   ...
@@ -161,6 +160,38 @@ in
             default_type text/html;
           '';
         };
+      };
+    };
+
+    environment.systemPackages = with pkgs; [
+      mpv
+      unstable.seanime
+    ];
+
+    systemd.services.seanime = {
+      description = "Seanime WebServer";
+
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+
+      path = [
+        pkgs.mpv
+        pkgs.bash
+        pkgs.coreutils
+      ];
+
+      serviceConfig = {
+        Type = "simple";
+
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
+        ExecStart = "${pkgs.unstable.seanime}/bin/seanime";
+
+        Environment = "PATH=${pkgs.mpv}/bin:${pkgs.bash}/bin:${pkgs.coreutils}/bin";
+
+        User = "deploy";
+        Group = "users";
+
+        Restart = "on-failure";
       };
     };
   };
