@@ -14,7 +14,7 @@
     ./smb.nix
     ./wireguard.nix
     ./router.nix
-
+    ./projects.nix
     inputs.vscode-server.nixosModules.default
   ]
   ++ (map configLib.relativeToRoot [

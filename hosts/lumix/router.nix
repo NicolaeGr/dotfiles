@@ -35,6 +35,9 @@
 
   networking.firewall = {
     enable = true;
-    trustedInterfaces = [ "br0" ];
+    trustedInterfaces = [
+      "br0"
+      "wg0"
+    ];
   };
 }

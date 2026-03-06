@@ -194,5 +194,7 @@ in
         Restart = "on-failure";
       };
     };
+
+    networking.firewall.allowedTCPPorts = [ 43211 ];
   };
 }
