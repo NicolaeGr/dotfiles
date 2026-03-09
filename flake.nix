@@ -172,13 +172,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Envycontrol has not had changes to the flake file that would allow running on 25.11 or later
-    nixpkgs-old.url = "github:NixOS/nixpkgs/nixos-25.05";
-    envycontrol = {
-      url = "github:bayasdev/envycontrol";
-      inputs.nixpkgs.follows = "nixpkgs-old";
-    };
-
-    aic8800.url = "git+file:///home/nicolae/Projects/etc/aic8800-nix";
+    aic8800.url = "github:hoanhxlyn/aic8800-nix";
   };
 }

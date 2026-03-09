@@ -1,5 +1,9 @@
-{ ... }:
+{ pkgs, ... }:
 {
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    virt-manager
+  ];
 }

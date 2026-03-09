@@ -25,3 +25,28 @@ fi
 # Colored prompt
 autoload -U colors && colors
 PS1="%F{053}[%F{178}%n%F{071}$ps1_hostname %F{172}%(3~|%-1~/…/%1~|%2~)%F{088}%F{053}]%{$reset_color%}$ "
+
+tmpcmd() {
+	if [ -z "$1" ]; then
+		echo "Usage: tmpcmd <name>"
+		return 1
+	fi
+
+	mkdir -p "/tmp/scripts/$USER"
+
+	local name="$1-$$.sh"
+	local tmpfile="/tmp/scripts/$USER/$name"
+
+	touch "$tmpfile"
+	chmod +x "$tmpfile"
+
+	[[ ":$PATH:" != *":/tmp/scripts/$USER:"* ]] && export PATH="/tmp/scripts/$USER:$PATH"
+
+	eval "alias edit-$name='${EDITOR:-vim} \"$tmpfile\"'"
+
+	${EDITOR:-vim} "$tmpfile"
+
+	echo "Executable '$name' created at $tmpfile. Edit it with 'edit-$name'."
+
+	trap "rm -f '$tmpfile'" EXIT
+}

@@ -7,7 +7,6 @@
 {
   imports = [
     inputs.hardware.nixosModules.lenovo-ideapad-15arh05
-    inputs.envycontrol.packages.x86_64-linux.default
     ./hardware-configuration.nix
 
     ./fs.nix
@@ -52,4 +51,26 @@
   services.udev.extraRules = ''
     KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
   '';
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [
+      "echobox"
+    ];
+    authentication = pkgs.lib.mkOverride 10 ''
+      #type database  DBuser  auth-method
+      local all       all     trust
+      host  sameuser    all     127.0.0.1/32 scram-sha-256
+      host  sameuser    all     ::1/128 scram-sha-256
+    '';
+    ensureUsers = [
+      {
+        name = "echobox";
+        ensureDBOwnership = true;
+        ensureClauses = {
+          login = true;
+        };
+      }
+    ];
+  };
 }
