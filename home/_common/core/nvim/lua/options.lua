@@ -30,7 +30,6 @@ vim.o.clipboard            = 'unnamedplus'
 
 -- Vim specific
 vim.o.hidden               = true  -- Do not save when switching buffers
-vim.o.fileencoding         = 'utf-8'
 vim.o.spell                = false -- As of v0.8.0 it only checks comments
 vim.o.spelllang            = 'en_us'
 vim.o.completeopt          = 'menuone,noinsert,noselect'
@@ -71,8 +70,6 @@ vim.g.copilot_assume_mapped = true
 vim.g.copilot_filetypes = {
   ["*"] = true,
 }
-
-vim.cmd.colorscheme 'catppuccin-mocha'
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"

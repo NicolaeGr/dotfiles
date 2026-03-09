@@ -19,122 +19,77 @@ let
 in
 {
 
-  programs.neovim =
-    let
-      nvimPackDir = pkgs.vimUtils.packDir config.programs.neovim.finalPackage.passthru.packpathDirs;
-    in
-    {
-      enable = true;
-      vimAlias = true;
-      vimdiffAlias = true;
-      withNodeJs = true;
-      withPython3 = true;
+  programs.neovim = {
+    enable = true;
+    vimAlias = true;
+    defaultEditor = true;
+    vimdiffAlias = true;
+    withNodeJs = true;
+    withPython3 = true;
 
-      plugins =
-        let
-          plugins = pkgs.unstable.vimPlugins;
-        in
-        with plugins;
-        [
-          lazy-nvim
-          lazydev-nvim
+    plugins = [
+      pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
+    ];
 
-          # LSP
-          nvim-lspconfig
+    extraPackages = [
+      # Formatters
+      pkgs.prettierd # Multi-language
+      pkgs.shfmt # Shell
+      pkgs.isort # Python
+      pkgs.sqlfluff
+      pkgs.stylua
+      pkgs.copilot-language-server
 
-          # Formatting
-          conform-nvim
+      # LSP
+      pkgs.lua-language-server # lua
+      pkgs.nixd # nix
+      pkgs.nil # nix
+      pkgs.vtsls # typescript / javascript
+      pkgs.nodePackages.vscode-json-languageserver
 
-          # Editor
-          which-key-nvim
-          trouble-nvim
+      # Tools
+      pkgs.cmake
+      pkgs.fswatch # File watcher utility, replacing libuv.fs_event for neovim 10.0
+      pkgs.fzf
+      pkgs.gcc
+      pkgs.git
+      pkgs.gnumake
+      pkgs.nodejs
+      pkgs.sqlite
+      pkgs.tree-sitter
+      pkgs.luarocks
+      pkgs.luajit
+      pkgs.hub
+      pkgs.wget # for mason.nvim
+      pkgs.pandoc # for devdocs.nvim
+      pkgs.imagemagick
+      pkgs.mermaid-cli
+      pkgs.github-mcp-server
+      pkgs.ghostscript
 
-          # UI
-          nui-nvim
-          fine-cmdline-nvim
-          vim-sleuth
-          presence-nvim
-          snacks-nvim
-          bufferline-nvim
-          lualine-nvim
+      # Languages
+      pkgs.go
+    ];
 
-          # Treesitter and language support
-          nvim-treesitter-context
-          nvim-ts-autotag
-          nvim-treesitter-textobjects
-          nvim-treesitter.withAllGrammars
+    extraLuaConfig = lib.mkIf (nvimLuaDir != null) ''
+      -- Set FLAKE_ROOT as a Lua global variable
+      vim.g.flake_root = "${if flakeRoot != "" then flakeRoot else "/etc/nixos/flake"}"
 
-          # Comments
-          nvim-ts-context-commentstring
-          todo-comments-nvim
-          ts-comments-nvim
+      require('keymaps')
+      require('commands')
 
-          # Search functionality
-          plenary-nvim
-          popup-nvim
-          telescope-nvim
-          telescope-fzf-native-nvim
+      require("lazy").setup({
+        spec = {
+          { import = "plugins" },
+        },
+        checker = {
+          enabled = true
+        },
+      })
 
-          # Theme
-          catppuccin-nvim
-          mini-icons
-
-          #Cmp
-          nvim-cmp
-          cmp-nvim-lsp
-          cmp-buffer
-          cmp-path
-          nvim-snippets
-          friendly-snippets
-
-          #Langs
-          go-nvim
-        ];
-
-      extraPackages = with pkgs; [
-        tree-sitter
-        gcc # needed for nvim-treesitter
-
-        # LazyVim defaults
-        stylua
-        shfmt
-
-        # LSP servers
-        nixd # Nix
-
-        # Formatting tools
-        libclang # C/C++
-      ];
-
-      extraLuaConfig = lib.mkIf (nvimLuaDir != null) ''
-        -- Set FLAKE_ROOT as a Lua global variable
-        vim.g.flake_root = "${if flakeRoot != "" then flakeRoot else "/etc/nixos/flake"}"
-
-        require('options')
-        require('keymaps')
-        require('commands')
-
-        require("lazy").setup({
-          performance = {
-            reset_packpath = false,
-            rtp = {
-                reset = false,
-              }
-            },
-          dev = {
-             path = "${nvimPackDir}/pack/myNeovimPackages/start",
-             patterns = {""},
-          },
-          install = {
-            -- Safeguard in case we forget to install a plugin with Nix
-            missing = false,
-          },
-          spec = {
-            { import = "plugins" },
-          },
-        })
-      '';
-    };
+      require('options')
+    '';
+  };
 
   home.file.".config/nvim/lua" = lib.mkIf (nvimLuaDir != null) {
     source = config.lib.file.mkOutOfStoreSymlink nvimLuaDir;
