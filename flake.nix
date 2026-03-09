@@ -178,5 +178,7 @@
       url = "github:bayasdev/envycontrol";
       inputs.nixpkgs.follows = "nixpkgs-old";
     };
+
+    aic8800.url = "git+file:///home/nicolae/Projects/etc/aic8800-nix";
   };
 }

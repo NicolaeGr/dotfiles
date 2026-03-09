@@ -52,7 +52,7 @@ in
           # UI
           nui-nvim
           fine-cmdline-nvim
-          sleuth
+          vim-sleuth
           presence-nvim
           snacks-nvim
           bufferline-nvim
@@ -86,6 +86,9 @@ in
           cmp-path
           nvim-snippets
           friendly-snippets
+
+          #Langs
+          go-nvim
         ];
 
       extraPackages = with pkgs; [

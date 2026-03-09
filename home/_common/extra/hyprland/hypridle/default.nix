@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  scriptPath = ".config/hypr/hypridle/global-brightness.sh";
+in
 {
 
   options = {
@@ -18,6 +21,12 @@
       "hypridle.conf" = {
         target = ".config/hypr/hypridle.conf";
         source = ./hypridle.conf;
+      };
+
+      "global-brightness.sh" = {
+        target = scriptPath;
+        source = ./global-brightness.sh;
+        executable = true;
       };
     };
 
@@ -41,5 +50,8 @@
       };
     };
 
+    wayland.windowManager.hyprland.settings.exec-once = lib.mkAfter [
+      "${scriptPath} reset"
+    ];
   };
 }

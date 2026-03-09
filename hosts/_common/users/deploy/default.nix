@@ -31,24 +31,7 @@
       hashedPasswordFile = config.sops.secrets."passwords/deploy".path;
       packages = [ pkgs.home-manager ];
 
-      extraGroups = [
-        "wheel"
-      ]
-      ++ configLib.ifUserGroupExists [
-        "networkmanager"
-        "audio"
-        "video"
-        "render"
-        "input"
-        "storage"
-        "users"
-        "power"
-        "libvirt"
-        "docker"
-        "adbusers"
-        "vboxusers"
-        "sambashare"
-      ] config;
+      extraGroups = configLib.ifUserGroupExists (configLib.defaultUserGroups ++ [ "wheel" ]) config;
 
       # openssh.authorizedKeys.keys = lib.lists.forEach pubKeys (key: builtins.readFile key);
     };

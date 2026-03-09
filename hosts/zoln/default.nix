@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   configLib,
   pkgs,
@@ -6,6 +7,8 @@
 }:
 {
   imports = [
+    inputs.aic8800.nixosModules.default
+
     ./hardware-configuration.nix
   ]
   ++ (map configLib.relativeToRoot [
@@ -30,6 +33,19 @@
 
   semi-active-av.enable = true;
 
+  hardware.aic8800.enable = true;
+  boot.kernelModules = [ "btusb" ];
+  boot.extraModprobeConfig = ''
+    options btusb reset=1
+  '';
+  services.udev.extraRules = ''
+    # AIC8800D80 Mode Switch: From MSC (a69c:5721) to WLAN (368b:8d81)
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="a69c", ATTR{idProduct}=="5721", RUN+="${pkgs.usb-modeswitch}/bin/usb_modeswitch -v a69c -p 5721 -K"
+
+    # Enable udev rules for Vial-compatible devices (My Corne)
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
+  '';
+
   environment.systemPackages = with pkgs; [
     calibre
 
@@ -42,10 +58,6 @@
     unstable.android-studio
     unstable.gnome-builder
   ];
-
-  services.udev.extraRules = ''
-    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
-  '';
 
   boot.blacklistedKernelModules = [
     "amdgpu"

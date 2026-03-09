@@ -23,6 +23,7 @@
       lib.mkIf config.extra.gui.enable [
         discord
         telegram-desktop
+        signal-desktop
       ];
   };
 }
