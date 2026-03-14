@@ -77,14 +77,14 @@
       };
     };
 
-    environment.systemPackages = with pkgs; [
+    environment.systemPackages = with pkgs.unstable; [
       protonup-ng
       winetricks
       wineWowPackages.stable
 
       mangohud
       prismlauncher
-      unstable.heroic
+      heroic
       bottles
       lutris
     ];

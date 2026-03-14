@@ -10,6 +10,8 @@
     inputs.aic8800.nixosModules.default
 
     ./hardware-configuration.nix
+
+    ./projects.nix
   ]
   ++ (map configLib.relativeToRoot [
     "hosts/_common/core"
