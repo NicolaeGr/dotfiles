@@ -49,7 +49,8 @@
         extraCompatPackages = [ pkgs.unstable.proton-ge-bin ];
         localNetworkGameTransfers.openFirewall = true;
         gamescopeSession.enable = true;
-
+        remotePlay.openFirewall = true;
+        dedicatedServer.openFirewall = true;
       };
 
       gamescope = {
@@ -77,17 +78,25 @@
       };
     };
 
-    environment.systemPackages = with pkgs.unstable; [
-      protonup-ng
-      winetricks
-      wineWowPackages.stable
-
+    environment.systemPackages = with pkgs; [
       mangohud
-      prismlauncher
-      heroic
-      bottles
-      lutris
+      winetricks
+      protonup-ng
+      wineWowPackages.staging
+
+      unstable.prismlauncher
+      unstable.heroic
+      unstable.bottles
+      unstable.lutris
     ];
+
+    boot.kernelModules = [ "ntsync" ];
+    services.udev.packages = [
+      (pkgs.writeTextDir "lib/udev/rules.d/70-ntsync.rules" ''
+        KERNEL=="ntsync", MODE="0660", TAG+="uaccess"
+      '')
+    ];
+    boot.initrd.kernelModules = [ "ntsync" ];
 
     environment.sessionVariables.STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
   };

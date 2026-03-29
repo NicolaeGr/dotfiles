@@ -23,11 +23,11 @@
     programs.vscode.package = pkgs.vscode.overrideAttrs (oldAttrs: rec {
       src = (
         builtins.fetchTarball {
-          url = "https://update.code.visualstudio.com/1.109.2/linux-x64/stable";
-          sha256 = "sha256:1rcgsq8d1svgc3znhrb4kadvzc3s64qq0hnhmppzzkzqh18zwj52";
+          url = "https://update.code.visualstudio.com/1.113.0/linux-x64/stable";
+          sha256 = "sha256:02rz18y2fzkrs1dhdizcgs32yl9qpz3jj2z981fw8l6b42killcg";
         }
       );
-      version = "1.109.2";
+      version = "1.113.0";
       buildInputs = oldAttrs.buildInputs ++ [
         pkgs.krb5
         pkgs.libsoup_3

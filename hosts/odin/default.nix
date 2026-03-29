@@ -35,6 +35,7 @@
 
   semi-active-av.enable = true;
 
+  boot.kernelPackages = pkgs.unstable.linuxPackages_zen;
   environment.systemPackages = with pkgs; [
     calibre
 
