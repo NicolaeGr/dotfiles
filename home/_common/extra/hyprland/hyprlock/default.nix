@@ -24,6 +24,7 @@
       "hyprlock-status.sh" = {
         target = ".config/hypr/hyprlock/status.sh";
         source = ./status.sh;
+        executable = true;
       };
     };
   };

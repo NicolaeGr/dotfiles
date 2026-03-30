@@ -26,9 +26,9 @@ in
     withNodeJs = true;
     withPython3 = true;
 
-    plugins = [
-      pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
-    ];
+    # plugins = [
+    #   pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
+    # ];
 
     extraPackages = [
       # Formatters
@@ -68,6 +68,7 @@ in
 
       # Languages
       pkgs.go
+      pkgs.llvmPackages_latest.clang
     ];
 
     extraLuaConfig = lib.mkIf (nvimLuaDir != null) ''
@@ -77,14 +78,7 @@ in
       require('keymaps')
       require('commands')
 
-      require("lazy").setup({
-        spec = {
-          { import = "plugins" },
-        },
-        checker = {
-          enabled = true
-        },
-      })
+      require('config.lazy')
 
       require('options')
     '';

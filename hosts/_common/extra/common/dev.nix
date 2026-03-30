@@ -17,6 +17,8 @@
         hashcat
         john
         ncrack
+
+        tmux
       ]
       ++ lib.optionals config.extra.gui.enable [
         # Web
