@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
 
     ./projects.nix
+    ./distrobox.nix
   ]
   ++ (map configLib.relativeToRoot [
     "hosts/_common/core"
@@ -29,6 +30,7 @@
   extra.hardware.nvidia.enable = true;
   extra.hardware.backlight.enable = true;
 
+  extra.virt.enable = true;
   extra.gaming.enable = true;
   extra.gaming.jc.enable = true;
   extra.media.full.enable = true;
@@ -59,6 +61,8 @@
 
     unstable.android-studio
     unstable.gnome-builder
+
+    kfrgb
   ];
 
   boot.blacklistedKernelModules = [
@@ -66,14 +70,19 @@
     "nouveau"
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  services.hardware.openrgb = {
+    enable = true;
+    package = pkgs.openrgb-with-all-plugins;
+    motherboard = "amd";
+    server.port = 6742;
+  };
+
+  boot.kernelPackages = pkgs.linuxPackages_6_18;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     open = true;
     nvidiaSettings = true;
     modesetting.enable = true;
     powerManagement.enable = true;
-
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 }

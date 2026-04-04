@@ -10,7 +10,6 @@
     ./hardware-configuration.nix
 
     ./fs.nix
-    ./virt.nix
     ./wireguard.nix
   ]
   ++ (map configLib.relativeToRoot [
@@ -29,6 +28,7 @@
   extra.hardware.nvidia.enable = true;
   extra.hardware.backlight.enable = true;
 
+  extra.virt.enable = true;
   extra.gaming.enable = true;
   extra.gaming.jc.enable = true;
   extra.media.full.enable = true;

@@ -1,5 +1,5 @@
 FLAKE_ROOT := `pwd`
-SOPS_FILE := "./secrets.yaml"
+SOPS_FILE := "./secrets/secrets.yaml"
 
 default:
   @just --list

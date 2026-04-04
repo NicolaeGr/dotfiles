@@ -20,6 +20,13 @@ vim.cmd([[autocmd BufWritePre * %s/\s\+$//e ]])
 -- Automatically load zshrc file
 vim.cmd([[set shellcmdflag=-lic]])
 
+-- Reload configuration
+vim.cmd([[command! ReloadConfig source $MYVIMRC]])
+
+-- When opening a new file, enable auto-reload
+vim.cmd([[autocmd FocusGained,BufReadPost * checktime]])
+
+
 -- Swap folder
 -- vim.cmd('command! ListSwap split | enew | r !ls -l ~/.local/share/nvim/swap')
 -- vim.cmd('command! CleanSwap !rm -rf ~/.local/state/nvim/swap/')

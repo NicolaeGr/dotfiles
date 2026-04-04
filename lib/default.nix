@@ -14,6 +14,7 @@
     "docker"
     "libvirt"
     "storage"
+    "libvirtd"
     "adbusers"
     "vboxusers"
     "sambashare"

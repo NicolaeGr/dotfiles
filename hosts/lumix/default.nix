@@ -33,8 +33,6 @@
     defaults.email = "nicolaegr@proton.me";
   };
 
-  services.fwupd.enable = true;
-
   services.croc.enable = true;
 
   boot.loader.systemd-boot.enable = true;

@@ -13,6 +13,7 @@
   ];
 
   config = {
+    services.fwupd.enable = true;
     services.dbus.enable = true;
     services.avahi = {
       enable = true;
