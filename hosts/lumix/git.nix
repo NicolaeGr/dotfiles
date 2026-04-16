@@ -33,6 +33,7 @@ in
       git
       just
       openssh
+      nh
     ];
 
     script = ''
