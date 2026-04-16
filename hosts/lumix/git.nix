@@ -3,21 +3,6 @@ let
   flakeRoot = builtins.getEnv "FLAKE_ROOT";
 in
 {
-  home-manager.sharedModules = [
-    ({
-      programs.git = lib.mkIf (flakeRoot != "") {
-        includes = [
-          {
-            condition = "gitdir:${flakeRoot}";
-            contents = {
-              core.sharedRepository = "group";
-            };
-          }
-        ];
-      };
-    })
-  ];
-
   systemd.services.auto-rebuild = {
     description = "Auto rebuild system from dotfiles if conditions match";
 
@@ -28,13 +13,16 @@ in
     environment = {
       DOTFILES = flakeRoot;
     };
-    path = with pkgs; [
-      bash
-      git
-      just
-      openssh
-      nh
-      nix
+    path = [
+      pkgs.coreutils
+      pkgs.git
+      pkgs.nh
+      pkgs.nix
+      pkgs.openssh
+      pkgs.gnutar
+      pkgs.gzip
+      pkgs.bash
+      pkgs.just
     ];
 
     script = ''
@@ -65,7 +53,7 @@ in
 
   security.sudo.extraRules = [
     {
-      users = [ "deploy" ];
+      users = [ "nicolae" ];
       commands = [
         {
           command = "/run/current-system/sw/bin/nixos-rebuild";

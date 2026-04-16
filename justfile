@@ -6,12 +6,12 @@ default:
 
 rebuild:
 	@echo "[+] Rebuilding system (impure)..."
-	FLAKE_ROOT={{FLAKE_ROOT}} nh os switch {{FLAKE_ROOT}} -- --impure
+	FLAKE_ROOT={{FLAKE_ROOT}} nh os switch path:{{FLAKE_ROOT}} -- --impure
 	@just post-rebuild
 
 rebuild-trace:
 	@echo "[+] Rebuilding system with trace (impure)..."
-	FLAKE_ROOT={{FLAKE_ROOT}} nh os switch {{FLAKE_ROOT}} -- --impure --show-trace
+	FLAKE_ROOT={{FLAKE_ROOT}} nh os switch path:{{FLAKE_ROOT}} -- --impure --show-trace
 	@just post-rebuild
 
 post-rebuild:
