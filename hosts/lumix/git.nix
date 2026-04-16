@@ -34,6 +34,7 @@ in
       just
       openssh
       nh
+      nix
     ];
 
     script = ''
