@@ -9,7 +9,7 @@
     ./hardware-configuration.nix
     ./minecraft.nix
     ./cloudflare.nix
-    ./jellyfin.nix
+    ./media.nix
     ./fast-ceiti.nix
     ./smb.nix
     ./wireguard.nix
