@@ -29,6 +29,7 @@ in
       DOTFILES = flakeRoot;
     };
     path = with pkgs; [
+      bash
       git
       just
       openssh
