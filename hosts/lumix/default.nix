@@ -15,6 +15,7 @@
     ./wireguard.nix
     ./router.nix
     ./projects.nix
+    ./git.nix
     inputs.vscode-server.nixosModules.default
   ]
   ++ (map configLib.relativeToRoot [
