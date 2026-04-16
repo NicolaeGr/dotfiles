@@ -202,7 +202,7 @@ in
     services.komga = {
       enable = true;
       stateDir = "${baseDir}/komga";
-      settings.server.port = 9090;
+      settings.server.port = 25600;
     };
 
     services.nginx.virtualHosts."komga.electrolit.biz" = {
@@ -210,29 +210,18 @@ in
       enableACME = true;
 
       extraConfig = ''
-        client_max_body_size 20M;
-
-        # Security / XSS Mitigation
-        add_header X-Content-Type-Options "nosniff" always;
-
-        # Permissions-Policy (reduce fingerprinting)
-        add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), battery=(), bluetooth=(), camera=(), clipboard-read=(), display-capture=(), document-domain=(), encrypted-media=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=(), serial=(), sync-xhr=(), usb=(), xr-spatial-tracking=()" always;
-
-        # Content Security Policy
-        add_header Content-Security-Policy "default-src https: data: blob:; img-src 'self' https://*; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.youtube.com blob:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; frame-ancestors 'self'; font-src 'self';" always;
-
-        # Proxy settings
         set $komga 127.0.0.1;
+        client_max_body_size 20000m;
 
         location / {
-          proxy_pass http://$komga:9090;
+          proxy_pass http://$komga:25600;
+          proxy_http_version 1.1;
+          proxy_redirect off;
+          proxy_buffering off;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_set_header X-Forwarded-Protocol $scheme;
-          proxy_set_header X-Forwarded-Host $http_host;
-          proxy_buffering off;
         }
       '';
     };

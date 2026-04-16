@@ -53,7 +53,7 @@ in
 
   security.sudo.extraRules = [
     {
-      users = [ "nicolae" ];
+      users = [ "deploy" ];
       commands = [
         {
           command = "/run/current-system/sw/bin/nixos-rebuild";
