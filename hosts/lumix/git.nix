@@ -3,16 +3,20 @@ let
   flakeRoot = builtins.getEnv "FLAKE_ROOT";
 in
 {
-  programs.git = lib.mkIf (flakeRoot != "") {
-    includes = [
-      {
-        condition = "gitdir:${flakeRoot}";
-        contents = {
-          core.sharedRepository = "group";
-        };
-      }
-    ];
-  };
+  home-manager.sharedModules = [
+    ({
+      programs.git = lib.mkIf (flakeRoot != "") {
+        includes = [
+          {
+            condition = "gitdir:${flakeRoot}";
+            contents = {
+              core.sharedRepository = "group";
+            };
+          }
+        ];
+      };
+    })
+  ];
 
   systemd.services.auto-rebuild = {
     description = "Auto rebuild system from dotfiles if conditions match";
