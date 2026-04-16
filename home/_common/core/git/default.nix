@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  flakeRoot = builtins.getEnv "FLAKE_ROOT";
+in
 {
   programs.git = {
     enable = true;
