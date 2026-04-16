@@ -31,7 +31,7 @@ in
     path = with pkgs; [
       git
       just
-      ssh
+      openssh
     ];
 
     script = ''
