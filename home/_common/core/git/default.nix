@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  flakeRoot = builtins.getEnv "FLAKE_ROOT";
+in
 {
   programs.git = {
     enable = true;
@@ -8,16 +11,6 @@
       log.showSignature = "true";
       init.defaultBranch = "main";
       pull.rebase = "true";
-      # url = {
-      #   "ssh://git@github.com" = {
-      #     insteadOf = "https://github.com";
-      #   };
-      #   "ssh://git@gitlab.com" = {
-      #     insteadOf = "https://gitlab.com";
-      #   };
-      # };
-      # make this only work in Projects folder
-
       safe.directory = [
         "/shared/*"
         "/storage/*"
