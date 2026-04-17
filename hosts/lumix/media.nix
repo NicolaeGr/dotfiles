@@ -150,7 +150,7 @@ in
       settings.server.port = 25600;
     };
 
-    systemd.services.komga.serviceConfig.ExecStart = lib.mkForce lib.getExe pkgs.unstable.komga;
+    systemd.services.komga.serviceConfig.ExecStart = lib.mkForce (lib.getExe pkgs.unstable.komga);
 
     services.nginx = {
       virtualHosts."jf.electrolit.biz" = {
@@ -221,7 +221,9 @@ in
             proxy_pass http://$komga:25600;
             proxy_http_version 1.1;
             proxy_redirect off;
-            proxy_buffering off;
+            proxy_buffer_size 128k;
+            proxy_buffers 4 256k;
+            proxy_busy_buffers_size 256k;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
