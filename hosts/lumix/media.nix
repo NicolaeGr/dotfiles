@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   hostName,
   ...
 }:
@@ -148,6 +149,8 @@ in
       group = "users";
       settings.server.port = 25600;
     };
+
+    systemd.services.komga.serviceConfig.ExecStart = lib.mkForce lib.getExe pkgs.unstable.komga;
 
     services.nginx = {
       virtualHosts."jf.electrolit.biz" = {
