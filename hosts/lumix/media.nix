@@ -144,6 +144,8 @@ in
     services.komga = {
       enable = true;
       stateDir = "${baseDir}/komga";
+      user = "deploy";
+      group = "users";
       settings.server.port = 25600;
     };
 
