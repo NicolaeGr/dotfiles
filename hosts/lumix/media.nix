@@ -201,6 +201,8 @@ in
       };
 
       virtualHosts."${hostName}.local" = {
+        serverAliases = [ "10.100.0.1" ];
+
         locations."/" = {
           return = "200 '${landingPage}'";
           extraConfig = ''
