@@ -21,6 +21,11 @@ in
       libvdpau-va-gl
     ];
 
+    environment.systemPackages = with pkgs; [
+      mpv
+      unstable.seanime
+    ];
+
     services.jellyfin = {
       enable = true;
       package = pkgs.unstable.jellyfin;
@@ -107,6 +112,41 @@ in
       };
     };
 
+    systemd.services.seanime = {
+      description = "Seanime WebServer";
+
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+
+      path = [
+        pkgs.mpv
+        pkgs.bash
+        pkgs.coreutils
+      ];
+
+      serviceConfig = {
+        Type = "simple";
+
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
+        ExecStart = "${pkgs.unstable.seanime}/bin/seanime";
+
+        Environment = "PATH=${pkgs.mpv}/bin:${pkgs.bash}/bin:${pkgs.coreutils}/bin";
+
+        User = "deploy";
+        Group = "users";
+
+        Restart = "on-failure";
+      };
+    };
+
+    networking.firewall.allowedTCPPorts = [ 43211 ];
+
+    services.komga = {
+      enable = true;
+      stateDir = "${baseDir}/komga";
+      settings.server.port = 25600;
+    };
+
     services.nginx = {
       virtualHosts."jf.electrolit.biz" = {
         forceSSL = true;
@@ -163,67 +203,27 @@ in
           '';
         };
       };
-    };
 
-    environment.systemPackages = with pkgs; [
-      mpv
-      unstable.seanime
-    ];
+      virtualHosts."komga.electrolit.biz" = {
+        forceSSL = true;
+        enableACME = true;
 
-    systemd.services.seanime = {
-      description = "Seanime WebServer";
+        extraConfig = ''
+          set $komga 127.0.0.1;
+          client_max_body_size 20000m;
 
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-
-      path = [
-        pkgs.mpv
-        pkgs.bash
-        pkgs.coreutils
-      ];
-
-      serviceConfig = {
-        Type = "simple";
-
-        ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
-        ExecStart = "${pkgs.unstable.seanime}/bin/seanime";
-
-        Environment = "PATH=${pkgs.mpv}/bin:${pkgs.bash}/bin:${pkgs.coreutils}/bin";
-
-        User = "deploy";
-        Group = "users";
-
-        Restart = "on-failure";
+          location / {
+            proxy_pass http://$komga:25600;
+            proxy_http_version 1.1;
+            proxy_redirect off;
+            proxy_buffering off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          }
+        '';
       };
-    };
-
-    networking.firewall.allowedTCPPorts = [ 43211 ];
-
-    services.komga = {
-      enable = true;
-      stateDir = "${baseDir}/komga";
-      settings.server.port = 25600;
-    };
-
-    services.nginx.virtualHosts."komga.electrolit.biz" = {
-      forceSSL = true;
-      enableACME = true;
-
-      extraConfig = ''
-        set $komga 127.0.0.1;
-        client_max_body_size 20000m;
-
-        location / {
-          proxy_pass http://$komga:25600;
-          proxy_http_version 1.1;
-          proxy_redirect off;
-          proxy_buffering off;
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
-        }
-      '';
     };
   };
 }
