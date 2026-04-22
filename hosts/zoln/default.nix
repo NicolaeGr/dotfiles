@@ -38,7 +38,12 @@
   semi-active-av.enable = true;
 
   hardware.aic8800.enable = true;
-  boot.kernelModules = [ "btusb" ];
+  boot.kernelModules = [
+    "btusb"
+
+    # for fan control of the motherboard's temperature sensors, which are connected to the IT87 chip
+    "it87"
+  ];
   boot.extraModprobeConfig = ''
     options btusb reset=1
   '';
@@ -85,4 +90,7 @@
     modesetting.enable = true;
     powerManagement.enable = true;
   };
+
+  boot.kernelParams = [ "acpi_enforce_resources=lax" ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [ it87 ];
 }

@@ -30,7 +30,8 @@
       loupe
       libreoffice
 
-      unstable.telegram-desktop # TODO: Revert to stable once there is a valid cache for stable (current build failed)
+      telegram-desktop
+      signal-desktop
 
       obsidian
     ];
