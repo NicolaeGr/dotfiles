@@ -76,6 +76,3 @@ check-sops:
 	else \
 		echo "[+] SOPS-nix activation finished"; \
 	fi
-
-push:
-	@git push --follow-tags

@@ -17,7 +17,7 @@
   default = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes";
 
-    inherit (checks.pre-commit-check) shellHook;
+    shellHook = "${checks.pre-commit-check.shellHook}\n\ngit config --local push.followTags true";
     buildInputs = checks.pre-commit-check.enabledPackages;
 
     nativeBuildInputs = builtins.attrValues {
