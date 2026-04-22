@@ -63,28 +63,45 @@
             <a href="https://jf.electrolit.biz" class="service-link">
                 <div class="service-name">Jellyfin</div>
             </a>
-            <a href="http://lumix.local:7878" class="service-link">
+            <a href="http://lumix.local:7878" class="service-link" data-port="7878">
                 <div class="service-name">Radarr</div>
             </a>
-            <a href="http://lumix.local:8989" class="service-link">
+            <a href="http://lumix.local:8989" class="service-link" data-port="8989">
                 <div class="service-name">Sonarr</div>
             </a>
-            <a href="http://lumix.local:8686" class="service-link">
+            <a href="http://lumix.local:8686" class="service-link" data-port="8686">
                 <div class="service-name">Lidarr</div>
             </a>
-            <a href="http://lumix.local:9696" class="service-link">
+            <a href="http://lumix.local:9696" class="service-link" data-port="9696">
                 <div class="service-name">Prowlarr</div>
             </a>
-            <a href="http://lumix.local:6767" class="service-link">
+            <a href="http://lumix.local:6767" class="service-link" data-port="6767">
                 <div class="service-name">Bazarr</div>
             </a>
-            <a href="http://lumix.local:8020" class="service-link">
+            <a href="http://lumix.local:8020" class="service-link" data-port="8020">
                 <div class="service-name">qBittorrent</div>
             </a>
-            <a href="http://lumix.local:43211" class="service-link">
+            <a href="http://lumix.local:43211" class="service-link" data-port="43211">
                 <div class="service-name">SEA</div>
             </a>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const host = location.hostname;
+            if (!host) return;
+
+            document.querySelectorAll('.service-link[data-port]').forEach(link => {
+                try {
+                    const url = new URL(link.href, location.href);
+                    url.hostname = host;
+                    url.port = link.dataset.port;
+                    link.href = url.toString();
+                } catch (error) {
+                    console.warn('Could not rewrite service link:', link, error);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
