@@ -22,7 +22,7 @@
       ]
       ++ lib.optionals config.extra.gui.enable [
         # Web
-        unstable.insomnia
+        insomnia
       ];
 
     programs.adb.enable = true;

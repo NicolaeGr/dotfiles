@@ -13,6 +13,8 @@
 
     ./projects.nix
     ./distrobox.nix
+
+    ./code.nix
   ]
   ++ (map configLib.relativeToRoot [
     "hosts/_common/core"
@@ -77,7 +79,7 @@
 
   services.hardware.openrgb = {
     enable = true;
-    package = pkgs.openrgb-with-all-plugins;
+    package = pkgs.unstable.openrgb-with-all-plugins;
     motherboard = "amd";
     server.port = 6742;
   };

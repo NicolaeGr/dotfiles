@@ -20,14 +20,14 @@
     ];
 
     programs.vscode.enable = true;
-    programs.vscode.package = pkgs.vscode.overrideAttrs (oldAttrs: rec {
+    programs.vscode.package = pkgs.vscode.overrideAttrs (oldAttrs: {
       src = (
         builtins.fetchTarball {
-          url = "https://update.code.visualstudio.com/1.113.0/linux-x64/stable";
-          sha256 = "sha256:02rz18y2fzkrs1dhdizcgs32yl9qpz3jj2z981fw8l6b42killcg";
+          url = "https://update.code.visualstudio.com/1.117.0/linux-x64/stable";
+          sha256 = "sha256:0nxr92dm6h732rpqpxsbn56r0yw2ckva9d06p6q65k2mz6w0f3jl";
         }
       );
-      version = "1.113.0";
+      version = "1.116.0";
       buildInputs = oldAttrs.buildInputs ++ [
         pkgs.krb5
         pkgs.libsoup_3

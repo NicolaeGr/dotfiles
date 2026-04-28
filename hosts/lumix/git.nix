@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 let
   flakeRoot = builtins.getEnv "FLAKE_ROOT";
 in
