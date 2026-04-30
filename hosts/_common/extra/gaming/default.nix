@@ -86,8 +86,8 @@
 
       unstable.prismlauncher
       unstable.heroic
-      unstable.bottles
-      unstable.lutris
+      bottles
+      lutris
     ];
 
     boot.kernelModules = [ "ntsync" ];
