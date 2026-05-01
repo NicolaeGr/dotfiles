@@ -11,8 +11,8 @@
   };
 
   config = lib.mkIf config.extra.virt.enable {
-
     virtualisation.libvirtd.enable = true;
+    virtualisation.libvirtd.allowedBridges = [ "virbr0" ];
     programs.virt-manager.enable = true;
 
     environment.systemPackages = with pkgs; [

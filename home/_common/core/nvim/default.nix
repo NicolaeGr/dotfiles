@@ -28,9 +28,9 @@ in
     withNodeJs = true;
     withPython3 = true;
 
-    # plugins = [
+    #     plugins = [
     #   pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
-    # ];
+    #     ];
 
     extraPackages = [
       # Formatters

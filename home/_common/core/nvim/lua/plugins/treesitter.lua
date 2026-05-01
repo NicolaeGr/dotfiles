@@ -12,7 +12,6 @@ return {
 						url = "https://github.com/tynalang/tree-sitter-tyna",
 						revision = "main",
 					},
-					filetype = "tn",
 					tier = 2,
 				}
 			end,

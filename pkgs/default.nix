@@ -8,4 +8,6 @@
 
   gabarito-fonts = pkgs.callPackage ./gabarito-fonts.nix { };
   kfrgb = pkgs.callPackage ./kfrgb.nix { };
+
+  nvim-fhs = pkgs.callPackage ./nvim/default.nix { };
 }

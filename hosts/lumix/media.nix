@@ -14,6 +14,7 @@ in
     services.cloudflare-dyndns.domains = [
       "jf.electrolit.biz"
       "komga.electrolit.biz"
+      "colibri.electrolit.biz"
     ];
 
     hardware.graphics.extraPackages = with pkgs; [
@@ -232,6 +233,18 @@ in
             proxy_set_header X-Forwarded-Proto $scheme;
           }
         '';
+      };
+
+      virtualHosts."colibri.electrolit.biz" = {
+        forceSSL = true;
+        enableACME = true;
+
+        locations."/" = {
+          return = ''200 '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Site Unavailable</title><style>body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#460000,#190000);color:#f8d7da;font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,sans-serif;text-align:center;} .card{max-width:720px;padding:3rem 2rem;border:1px solid rgba(255,255,255,.08);border-radius:24px;background:rgba(0,0,0,.25);box-shadow:0 24px 80px rgba(0,0,0,.35);} h1{font-size:clamp(2rem,4vw,4rem);margin:0 0 1rem;} p{font-size:1.1rem;line-height:1.7;margin:0;} </style></head><body><div class="card"><h1>Site is down</h1><p>Our site is currently unavailable for technical reasons. Please check back later.</p></div></body></html>' '';
+          extraConfig = ''
+            default_type text/html;
+          '';
+        };
       };
     };
   };
