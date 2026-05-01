@@ -157,7 +157,6 @@ in
       serviceConfig = {
         Type = "simple";
         WorkingDirectory = "${projectRoot}/hosts/lumix/app";
-        ExecStartPre = "cd ${projectRoot}/hosts/lumix/app && ${pkgs.nodePackages.npm}/bin/npm install --production";
         ExecStart = "${pkgs.nodejs}/bin/node ${projectRoot}/hosts/lumix/app/server.js";
         Restart = "on-failure";
         User = "deploy";
