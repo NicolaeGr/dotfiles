@@ -249,9 +249,6 @@ in
       };
 
       virtualHosts."colibri.electrolit.biz" = {
-        forceSSL = true;
-        enableACME = true;
-
         extraConfig = ''
           set $colibri 127.0.0.1;
 
