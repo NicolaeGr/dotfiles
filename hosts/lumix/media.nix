@@ -5,6 +5,8 @@
   ...
 }:
 let
+  flakeRoot = builtins.getEnv "FLAKE_ROOT";
+  projectRoot = if flakeRoot != "" then flakeRoot else builtins.toString ./.;
   baseDir = "/storage/jellyfin";
   landingPage = builtins.readFile ./page.html;
 in
@@ -141,14 +143,26 @@ in
       };
     };
 
-    networking.firewall.allowedTCPPorts = [ 43211 ];
+    systemd.services.colibri = {
+      description = "Colibri Express App";
 
-    services.komga = {
-      enable = true;
-      stateDir = "${baseDir}/komga";
-      user = "deploy";
-      group = "users";
-      settings.server.port = 25600;
+      after = [ "network-online.target" ];
+      wantedBy = [ "multi-user.target" ];
+
+      path = [
+        pkgs.nodejs
+        pkgs.nodePackages.npm
+      ];
+
+      serviceConfig = {
+        Type = "simple";
+        WorkingDirectory = "${projectRoot}/hosts/lumix/app";
+        ExecStartPre = "cd ${projectRoot}/hosts/lumix/app && ${pkgs.nodePackages.npm}/bin/npm install --production";
+        ExecStart = "${pkgs.nodejs}/bin/node ${projectRoot}/hosts/lumix/app/server.js";
+        Restart = "on-failure";
+        User = "deploy";
+        Group = "users";
+      };
     };
 
     systemd.services.komga.serviceConfig.ExecStart = lib.mkForce (lib.getExe pkgs.unstable.komga);
@@ -239,12 +253,20 @@ in
         forceSSL = true;
         enableACME = true;
 
-        locations."/" = {
-          return = ''200 '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Site Unavailable</title><style>body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#460000,#190000);color:#f8d7da;font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,sans-serif;text-align:center;} .card{max-width:720px;padding:3rem 2rem;border:1px solid rgba(255,255,255,.08);border-radius:24px;background:rgba(0,0,0,.25);box-shadow:0 24px 80px rgba(0,0,0,.35);} h1{font-size:clamp(2rem,4vw,4rem);margin:0 0 1rem;} p{font-size:1.1rem;line-height:1.7;margin:0;} </style></head><body><div class="card"><h1>Site is down</h1><p>Our site is currently unavailable for technical reasons. Please check back later.</p></div></body></html>' '';
-          extraConfig = ''
-            default_type text/html;
-          '';
-        };
+        extraConfig = ''
+          set $colibri 127.0.0.1;
+
+          location / {
+            proxy_pass http://$colibri:9432;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Protocol $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_buffering off;
+          }
+        '';
       };
     };
   };
