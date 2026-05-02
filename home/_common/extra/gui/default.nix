@@ -32,6 +32,7 @@
 
       telegram-desktop
       signal-desktop
+      fluffychat
 
       obsidian
     ];
