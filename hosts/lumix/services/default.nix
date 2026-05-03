@@ -9,6 +9,13 @@ let
   baseDir = "/storage/jellyfin";
 in
 {
+  networking.interfaces.br0.ipv4.addresses = [
+    {
+      address = "10.200.0.1";
+      prefixLength = 24;
+    }
+  ];
+
   networking.firewall.extraForwardRules = ''
     # 1. Allow established connections
     ct state established,related accept
