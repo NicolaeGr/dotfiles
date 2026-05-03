@@ -5,18 +5,14 @@
   ...
 }:
 let
-  flakeRoot = builtins.getEnv "FLAKE_ROOT";
-  projectRoot = if flakeRoot != "" then flakeRoot else builtins.toString ./.;
   baseDir = "/storage/jellyfin";
-  landingPage = builtins.readFile ./page.html;
 in
 {
   config = {
     hardware.graphics.enable = true;
     services.cloudflare-dyndns.domains = [
-      "jf.electrolit.biz"
+      "*.electrolit.biz"
       "komga.electrolit.biz"
-      "colibri.electrolit.biz"
     ];
 
     hardware.graphics.extraPackages = with pkgs; [
@@ -35,41 +31,6 @@ in
       package = pkgs.unstable.jellyfin;
 
       dataDir = "${baseDir}/jellyfin";
-    };
-
-    services.radarr = {
-      enable = true;
-      openFirewall = true;
-
-      dataDir = "${baseDir}/radarr";
-
-      user = "deploy";
-      group = "users";
-    };
-
-    services.sonarr = {
-      enable = true;
-      openFirewall = true;
-
-      dataDir = "${baseDir}/sonarr";
-
-      user = "deploy";
-      group = "users";
-    };
-
-    services.lidarr = {
-      enable = true;
-      openFirewall = true;
-
-      dataDir = "${baseDir}/lidarr";
-
-      user = "deploy";
-      group = "users";
-    };
-
-    services.prowlarr = {
-      enable = true;
-      openFirewall = true;
     };
 
     services.qbittorrent = {
@@ -194,12 +155,23 @@ in
       };
 
       virtualHosts."${hostName}.local" = {
-        serverAliases = [ "10.100.0.1" ];
+        serverAliases = [
+          "192.168.100.10"
+          "10.100.0.1"
+          "electrolit.biz"
+        ];
 
         locations."/" = {
-          return = "200 '${landingPage}'";
+          root = builtins.dirOf ./page.html;
+          index = "page.html";
+
           extraConfig = ''
             default_type text/html;
+
+            allow 192.168.100.0/24;
+            allow 10.100.0.0/24;
+            allow 178.168.37.108;
+            deny all;
           '';
         };
       };

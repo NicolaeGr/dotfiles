@@ -29,10 +29,19 @@
   users.victor.enable = true;
   users.adrian.enable = true;
 
-  services.nginx.enable = true;
   security.acme = {
     acceptTerms = true;
     defaults.email = "nicolaegr@proton.me";
+  };
+  services.nginx = {
+    enable = true;
+    virtualHosts."_" = {
+      default = true;
+
+      locations."/" = {
+        return = "403";
+      };
+    };
   };
 
   services.croc.enable = true;

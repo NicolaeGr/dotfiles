@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ lib, ... }:
 let
   deployUID = 1002;
   deployGID = 100;
@@ -6,18 +6,16 @@ in
 {
   mkServiceContainer =
     {
-      name,
+      enable,
       ip,
-      ports,
       mounts,
       serviceConfig,
     }:
-    {
+    lib.mkIf enable {
       autoStart = true;
       privateNetwork = true;
       hostBridge = "br0";
-      localAddress = "${ip}/24";
-
+      localAddress = ip;
       bindMounts = mounts;
 
       config =
@@ -30,9 +28,8 @@ in
           };
           users.groups.users.gid = deployGID;
 
-          networking.firewall.allowedTCPPorts = ports;
-          networking.defaultGateway = "10.200.0.1";
           networking.nameservers = [ "1.1.1.1" ];
+          networking.defaultGateway = "192.168.100.1";
 
           imports = [ serviceConfig ];
         };
