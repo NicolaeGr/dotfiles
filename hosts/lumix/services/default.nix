@@ -26,10 +26,6 @@ in
     ip = "10.200.2.10";
     ports = [ 6767 ];
     mounts = {
-      "${baseDir}/bazarr" = {
-        hostPath = "${baseDir}/bazarr";
-        isReadOnly = false;
-      };
       "/storage/media" = {
         hostPath = "/storage/media";
         isReadOnly = false;
