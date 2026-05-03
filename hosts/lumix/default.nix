@@ -16,6 +16,7 @@
     ./router.nix
     ./projects.nix
     ./git.nix
+    ./services
     inputs.vscode-server.nixosModules.default
   ]
   ++ (map configLib.relativeToRoot [

@@ -67,32 +67,9 @@ in
       group = "users";
     };
 
-    services.navidrome = {
-      enable = false;
-      openFirewall = true;
-
-      settings = {
-        Address = "0.0.0.0";
-        Port = 4533;
-        MusicFolder = "/storage/media/music";
-        DataFolder = "${baseDir}/navidrome";
-      };
-
-      user = "deploy";
-      group = "users";
-    };
-
     services.prowlarr = {
       enable = true;
       openFirewall = true;
-    };
-
-    services.bazarr = {
-      enable = true;
-      openFirewall = true;
-
-      user = "deploy";
-      group = "users";
     };
 
     services.qbittorrent = {
@@ -140,27 +117,6 @@ in
         Group = "users";
 
         Restart = "on-failure";
-      };
-    };
-
-    systemd.services.colibri = {
-      description = "Colibri Express App";
-
-      after = [ "network-online.target" ];
-      wantedBy = [ "multi-user.target" ];
-
-      path = [
-        pkgs.nodejs
-        pkgs.nodePackages.npm
-      ];
-
-      serviceConfig = {
-        Type = "simple";
-        WorkingDirectory = "${projectRoot}/hosts/lumix/app";
-        ExecStart = "${pkgs.nodejs}/bin/node ${projectRoot}/hosts/lumix/app/server.js";
-        Restart = "on-failure";
-        User = "deploy";
-        Group = "users";
       };
     };
 
@@ -214,17 +170,6 @@ in
         '';
       };
 
-      virtualHosts."${hostName}.local" = {
-        serverAliases = [ "10.100.0.1" ];
-
-        locations."/" = {
-          return = "200 '${landingPage}'";
-          extraConfig = ''
-            default_type text/html;
-          '';
-        };
-      };
-
       virtualHosts."komga.electrolit.biz" = {
         forceSSL = true;
         enableACME = true;
@@ -248,21 +193,15 @@ in
         '';
       };
 
-      virtualHosts."colibri.electrolit.biz" = {
-        extraConfig = ''
-          set $colibri 127.0.0.1;
+      virtualHosts."${hostName}.local" = {
+        serverAliases = [ "10.100.0.1" ];
 
-          location / {
-            proxy_pass http://$colibri:9432;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Protocol $scheme;
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_buffering off;
-          }
-        '';
+        locations."/" = {
+          return = "200 '${landingPage}'";
+          extraConfig = ''
+            default_type text/html;
+          '';
+        };
       };
     };
   };

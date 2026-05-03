@@ -19,6 +19,8 @@
   };
 
   config = lib.mkIf config.extra.wireguard.enable {
+    networking.firewall.trustedInterfaces = lib.mkAfter [ "wg0" ];
+
     networking.wg-quick.interfaces.wg0 = {
       postUp = ''
         sysctl -w net.ipv4.conf.all.rp_filter=0

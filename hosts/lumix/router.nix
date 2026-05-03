@@ -1,17 +1,5 @@
 { ... }:
 {
-  services.avahi = {
-    enable = true;
-    nssmdns = true;
-    openFirewall = true;
-    interfaces = [ "br0" ];
-    publish = {
-      enable = true;
-      userServices = true;
-      addresses = true;
-    };
-  };
-
   networking.networkmanager.unmanaged = [
     "enp2s0"
     "enp3s0"
@@ -35,9 +23,6 @@
 
   networking.firewall = {
     enable = true;
-    trustedInterfaces = [
-      "br0"
-      "wg0"
-    ];
+    trustedInterfaces = [ "br0" ];
   };
 }
