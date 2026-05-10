@@ -29,20 +29,7 @@
   users.victor.enable = true;
   users.adrian.enable = true;
 
-  services.nginx = {
-    enable = true;
-    recommendedTlsSettings = true;
-    recommendedProxySettings = true;
-
-    virtualHosts."_" = {
-      default = true;
-
-      locations."/" = {
-        return = "403";
-      };
-    };
-  };
-
+  services.nginx.enable = true;
   services.croc.enable = true;
 
   boot.loader.systemd-boot.enable = true;

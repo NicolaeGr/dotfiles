@@ -21,9 +21,12 @@
     deleteMissing = false;
   };
 
+  users.users.nginx.extraGroups = [ "acme" ];
+
   security.acme = {
     acceptTerms = true;
     defaults.email = "nicolaegr@proton.me";
+
     certs."electrolit.biz" = {
       extraDomainNames = [ "*.electrolit.biz" ];
       dnsProvider = "cloudflare";

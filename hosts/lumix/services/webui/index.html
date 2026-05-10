@@ -63,45 +63,28 @@
             <a href="https://jf.electrolit.biz" class="service-link">
                 <div class="service-name">Jellyfin</div>
             </a>
-            <a href="http://radarr.electrolit.biz" class="service-link" data-port="7878">
+            <a href="http://radarr.electrolit.biz" class="service-link">
                 <div class="service-name">Radarr</div>
             </a>
-            <a href="http://sonarr.electrolit.biz" class="service-link" data-port="8989">
+            <a href="http://sonarr.electrolit.biz" class="service-link">
                 <div class="service-name">Sonarr</div>
             </a>
-            <a href="http://lidarr.electrolit.biz" class="service-link" data-port="8686">
+            <a href="http://lidarr.electrolit.biz" class="service-link">
                 <div class="service-name">Lidarr</div>
             </a>
-            <a href="http://prowlarr.electrolit.biz" class="service-link" data-port="9696">
+            <a href="http://prowlarr.electrolit.biz" class="service-link">
                 <div class="service-name">Prowlarr</div>
             </a>
-            <a href="http://bazarr.electrolit.biz" class="service-link" data-port="6767">
+            <a href="http://bazarr.electrolit.biz" class="service-link">
                 <div class="service-name">Bazarr</div>
             </a>
-            <a href="http://bit.electrolit.biz" class="service-link" data-port="8020">
+            <a href="http://bit.electrolit.biz" class="service-link">
                 <div class="service-name">qBittorrent</div>
             </a>
-            <a href="http://sea.electrolit.biz" class="service-link" data-port="43211">
+            <a href="http://sea.electrolit.biz" class="service-link">
                 <div class="service-name">SEA</div>
             </a>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const host = location.hostname;
-            if (!host) return;
-
-            document.querySelectorAll('.service-link[data-port]').forEach(link => {
-                try {
-                    const url = new URL(link.href, location.href);
-                    url.hostname = host;
-                    url.port = link.dataset.port;
-                    link.href = url.toString();
-                } catch (error) {
-                    console.warn('Could not rewrite service link:', link, error);
-                }
-            });
-        });
-    </script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 {
+  lib,
+  pkgs,
   hostName,
   ...
 }:
@@ -7,6 +9,8 @@ let
 in
 {
   services.nginx.virtualHosts."electrolit.biz" = cLib.withPrivateAccess {
+    forceSSL = true;
+    useACMEHost = "electrolit.biz";
     serverAliases = [
       "192.168.100.10"
       "10.100.0.1"

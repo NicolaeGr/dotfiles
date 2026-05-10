@@ -16,17 +16,19 @@
     enable = true;
     config = ''
       electrolit.biz {
-          rewrite name regex (.*)\.electrolit\.biz electrolit.biz
-          hosts {
-              10.100.0.1 electrolit.biz
-              fallthrough
+          template IN A {
+              match ^(.*\.)?electrolit\.biz\.$
+              answer "{{ .Name }} 60 IN A 10.100.0.1"
           }
+
+          errors
+          log
       }
 
       . {
           forward . 1.1.1.1 8.8.8.8
-          errors
           cache 30
+          errors
       }
     '';
   };
