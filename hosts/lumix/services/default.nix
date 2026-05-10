@@ -10,7 +10,7 @@ in
 {
   containers.arr = containerLib.mkServiceContainer {
     enable = true;
-    ip = "192.168.100.21/24";
+    ip = "192.168.100.21";
     mounts = {
       "${baseDir}" = {
         hostPath = "${baseDir}";
@@ -26,7 +26,7 @@ in
 
   containers.navidrome = containerLib.mkServiceContainer {
     enable = true;
-    ip = "192.168.100.14/24";
+    ip = "192.168.100.14";
     mounts = {
       "${baseDir}/navidrome" = {
         hostPath = "${baseDir}/navidrome";
