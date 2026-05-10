@@ -2,6 +2,11 @@
 {
   sops.secrets."cloudflare_api_key" = { };
 
+  sops.templates."cloudflare-acme-env" = {
+    content = "CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare_api_key}";
+    owner = "acme";
+  };
+
   services.cloudflare-dyndns = {
     enable = true;
 
@@ -14,5 +19,15 @@
     ipv6 = false;
     proxied = false;
     deleteMissing = false;
+  };
+
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "nicolaegr@proton.me";
+    certs."electrolit.biz" = {
+      extraDomainNames = [ "*.electrolit.biz" ];
+      dnsProvider = "cloudflare";
+      credentialsFile = config.sops.templates."cloudflare-acme-env".path;
+    };
   };
 }

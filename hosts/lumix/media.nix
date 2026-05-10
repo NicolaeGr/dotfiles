@@ -10,10 +10,6 @@ in
 {
   config = {
     hardware.graphics.enable = true;
-    services.cloudflare-dyndns.domains = [
-      "*.electrolit.biz"
-      "komga.electrolit.biz"
-    ];
 
     hardware.graphics.extraPackages = with pkgs; [
       intel-media-driver
@@ -152,28 +148,6 @@ in
             proxy_set_header X-Forwarded-Proto $scheme;
           }
         '';
-      };
-
-      virtualHosts."${hostName}.local" = {
-        serverAliases = [
-          "192.168.100.10"
-          "10.100.0.1"
-          "electrolit.biz"
-        ];
-
-        locations."/" = {
-          root = builtins.dirOf ./page.html;
-          index = "page.html";
-
-          extraConfig = ''
-            default_type text/html;
-
-            allow 192.168.100.0/24;
-            allow 10.100.0.0/24;
-            allow 178.168.37.108;
-            deny all;
-          '';
-        };
       };
     };
   };

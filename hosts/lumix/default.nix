@@ -29,12 +29,11 @@
   users.victor.enable = true;
   users.adrian.enable = true;
 
-  security.acme = {
-    acceptTerms = true;
-    defaults.email = "nicolaegr@proton.me";
-  };
   services.nginx = {
     enable = true;
+    recommendedTlsSettings = true;
+    recommendedProxySettings = true;
+
     virtualHosts."_" = {
       default = true;
 

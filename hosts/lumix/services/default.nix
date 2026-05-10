@@ -8,6 +8,31 @@ let
   baseDir = "/storage/jellyfin";
 in
 {
+  services.cloudflare-dyndns.domains = [
+    "*.electrolit.biz"
+  ];
+
+  services.nginx = {
+    enable = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+
+    virtualHosts = {
+      "~^(?<subdomain>.+arr)\.electrolit\.biz$" = containerLib.withPrivateAccess {
+        useACMEHost = "electrolit.biz";
+
+        locations."/" = {
+          proxyPass = "http://192.168.100.21:80";
+          proxyWebsockets = true;
+
+          extraConfig = ''
+            proxy_set_header Host $host;
+          '';
+        };
+      };
+    };
+  };
+
   containers.arr = containerLib.mkServiceContainer {
     enable = true;
     ip = "192.168.100.21";
