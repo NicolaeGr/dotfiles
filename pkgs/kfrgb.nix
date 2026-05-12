@@ -25,7 +25,7 @@ stdenv.mkDerivation {
   meta = with lib; {
     description = "kfrgb - A script to control kfrgb devices";
     homepage = "https://github.com/KeyofBlueS/kfrgb";
-    license = licenses.unfree; # no license specified upstream, adjust if needed
+    license = licenses.mit;
     maintainers = [ ];
     platforms = platforms.linux;
   };
