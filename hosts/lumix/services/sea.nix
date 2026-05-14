@@ -24,6 +24,11 @@ in
         hostPath = "/dev/dri";
         isReadOnly = false;
       };
+
+      "/var/lib/deploy" = {
+        hostPath = "/storage/appdata/seanime";
+        isReadOnly = false;
+      };
     };
 
     module = {
@@ -36,10 +41,24 @@ in
         ];
       };
 
-      users.users.deploy.extraGroups = [
-        "video"
-        "render"
-      ];
+      users.users.deploy = {
+        isNormalUser = true;
+
+        uid = 1002;
+
+        group = "users";
+
+        home = "/var/lib/deploy";
+
+        createHome = true;
+
+        extraGroups = [
+          "video"
+          "render"
+        ];
+
+        shell = pkgs.bashInteractive;
+      };
 
       environment.systemPackages = with pkgs; [
         mpv
@@ -65,16 +84,23 @@ in
         serviceConfig = {
           Type = "simple";
 
+          User = "deploy";
+          Group = "users";
+
+          WorkingDirectory = "/var/lib/deploy";
+
           ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
 
           ExecStart = "${pkgs.unstable.seanime}/bin/seanime";
 
           Restart = "on-failure";
 
-          User = "deploy";
-          Group = "users";
-
           Environment = [
+            "HOME=/var/lib/deploy"
+            "XDG_CONFIG_HOME=/var/lib/deploy/.config"
+            "XDG_CACHE_HOME=/var/lib/deploy/.cache"
+            "XDG_DATA_HOME=/var/lib/deploy/.local/share"
+
             "LIBVA_DRIVER_NAME=iHD"
             "VAAPI_DRIVER=iHD"
           ];

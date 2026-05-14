@@ -1,7 +1,7 @@
 { lib, pkgs, ... }:
 let
   containerLib = import ./_util.nix { inherit pkgs lib; };
-  stateDir = "/storage/jellyfin/komga";
+  stateDir = "/storage/appdata/komga";
   ip = "192.168.100.12";
 in
 {
