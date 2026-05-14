@@ -43,6 +43,7 @@ in
 
       users.users.deploy = {
         isNormalUser = true;
+        isSystemUser = lib.mkForce false;
 
         uid = 1002;
 
