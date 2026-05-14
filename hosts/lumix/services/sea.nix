@@ -107,6 +107,9 @@ in
           ];
         };
       };
+
+      networking.firewall.allowedTCPPorts = [ 43211 ];
+      networking.firewall.allowedUDPPorts = [ 43211 ];
     };
   };
 
