@@ -10,12 +10,8 @@ in
     ip = ip;
 
     mounts = {
-      "${baseDir}" = {
-        hostPath = "${baseDir}";
-        isReadOnly = false;
-      };
-      "/storage/media" = {
-        hostPath = "/storage/media";
+      "/storage" = {
+        hostPath = "/storage";
         isReadOnly = false;
       };
       "/var/lib" = {

@@ -15,8 +15,8 @@ in
     ip = ip;
 
     mounts = {
-      "/storage/media" = {
-        hostPath = "/storage/media";
+      "/storage" = {
+        hostPath = "/storage";
         isReadOnly = false;
       };
 
