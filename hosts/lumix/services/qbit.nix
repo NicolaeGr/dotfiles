@@ -1,5 +1,6 @@
-{ ... }:
+{ lib, pkgs, ... }:
 let
+  containerLib = import ./_util.nix { inherit pkgs lib; };
   baseDir = "/storage/jellyfin";
 in
 {
@@ -24,9 +25,8 @@ in
     };
   };
 
-  services.nginx.virtualHosts."bit.electrolit.biz" = {
+  services.nginx.virtualHosts."bit.electrolit.biz" = containerLib.withPrivateAccess {
     locations."/" = {
-      recommendedProxySettings = true;
       proxyPass = "http://127.0.0.1:8020";
     };
   };
