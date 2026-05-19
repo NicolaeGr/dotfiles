@@ -12,7 +12,7 @@ in
     mounts = {
       "/storage" = {
         hostPath = "/storage";
-        isReadOnly = true;
+        isReadOnly = false;
       };
     };
     module = {
