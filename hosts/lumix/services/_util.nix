@@ -74,7 +74,7 @@ in
       extraConfig = (cfg.extraConfig or "") + ''
         allow 192.168.100.0/24;
         allow 10.100.0.0/24;
-        allow 178.168.37.108;
+        allow 188.138.145.187;
         deny all;
       '';
     };
