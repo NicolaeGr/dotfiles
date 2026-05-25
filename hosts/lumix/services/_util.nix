@@ -42,6 +42,10 @@ in
               isSystemUser = true;
               uid = deployUID;
               group = "users";
+              extraGroups = [
+                "render"
+                "video"
+              ];
             };
 
             users.groups.users.gid = deployGID;
