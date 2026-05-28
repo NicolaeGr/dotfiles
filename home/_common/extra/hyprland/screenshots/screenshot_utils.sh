@@ -1,103 +1,85 @@
 #!/usr/bin/env zsh
-export WLR_RENDERER_ALLOW_SOFTWARE=1
 set -euo pipefail
 
-local home_relative_img_path=".cache/hyprshot"
-_tmp() {
-	local tmp_dir="${HOME}/${home_relative_img_path}"
-	mkdir -p "$tmp_dir"
-	echo "$tmp_dir/tmp.png"
-}
+export WLR_RENDERER_ALLOW_SOFTWARE=1
 
-_out() {
-	local suffix=${1:-screenshot}
-	local dir="$HOME/Media/images/Screenshots"
-	mkdir -p "$dir"
-	echo "$dir/$(date '+%F-%H%M%S')_${suffix}.png"
-}
+CACHE_DIR="$HOME/.cache/hyprshot"
+OUT_DIR="$HOME/Media/images/Screenshots"
+ICON="$HOME/.config/hypr/icons/screenshot.png"
 
-_notify() {
+mkdir -p "$CACHE_DIR" "$OUT_DIR"
+
+notify() {
 	local msg="$1"
-	local custom_icon="$HOME/.config/hypr/icons/screenshot.png"
 
-	if [[ -f $custom_icon ]]; then
-		notify-send -i "$custom_icon" "Screenshot" "$msg"
+	if [[ -f $ICON ]]; then
+		notify-send -i "$ICON" "Screenshot" "$msg"
 	else
 		notify-send -i camera-photo "Screenshot" "$msg"
 	fi
 }
 
-satty_edit() {
-	local input="$1"
-	local output="$2"
+wait_for_file() {
+	local file="$1"
+
+	# wait until file exists and has content
+	for _ in {1..100}; do
+		[[ -s $file ]] && return 0
+		sleep 0.05
+	done
+
+	return 1
+}
+
+shot() {
+	local mode="$1"
+	local suffix="${2:-$mode}"
+
+	local tmp
+	tmp="$(mktemp "$CACHE_DIR/shot-XXXXXX.png")"
+
+	local out="$OUT_DIR/$(date '+%F-%H%M%S')_${suffix}.png"
+
+	hyprshot \
+		--freeze \
+		--silent \
+		--mode "$mode" \
+		-o "$CACHE_DIR" \
+		-f "$(basename "$tmp")"
+
+	if ! wait_for_file "$tmp"; then
+		notify "Screenshot failed"
+		rm -f "$tmp"
+		return 1
+	fi
 
 	satty \
-		--filename "$input" \
-		--output-filename "$output" \
+		--filename "$tmp" \
+		--output-filename "$out" \
 		--save-after-copy \
 		--early-exit \
 		--copy-command "wl-copy" \
 		--disable-notifications
 
-	[[ -f $output ]]
-}
-
-full() {
-	local tmp=$(_tmp)
-	local out=$(_out full)
-
-	hyprshot --freeze --mode output --silent -o /home/nicolae -f "$home_relative_img_path/tmp.png"
-
-	if satty_edit "$tmp" "$out"; then
-		_notify "Full saved & copied"
-	else
-		echo "Cancelled"
-	fi
-
-	rm -f "$tmp"
-}
-
-region() {
-	local tmp=$(_tmp)
-	local out=$(_out region)
-
-	hyprshot --freeze --mode region --silent -o /home/nicolae -f "$home_relative_img_path/tmp.png"
-
-	if ! [[ -s $tmp ]]; then
-		echo "Selection cancelled"
-		rm -f "$tmp"
-		return 1
-	fi
-
-	if satty_edit "$tmp" "$out"; then
-		_notify "Region saved & copied"
-	fi
-
-	rm -f "$tmp"
-}
-
-window() {
-	local suffix=${1:-window}
-	local tmp=$(_tmp)
-	local out=$(_out "$suffix")
-
-	hyprshot --freeze --mode window --silent -o /home/nicolae -f "$home_relative_img_path/tmp.png"
-
-	if satty_edit "$tmp" "$out"; then
-		_notify "Window saved & copied"
-	else
-		echo "Cancelled"
+	if [[ -f $out ]]; then
+		notify "Saved & copied"
 	fi
 
 	rm -f "$tmp"
 }
 
 case "${1:-}" in
-full) full ;;
-region) region ;;
-window) window "${2:-}" ;;
+full)
+	shot output full
+	;;
+region)
+	shot region region
+	;;
+window)
+	shot window "${2:-window}"
+	;;
 *)
-	echo "Usage: $0 {full|region|window} [suffix]"
+	echo "Usage: $0 {full|region|window}"
 	exit 1
 	;;
 esac
