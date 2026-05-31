@@ -1,8 +1,6 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-export WLR_RENDERER_ALLOW_SOFTWARE=1
-
 CACHE_DIR="$HOME/.cache/hyprshot"
 OUT_DIR="$HOME/Media/images/Screenshots"
 ICON="$HOME/.config/hypr/icons/screenshot.png"
@@ -19,39 +17,32 @@ notify() {
 	fi
 }
 
-wait_for_file() {
-	local file="$1"
-
-	# wait until file exists and has content
-	for _ in {1..100}; do
-		[[ -s $file ]] && return 0
-		sleep 0.05
-	done
-
-	return 1
+get_active_monitor_geometry() {
+	hyprctl monitors -j | jq -r '
+		.[] | select(.focused == true) |
+		"\(.x),\(.y) \(.width)x\(.height)"
+	'
 }
 
-shot() {
-	local mode="$1"
-	local suffix="${2:-$mode}"
+shot_full() {
+	local geom tmp out
 
-	local tmp
-	tmp="$(mktemp "$CACHE_DIR/shot-XXXXXX.png")"
-
-	local out="$OUT_DIR/$(date '+%F-%H%M%S')_${suffix}.png"
-
-	hyprshot \
-		--freeze \
-		--silent \
-		--mode "$mode" \
-		-o "$CACHE_DIR" \
-		-f "$(basename "$tmp")"
-
-	if ! wait_for_file "$tmp"; then
-		notify "Screenshot failed"
-		rm -f "$tmp"
+	geom="$(get_active_monitor_geometry)"
+	if [[ -z $geom ]]; then
+		notify "Could not determine active monitor"
 		return 1
 	fi
+
+	tmp="$(mktemp "$CACHE_DIR/shot-XXXXXX.png")"
+	out="$OUT_DIR/$(date '+%F-%H%M%S')_full.png"
+
+	grim -g "$geom" "$tmp"
+
+	[[ -s $tmp ]] || {
+		notify "Screenshot failed (empty image)"
+		rm -f "$tmp"
+		return 1
+	}
 
 	satty \
 		--filename "$tmp" \
@@ -61,22 +52,51 @@ shot() {
 		--copy-command "wl-copy" \
 		--disable-notifications
 
-	if [[ -f $out ]]; then
-		notify "Saved & copied"
-	fi
+	notify "Saved & copied"
+	rm -f "$tmp"
+}
 
+shot_region() {
+	local tmp out region
+
+	tmp="$(mktemp "$CACHE_DIR/shot-XXXXXX.png")"
+	out="$OUT_DIR/$(date '+%F-%H%M%S')_region.png"
+
+	region="$(slurp)" || {
+		notify "Cancelled"
+		rm -f "$tmp"
+		return 1
+	}
+
+	grim -g "$region" "$tmp"
+
+	[[ -s $tmp ]] || {
+		notify "Screenshot failed"
+		rm -f "$tmp"
+		return 1
+	}
+
+	satty \
+		--filename "$tmp" \
+		--output-filename "$out" \
+		--save-after-copy \
+		--early-exit \
+		--copy-command "wl-copy" \
+		--disable-notifications
+
+	notify "Saved & copied"
 	rm -f "$tmp"
 }
 
 case "${1:-}" in
 full)
-	shot output full
+	shot_full
 	;;
 region)
-	shot region region
+	shot_region
 	;;
 window)
-	shot window "${2:-window}"
+	shot_region
 	;;
 *)
 	echo "Usage: $0 {full|region|window}"

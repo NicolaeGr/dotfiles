@@ -13,7 +13,6 @@
   };
 
   config = lib.mkIf config.extra.gaming.enable {
-    hardware.xone.enable = true; # xbox controller
     hardware.xpadneo.enable = true;
 
     programs = {

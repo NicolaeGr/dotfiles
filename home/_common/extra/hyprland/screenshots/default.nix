@@ -12,7 +12,10 @@
   };
 
   home.packages = with pkgs; [
-    hyprshot
+    jq
+    grim
+    slurp
+    wl-clipboard
     satty
     libnotify
   ];
