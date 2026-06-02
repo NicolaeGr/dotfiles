@@ -11,6 +11,8 @@
 
     ./fs.nix
     ./wireguard.nix
+
+    ./gamesync.nix
   ]
   ++ (map configLib.relativeToRoot [
     "hosts/_common/core"

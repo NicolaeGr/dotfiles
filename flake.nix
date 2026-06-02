@@ -55,7 +55,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
           checks = self.checks.${system};
         in
-        import ./shell.nix { inherit checks pkgs; }
+        import ./shelll.nix { inherit checks pkgs; }
       );
 
       nixosConfigurations = {

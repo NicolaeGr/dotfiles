@@ -14,7 +14,7 @@
     ./projects.nix
     ./distrobox.nix
 
-    ./code.nix
+    ./gamesync.nix
   ]
   ++ (map configLib.relativeToRoot [
     "hosts/_common/core"

@@ -1,6 +1,11 @@
-{ pkgs, ... }:
 {
-  services.ludusavi = {
+  pkgs,
+  lib,
+  hostName,
+  ...
+}:
+{
+  services.ludusavi = lib.mkIf (hostName == "odin" || hostName == "zoln") {
     enable = true;
     package = pkgs.unstable.ludusavi;
 
@@ -19,6 +24,10 @@
         {
           path = "~/.config/heroic";
           store = "heroic";
+        }
+        {
+          path = "~/.local/share/lutris";
+          store = "lutris";
         }
       ];
     };

@@ -7,15 +7,20 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./minecraft.nix
+
+    ./git.nix
+    ./router.nix
+    ./wireguard.nix
     ./cloudflare.nix
+
+    ./projects.nix
+    ./services
+
+    ./minecraft.nix
     ./fast-ceiti.nix
     ./smb.nix
-    ./wireguard.nix
-    ./router.nix
-    ./projects.nix
-    ./git.nix
-    ./services
+    ./gamesync.nix
+
     inputs.vscode-server.nixosModules.default
   ]
   ++ (map configLib.relativeToRoot [
