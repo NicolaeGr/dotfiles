@@ -8,8 +8,8 @@
       manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
       theme = "dark";
 
-      backup.path = "$XDG_STATE_HOME/backups/ludusavi";
-      restore.path = "$XDG_STATE_HOME/backups/ludusavi";
+      backup.path = "~/.local/state/backups/ludusavi";
+      restore.path = "~/.local/state/backups/ludusavi";
 
       roots = [
         {
