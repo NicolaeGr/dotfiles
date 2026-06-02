@@ -10,11 +10,11 @@
 
     settings = {
       devices = {
-        "desktop" = {
-          id = "6HVSF2N-BYUZHEF-WHYBMIX-BPSWNVU-GERW35S-PQZBIFV-L4H3UP7-JR5VTQD";
+        "zoln" = {
+          id = "X6SS352-33QWTNI-ZSWABTW-RSNSUMY-WPC35RO-H6P62O2-THMT74N-AO5CPA6";
         };
-        "laptop" = {
-          id = "ALQ2CZD-UBK7SN6-BM5ULTC-FPMTCCD-KZ2D4JD-RNIV3CE-XRX3FRA-LBB67A2";
+        "odin" = {
+          id = "BGUTY2D-CKZAKTA-G3PD2HO-CXT47QL-RXAW4SO-KU33ZFS-VAZLKQA-SCCOBQG";
         };
       };
 
@@ -22,8 +22,8 @@
         "ludusavi-sync" = {
           path = "/home/nicolae/Public/LudusaviBackup";
           devices = [
-            "desktop"
-            "laptop"
+            "zoln"
+            "odin"
           ];
           versioning = {
             type = "simple";

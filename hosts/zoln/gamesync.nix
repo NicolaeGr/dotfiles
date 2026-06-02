@@ -10,8 +10,8 @@
 
     settings = {
       devices = {
-        "server" = {
-          id = "FA5YAJT-IMV3PQY-AUKSOXZ-LTTFBA3-FC6TA7E-JWQAV65-3TCT6I2-2FYPRAQ";
+        "lumix" = {
+          id = "ICHQARH-ZN7IIUX-3HHHMOB-DKDRM2A-TPBY7LX-LJBOMP3-TQXLTEZ-WJOMMQF";
 
           addresses = [
             "tcp://192.168.100.10:22000"
@@ -23,7 +23,7 @@
       folders = {
         "ludusavi-sync" = {
           path = "/home/nicolae/.config/ludusavi";
-          devices = [ "server" ];
+          devices = [ "lumix" ];
         };
       };
     };
