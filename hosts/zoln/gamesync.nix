@@ -14,7 +14,7 @@
           id = "FA5YAJT-IMV3PQY-AUKSOXZ-LTTFBA3-FC6TA7E-JWQAV65-3TCT6I2-2FYPRAQ";
 
           addresses = [
-            "tcp://1192.168.1.10:22000"
+            "tcp://192.168.100.10:22000"
             "dynamic"
           ];
         };
