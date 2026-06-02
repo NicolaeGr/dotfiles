@@ -6,7 +6,6 @@
 }:
 {
   systemd.tmpfiles.rules = [
-
     "d /storage/smb 0777 root users - -"
   ];
 

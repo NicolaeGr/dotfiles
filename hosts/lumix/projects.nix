@@ -1,9 +1,5 @@
+{ pkgs, ... }:
 {
-  pkgs,
-  ...
-}:
-{
-
   services.cloudflare-dyndns.domains = [ "expense.electrolit.biz" ];
 
   systemd.services.expensetracker = {
