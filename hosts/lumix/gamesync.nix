@@ -19,7 +19,7 @@
       };
 
       folders = {
-        "ludusavi-sync" = {
+        "ludusavi-backup" = {
           path = "/home/nicolae/Public/LudusaviBackup";
           devices = [
             "zoln"

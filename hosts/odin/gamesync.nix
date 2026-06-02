@@ -20,7 +20,7 @@
       };
 
       folders = {
-        "ludusavi-sync" = {
+        "ludusavi-backup" = {
           path = "/home/nicolae/.local/state/backups/ludusavi";
           devices = [ "lumix" ];
         };
