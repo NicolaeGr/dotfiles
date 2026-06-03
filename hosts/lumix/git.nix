@@ -8,11 +8,15 @@ in
 
     serviceConfig = {
       Type = "oneshot";
-      User = "deploy";
+      User = "nicolae";
+      WorkingDirectory = flakeRoot;
     };
+
     environment = {
+      HOME = "/home/nicolae";
       DOTFILES = flakeRoot;
     };
+
     path = [
       pkgs.coreutils
       pkgs.git
@@ -23,21 +27,25 @@ in
       pkgs.gzip
       pkgs.bash
       pkgs.just
+      pkgs.sudo
     ];
 
     script = ''
       set -euo pipefail
 
-      cd "$DOTFILES"
+      git diff --quiet || { echo "[!] Local working tree is dirty. Aborting auto-update."; exit 0; }
+      git diff --cached --quiet || { echo "[!] Local staging area is dirty. Aborting auto-update."; exit 0; }
 
-      git diff --quiet || exit 0
-
-      git pull --tags
+      GIT_SSH_COMMAND="ssh -i /home/nicolae/.ssh/github_dotfiles_deployment -o IdentitiesOnly=yes" git pull --tags
 
       TAG=$(git tag --points-at HEAD | grep '^buildable-' || true)
 
-      [ -z "$TAG" ] && exit 0
+      if [ -z "$TAG" ]; then
+          echo "[*] Current HEAD is not tagged as buildable. Nothing to do."
+          exit 0
+      fi
 
+      echo "[+] Buildable tag found ($TAG). Running rebuild..."
       just rebuild
     '';
   };
@@ -53,7 +61,7 @@ in
 
   security.sudo.extraRules = [
     {
-      users = [ "deploy" ];
+      users = [ "nicolae" ];
       commands = [
         {
           command = "/run/current-system/sw/bin/nixos-rebuild";
