@@ -1,54 +1,9 @@
 { pkgs, ... }:
 let
-  flakeRoot = builtins.getEnv "FLAKE_ROOT";
+  envRoot = builtins.getEnv "FLAKE_ROOT";
+  flakeRoot = if envRoot == "" then "/home/nicolae/Projects/dotfiles" else envRoot;
 in
 {
-  systemd.services.auto-rebuild = {
-    description = "Auto rebuild system from dotfiles if conditions match";
-
-    serviceConfig = {
-      Type = "oneshot";
-      User = "nicolae";
-      WorkingDirectory = flakeRoot;
-    };
-
-    environment = {
-      HOME = "/home/nicolae";
-      DOTFILES = flakeRoot;
-    };
-
-    path = [
-      pkgs.coreutils
-      pkgs.git
-      pkgs.nh
-      pkgs.nix
-      pkgs.openssh
-      pkgs.gnutar
-      pkgs.gzip
-      pkgs.bash
-      pkgs.just
-    ];
-
-    script = ''
-      set -euo pipefail
-
-      git diff --quiet || { echo "[!] Local working tree is dirty. Aborting auto-update."; exit 0; }
-      git diff --cached --quiet || { echo "[!] Local staging area is dirty. Aborting auto-update."; exit 0; }
-
-      GIT_SSH_COMMAND="ssh -i /home/nicolae/.ssh/github_dotfiles_deployment -o IdentitiesOnly=yes" git pull --tags
-
-      TAG=$(git tag --points-at HEAD | grep '^buildable-' || true)
-
-      if [ -z "$TAG" ]; then
-          echo "[*] Current HEAD is not tagged as buildable. Nothing to do."
-          exit 0
-      fi
-
-      echo "[+] Buildable tag found ($TAG). Running rebuild..."
-      just rebuild
-    '';
-  };
-
   systemd.timers.auto-rebuild = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
@@ -58,15 +13,69 @@ in
     };
   };
 
-  security.sudo.extraRules = [
-    {
-      users = [ "nicolae" ];
-      commands = [
-        {
-          command = "/run/current-system/sw/bin/nixos-rebuild";
-          options = [ "NOPASSWD" ];
-        }
-      ];
-    }
-  ];
+  systemd.services.auto-rebuild = {
+    description = "Auto rebuild system from dotfiles if conditions match";
+
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      WorkingDirectory = flakeRoot;
+    };
+
+    environment = {
+      FLAKE_ROOT = flakeRoot;
+      HOME = "/root";
+    };
+
+    path = [
+      pkgs.coreutils
+      pkgs.git
+      pkgs.nh
+      pkgs.nix
+      pkgs.openssh
+      "/run/wrappers"
+    ];
+
+    script = ''
+      set -euo pipefail
+
+      echo "[+] Checking for updates securely as user 'nicolae'..."
+
+      # Temporarily turn off 'exit on error' so we can catch the skip code
+      set +e
+
+
+      sudo -u nicolae -H --preserve-env=FLAKE_ROOT bash -c '
+        cd "$FLAKE_ROOT"
+
+        git diff --quiet || { echo "[!] Local working tree is dirty. Skipping."; exit 2; }
+        git diff --cached --quiet || { echo "[!] Local staging area is dirty. Skipping."; exit 2; }
+
+        GIT_SSH_COMMAND="ssh -i /home/nicolae/.ssh/github_dotfiles_deployment -o IdentitiesOnly=yes" git pull --tags
+
+        TAG=$(git tag --points-at HEAD | grep "^buildable-" || true)
+        if [ -z "$TAG" ]; then
+            echo "[*] Current HEAD is not tagged as buildable. Skipping."
+            exit 2
+        fi
+      '
+
+      PULL_STATUS=$?
+      set -e # Turn 'exit on error' back on
+
+      if [ $PULL_STATUS -eq 2 ]; then
+        echo "[*] No valid updates to apply. Exiting cleanly with status 0."
+        exit 0
+      elif [ $PULL_STATUS -ne 0 ]; then
+        echo "[!] Git operations failed with error code $PULL_STATUS."
+        exit $PULL_STATUS
+      fi
+
+      echo "[+] Buildable tag confirmed. Proceeding with system activation natively as root..."
+
+      nh os switch path:${flakeRoot} -- --impure
+
+      echo "[+] System activation successful."
+    '';
+  };
 }
