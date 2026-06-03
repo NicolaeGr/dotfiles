@@ -30,12 +30,12 @@ in
     path = [
       pkgs.coreutils
       pkgs.git
-      pkgs.nh
       pkgs.nix
       pkgs.openssh
       pkgs.bash
       pkgs.gnugrep
       "/run/wrappers"
+      "/run/current-system/sw"
     ];
 
     script = ''
@@ -73,7 +73,7 @@ in
 
       echo "[+] Buildable tag confirmed. Proceeding with system activation natively as root..."
 
-      nh os switch path:${flakeRoot} -- --impure
+      /run/current-system/sw/bin/nixos-rebuild switch --flake path:${flakeRoot} --impure
 
       echo "[+] System activation successful."
     '';
