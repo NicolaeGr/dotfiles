@@ -1,7 +1,7 @@
 { pkgs, ... }:
 let
   envRoot = builtins.getEnv "FLAKE_ROOT";
-  flakeRoot = if envRoot == "" then "/home/nicolae/Projects/dotfiles" else envRoot;
+  flakeRoot = if envRoot == "" then "/home/nicolae/dotfiles" else envRoot;
 in
 {
   systemd.timers.auto-rebuild = {
@@ -33,6 +33,8 @@ in
       pkgs.nh
       pkgs.nix
       pkgs.openssh
+      pkgs.bash
+      pkgs.gnugrep
       "/run/wrappers"
     ];
 
@@ -41,11 +43,9 @@ in
 
       echo "[+] Checking for updates securely as user 'nicolae'..."
 
-      # Temporarily turn off 'exit on error' so we can catch the skip code
       set +e
 
-
-      sudo -u nicolae -H --preserve-env=FLAKE_ROOT bash -c '
+      sudo -u nicolae -H env PATH="$PATH" FLAKE_ROOT="$FLAKE_ROOT" ${pkgs.bash}/bin/bash -c '
         cd "$FLAKE_ROOT"
 
         git diff --quiet || { echo "[!] Local working tree is dirty. Skipping."; exit 2; }
@@ -61,7 +61,7 @@ in
       '
 
       PULL_STATUS=$?
-      set -e # Turn 'exit on error' back on
+      set -e
 
       if [ $PULL_STATUS -eq 2 ]; then
         echo "[*] No valid updates to apply. Exiting cleanly with status 0."
