@@ -27,7 +27,6 @@ in
       pkgs.gzip
       pkgs.bash
       pkgs.just
-      pkgs.sudo
     ];
 
     script = ''
