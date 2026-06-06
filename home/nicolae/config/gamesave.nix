@@ -32,4 +32,10 @@
       ];
     };
   };
+
+  home.packages = [
+    (pkgs.writeShellScriptBin "ludusavi-restore-all" ''
+      ${pkgs.ludusavi}/bin/ludusavi --config $HOME/.config/ludusavi restore --force
+    '')
+  ];
 }
