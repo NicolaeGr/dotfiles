@@ -64,7 +64,6 @@
 
     gimp
     avahi
-    gitkraken
 
     unstable.android-studio
     unstable.gnome-builder

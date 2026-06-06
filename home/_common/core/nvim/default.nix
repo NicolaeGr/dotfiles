@@ -27,6 +27,7 @@ in
     vimdiffAlias = true;
     withNodeJs = true;
     withPython3 = true;
+    withRuby = true;
 
     #     plugins = [
     #   pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
@@ -46,7 +47,7 @@ in
       pkgs.nixd # nix
       pkgs.nil # nix
       pkgs.vtsls # typescript / javascript
-      pkgs.nodePackages.vscode-json-languageserver
+      pkgs.vscode-json-languageserver
 
       # Tools
       pkgs.cmake
@@ -73,7 +74,7 @@ in
       pkgs.llvmPackages_latest.clang
     ];
 
-    extraLuaConfig = lib.mkIf (nvimLuaDir != null) ''
+    initLua = lib.mkIf (nvimLuaDir != null) ''
       -- Set FLAKE_ROOT as a Lua global variable
       vim.g.flake_root = "${if flakeRoot != "" then flakeRoot else "/etc/nixos/flake"}"
 

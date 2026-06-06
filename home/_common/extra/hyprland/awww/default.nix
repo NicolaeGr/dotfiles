@@ -7,13 +7,13 @@
 }:
 {
   options = {
-    extra.hyprland.swww.enable = lib.mkEnableOption {
+    extra.hyprland.awww.enable = lib.mkEnableOption {
       default = false;
-      description = "Enable swww";
+      description = "Enable awww";
     };
   };
 
-  config = lib.mkIf config.extra.hyprland.swww.enable {
+  config = lib.mkIf config.extra.hyprland.awww.enable {
     home.file."bg.jpg" = {
       target = ".config/hypr/backgrounds/bg.jpg";
       source = ./bg.jpg;
@@ -35,12 +35,12 @@
     };
 
     home.packages = with pkgs; [
-      swww
+      awww
     ];
 
     wayland.windowManager.hyprland.settings.exec-once = [
-      "swww-daemon &"
-      "swww img ${config.home.homeDirectory}/.config/hypr/backgrounds/galaxy.jpg"
+      "awww-daemon &"
+      "awww img ${config.home.homeDirectory}/.config/hypr/backgrounds/galaxy.jpg"
     ];
   };
 }

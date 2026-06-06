@@ -19,7 +19,7 @@
       "obey pam restrictions" = "Yes";
     };
 
-    shares."storage" = {
+    settings.storage = {
       path = "/storage/smb";
       browseable = true;
       guestOk = false;

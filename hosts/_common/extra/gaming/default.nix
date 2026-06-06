@@ -25,7 +25,7 @@
           extraPkgs =
             pkgs:
             (builtins.attrValues {
-              inherit (pkgs.xorg)
+              inherit (pkgs)
                 libXcursor
                 libXi
                 libXinerama
@@ -80,7 +80,7 @@
       mangohud
       winetricks
       protonup-ng
-      wineWowPackages.staging
+      wineWow64Packages.staging
 
       unstable.prismlauncher
       unstable.heroic

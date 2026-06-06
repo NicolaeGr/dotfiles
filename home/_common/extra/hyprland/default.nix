@@ -12,7 +12,7 @@
     ./screenshots
     ./hyprlock
     ./hypridle
-    ./swww
+    ./awww
     ./nosh
   ];
 
@@ -26,7 +26,7 @@
   config = lib.mkIf config.extra.hyprland.enable {
     extra.hyprland.hypridle.enable = true;
     extra.hyprland.hyprlock.enable = true;
-    extra.hyprland.swww.enable = true;
+    extra.hyprland.awww.enable = true;
     extra.hyprland.nosh.enable = true;
 
     home.packages = with pkgs; [
@@ -35,6 +35,7 @@
 
     wayland.windowManager.hyprland = {
       enable = true;
+      configType = "hyprlang";
 
       systemd = {
         enable = false;

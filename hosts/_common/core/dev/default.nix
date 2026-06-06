@@ -16,7 +16,7 @@
     tokei
     ngrok
     gnumake
-    nodePackages.prettier # can be moved to some extra config
+    prettier
 
     # Languages
     gcc
@@ -26,8 +26,8 @@
     go
 
     # Package Managers
-    nodePackages.pnpm
-    nodePackages.yarn
+    pnpm
+    yarn
 
     # Networking
     nmap

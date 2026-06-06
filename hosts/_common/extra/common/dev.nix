@@ -17,6 +17,7 @@
         hashcat
         john
         ncrack
+        android-tools
 
         tmux
       ]
@@ -25,6 +26,5 @@
         insomnia
       ];
 
-    programs.adb.enable = true;
   };
 }

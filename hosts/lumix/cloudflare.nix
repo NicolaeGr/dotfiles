@@ -30,7 +30,9 @@
     certs."electrolit.biz" = {
       extraDomainNames = [ "*.electrolit.biz" ];
       dnsProvider = "cloudflare";
-      credentialsFile = config.sops.templates."cloudflare-acme-env".path;
+      credentialFiles = {
+        "CLOUDFLARE_DNS_API_TOKEN_FILE" = config.sops.templates."cloudflare-acme-env".path;
+      };
     };
   };
 }

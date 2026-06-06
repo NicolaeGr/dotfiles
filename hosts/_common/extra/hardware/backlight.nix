@@ -1,7 +1,6 @@
 {
   pkgs,
   config,
-  options,
   lib,
   ...
 }:
@@ -16,17 +15,17 @@
 
   config = lib.mkIf config.extra.hardware.backlight.enable {
     environment.systemPackages = with pkgs; [
-      xorg.xbacklight
+      xbacklight
     ];
 
-    programs.light.enable = true;
+    hardware.acpilight.enable = true;
     security.sudo.extraRules = [
       {
         groups = [ "wheel" ];
         commands = [
           {
             options = [ "NOPASSWD" ];
-            command = "${pkgs.light}/bin/light";
+            command = "${pkgs.acpilight}/bin/light";
           }
         ];
       }

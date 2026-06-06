@@ -39,6 +39,6 @@
     preferXdgDirectories = true;
     shell.enableZshIntegration = true;
 
-    stateVersion = "25.05";
+    stateVersion = "26.05";
   };
 }
