@@ -23,7 +23,7 @@
 
       cursor = {
         name = "hyprcursor-rose-pine";
-        package = inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        package = pkgs.rose-pine-hyprcursor;
         size = 24;
       };
 

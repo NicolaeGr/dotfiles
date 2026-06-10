@@ -151,22 +151,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    rose-pine-hyprcursor.url = "github:ndom91/rose-pine-hyprcursor";
-
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-    awww.url = "git+https://codeberg.org/LGFae/awww";
-
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
 
-    nosh = {
-      url = "github:NicolaeGr/nosh";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nosh.url = "github:NicolaeGr/nosh";
     minecraft-manager = {
       url = "github:nicolaegr/minecraft.manager";
       inputs.nixpkgs.follows = "nixpkgs";

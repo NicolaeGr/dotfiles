@@ -21,21 +21,17 @@
     programs.nosh.enable = true;
     programs.nosh.startAfter = [ "wayland-session@Hyprland.target" ];
 
-    wayland.windowManager.hyprland.settings =
+    wayland.windowManager.hyprland.extraConfig =
       let
         nosh_cmd = "${inputs.nosh.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/nosh";
       in
-      {
-        bind = [
-          "$mod, X, exec, ${nosh_cmd} app-launcher"
-        ];
+      lib.mkAfter ''
+        hl.bind("SUPER + X", hl.dsp.exec_cmd("${nosh_cmd} app-launcher"))
 
-        bindel = [
-          ", XF86AudioRaiseVolume, exec, ${nosh_cmd} volume-up"
-          ", XF86AudioLowerVolume, exec, ${nosh_cmd} volume-down"
-          ", XF86MonBrightnessUp, exec, ${nosh_cmd} brightness-up"
-          ", XF86MonBrightnessDown, exec, ${nosh_cmd} brightness-down"
-        ];
-      };
+        hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("${nosh_cmd} volume-up"), { locked = true, repeating = true })
+        hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("${nosh_cmd} volume-down"), { locked = true, repeating = true })
+        hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("${nosh_cmd} brightness-up"), { locked = true, repeating = true })
+        hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("${nosh_cmd} brightness-down"), { locked = true, repeating = true })
+      '';
   };
 }

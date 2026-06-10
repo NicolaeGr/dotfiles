@@ -50,8 +50,10 @@ in
       };
     };
 
-    wayland.windowManager.hyprland.settings.exec-once = lib.mkAfter [
-      "${scriptPath} reset"
-    ];
+    wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
+      hl.on("hyprland.start", function()
+          hl.exec_cmd("${scriptPath} reset")
+      end)
+    '';
   };
 }

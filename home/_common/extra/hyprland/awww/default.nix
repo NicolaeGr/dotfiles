@@ -38,9 +38,11 @@
       awww
     ];
 
-    wayland.windowManager.hyprland.settings.exec-once = [
-      "awww-daemon &"
-      "awww img ${config.home.homeDirectory}/.config/hypr/backgrounds/galaxy.jpg"
-    ];
+    wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
+      hl.on("hyprland.start", function()
+          hl.exec_cmd("awww-daemon &")
+          hl.exec_cmd("awww img ${config.home.homeDirectory}/.config/hypr/backgrounds/galaxy.jpg")
+      end)
+    '';
   };
 }

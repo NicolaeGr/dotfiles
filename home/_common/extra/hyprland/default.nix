@@ -1,5 +1,4 @@
 {
-  inputs,
   hostName,
   config,
   lib,
@@ -7,7 +6,6 @@
   ...
 }:
 {
-
   imports = [
     ./screenshots
     ./hyprlock
@@ -35,269 +33,230 @@
 
     wayland.windowManager.hyprland = {
       enable = true;
-      configType = "hyprlang";
+      configType = "lua";
 
       systemd = {
         enable = false;
         variables = [ "--all" ];
       };
 
-      settings = {
-        exec-once = [
-          "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all"
-          ''${pkgs.bash}/bin/bash -c 'eval "$(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"' ''
-        ];
+      settings = { };
 
-        monitor =
-          if (hostName == "odin") then
-            [
-              "eDP-1,highres,100x0,1"
-              "HDMI-A-1,preferred,auto,1,mirror,eDP-1"
-            ]
-          else if (hostName == "zoln") then
-            [
-              "DP-1,2560x1440@180,0x0,1"
-            ]
+      extraConfig = ''
+        --
+        -- ========== Variables ==========
+        --
+        local mod = "SUPER"
+        local terminal = "kitty"
+        local fileManager = "nautilus"
+
+        --
+        -- ========== Environment ==========
+        --
+        hl.config({
+            env = {
+                "QT_QPA_PLATFORMTHEME,qt5ct",
+                "MOZ_ENABLE_WAYLAND,1",
+                "MOZ_WEBRENDER,1",
+                "XDG_SESSION_TYPE,wayland",
+                "WLR_NO_HARDWARE_CURSORS,1",
+                "WLR_RENDERER_ALLOW_SOFTWARE,1",
+                "QT_QPA_PLATFORM,wayland",
+                "GNOME_KEYRING_CONTROL,/run/user/1000/keyring",
+                "SSH_AUTH_SOCK,/run/user/1000/keyring/ssh"
+            }
+        })
+
+        --
+        -- ========== Autostart ==========
+        --
+        hl.on("hyprland.start", function()
+            hl.exec_cmd("${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all")
+            hl.exec_cmd([=[${pkgs.bash}/bin/bash -c 'eval "$(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"']=])
+        end)
+
+        --
+        -- ========== Monitors ==========
+        --
+        ${
+          if hostName == "odin" then
+            ''
+              hl.monitor({ output = "eDP-1", mode = "highres", position = "100x0", scale = 1 })
+              hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto", scale = 1, mirror = "eDP-1" })
+            ''
+          else if hostName == "zoln" then
+            ''
+              hl.monitor({ output = "DP-1", mode = "2560x1440@180", position = "0x0", scale = 1 })
+            ''
           else
-            [ "eDP-1,highres,100x0,1" ];
+            ''
+              hl.monitor({ output = "eDP-1", mode = "highres", position = "100x0", scale = 1 })
+            ''
+        }
 
-        "$mod" = "SUPER";
-        "$terminal" = "kitty";
-        "$fileManager" = "nautilus";
+        --
+        -- ========== Behavior & Appearance ==========
+        --
+        hl.config({
+            binds = {
+                workspace_center_on = 1,
+                movefocus_cycles_fullscreen = false,
+            },
+            input = {
+                kb_layout = "ro,ru",
+                kb_options = "grp:alt_shift_toggle,lv3:ralt_switch",
+                natural_scroll = false,
+                touchpad = {
+                    natural_scroll = true,
+                    disable_while_typing = false,
+                }
+            },
+            cursor = {
+                inactive_timeout = 10,
+            },
+            misc = {
+                disable_hyprland_logo = true,
+                animate_manual_resizes = true,
+                animate_mouse_windowdragging = true,
+                middle_click_paste = false,
+            },
+            general = {
+                gaps_in = 6,
+                gaps_out = 12,
+                border_size = 1,
+                allow_tearing = true,
+                resize_on_border = true,
+                hover_icon_on_border = true,
+            },
+            decoration = {
+                rounding = 8,
+                active_opacity = 1.0,
+                inactive_opacity = 0.85,
+                fullscreen_opacity = 1.0,
+                blur = {
+                    enabled = true,
+                    size = 4,
+                    passes = 2,
+                    new_optimizations = true,
+                    popups = true,
+                },
+                shadow = {
+                    enabled = true,
+                }
+            },
+            animations = {
+                enabled = true,
+                bezier = { "myBezier, 0.05, 0.9, 0.1, 1.05" },
+                animation = {
+                    "windows, 1, 7, myBezier",
+                    "windowsOut, 1, 7, default, popin 80%",
+                    "border, 1, 10, default",
+                    "borderangle, 1, 8, default",
+                    "fade, 1, 7, default",
+                    "workspaces, 1, 6, default",
+                }
+            }
+        })
 
-        #
-        # ========== Behavior ==========
-        #
-        env = [
-          "QT_QPA_PLATFORMTHEME,qt5ct"
-          "MOZ_ENABLE_WAYLAND, 1"
-          "MOZ_WEBRENDER, 1"
-          "XDG_SESSION_TYPE,wayland"
-          "WLR_NO_HARDWARE_CURSORS,1"
-          "WLR_RENDERER_ALLOW_SOFTWARE,1"
-          "QT_QPA_PLATFORM,wayland"
-          "GNOME_KEYRING_CONTROL,/run/user/1000/keyring"
-          "SSH_AUTH_SOCK,/run/user/1000/keyring/ssh"
-        ];
+        -- Gestures are handled via the top-level hl.gesture function
+        hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 
-        binds = {
-          workspace_center_on = 1;
-          movefocus_cycles_fullscreen = false;
-        };
+        --
+        -- ========== Window Rules ==========
+        --
+        local float_titles = { "^(Open File)(.*)$", "^(Select a File)(.*)$", "^(Choose wallpaper)(.*)$", "^(Open Folder)(.*)$", "^(Save As)(.*)$", "^(Library)(.*)$", "^(Accounts)(.*)$" }
+        for _, title_match in ipairs(float_titles) do
+            hl.window_rule({ match = { title = title_match }, float = true })
+        end
 
-        input = {
-          kb_layout = "ro,ru";
-          kb_options = "grp:alt_shift_toggle,lv3:ralt_switch";
+        local float_classes = { "^(galculator)$", "^(waypaper)$", "^(keymapp)$" }
+        for _, class_match in ipairs(float_classes) do
+            hl.window_rule({ match = { class = class_match }, float = true })
+        end
 
-          natural_scroll = false;
-          touchpad = {
-            natural_scroll = true;
-            disable_while_typing = false;
-          };
-        };
+        hl.window_rule({ match = { class = "^(com.gabm.satty)$" }, float = true, size = "50% 50%", center = true })
+        hl.window_rule({ match = { title = "^(Picture-in-Picture)$" }, float = true, size = "30% 30%", center = true, pin = true, opaque = true })
 
-        cursor = {
-          inactive_timeout = 10;
-        };
+        local opaque_classes = { "^([Gg]imp)$", "^([Ff]lameshot)$", "^([Ii]inkscape)$", "^([Bb]lender)$", "^([Oo][Bb][Ss])$", "^([Vv]lc)$" }
+        for _, class_match in ipairs(opaque_classes) do
+            hl.window_rule({ match = { class = class_match }, opaque = true })
+        end
 
-        misc = {
-          disable_hyprland_logo = true;
-          animate_manual_resizes = true;
-          animate_mouse_windowdragging = true;
-          new_window_takes_over_fullscreen = 2;
-          middle_click_paste = false;
-        };
+        hl.window_rule({ match = { title = "^(Netflix)(.*)$" }, opaque = true })
+        hl.window_rule({ match = { title = "^(.*YouTube.*)$" }, opaque = true })
 
-        #
-        # ========== Appearance ==========
-        #
-        general = {
-          "gaps_in" = 6;
-          "gaps_out" = 12;
-          "border_size" = 1;
+        hl.window_rule({ match = { class = "^([Ss]team)$" }, opaque = true })
+        hl.window_rule({ match = { title = "^()$", class = "^([Ss]team)$" }, stay_focused = true, min_size = "1 1" })
+        hl.window_rule({ match = { class = "^([Ss]team_app_*)$" }, opaque = true, immediate = true })
 
-          # "col.active_border" = "rgba(9e5cafee) rgba(c567dcee) 45deg";
-          # "col.inactive_border" = "rgba(595959aa)";
+        hl.window_rule({ match = { class = "^(jetbrains-.*)$" }, opaque = true })
+        hl.window_rule({ match = { class = "^(jetbrains-.*)$", title = "^$", initial_title = "^$", float = true }, no_initial_focus = true, stay_focused = true })
+        hl.window_rule({ match = { class = "^(jetbrains-.*)$", title = "^(win.*)$", float = true }, no_focus = true })
 
-          "allow_tearing" = true;
-          "resize_on_border" = true;
-          "hover_icon_on_border" = true;
-        };
+        --
+        -- ========== Core Binds ==========
+        --
+        hl.bind(mod .. " + B", hl.dsp.exec_cmd("app.zen_browser.zen"))
+        hl.bind(mod .. " + T", hl.dsp.exec_cmd(terminal))
+        hl.bind(mod .. " + Q", hl.dsp.window.close())
+        hl.bind(mod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+        hl.bind(mod .. " + SHIFT + L", hl.dsp.exec_cmd("hyprlock"))
+        hl.bind(mod .. " + F", hl.dsp.exec_cmd(fileManager))
+        hl.bind(mod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+        hl.bind(mod .. " + P", hl.dsp.window.pseudo({ action = "toggle" }))
+        hl.bind(mod .. " + J", hl.dsp.layout("togglesplit"))
 
-        decoration = {
-          rounding = 8;
-          active_opacity = 1.0;
-          inactive_opacity = 0.85;
-          fullscreen_opacity = 1.0;
+        -- Move Focus
+        hl.bind(mod .. " + left", hl.dsp.focus({ direction = "l" }))
+        hl.bind(mod .. " + right", hl.dsp.focus({ direction = "r" }))
+        hl.bind(mod .. " + up", hl.dsp.focus({ direction = "u" }))
+        hl.bind(mod .. " + down", hl.dsp.focus({ direction = "d" }))
 
-          blur = {
-            enabled = true;
-            size = 4;
-            passes = 2;
-            new_optimizations = true;
-            popups = true;
-          };
+        -- Special Workspace
+        hl.bind(mod .. " + S", hl.dsp.workspace.toggle_special("magic"))
+        hl.bind(mod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
 
-          shadow.enabled = true;
-        };
+        -- Mouse Scroll & Directional Workspaces
+        hl.bind(mod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
+        hl.bind(mod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
+        hl.bind(mod .. " + Control_L + left", hl.dsp.focus({ workspace = "e-1" }))
+        hl.bind(mod .. " + Control_L + right", hl.dsp.focus({ workspace = "e+1" }))
+        hl.bind(mod .. " + SHIFT + left", hl.dsp.window.move({ workspace = "e-1" }))
+        hl.bind(mod .. " + SHIFT + right", hl.dsp.window.move({ workspace = "e+1" }))
 
-        animations = {
-          enabled = true;
+        -- Chained / Sequential Binds (Requires anonymous function wrapper)
+        hl.bind(mod .. " + Tab", function()
+            hl.dispatch(hl.dsp.window.cycle_next())
+            hl.dispatch(hl.dsp.window.bring_to_top())
+        end)
+        hl.bind(mod .. " + ALT + F", hl.dsp.window.fullscreen({ action = "toggle" }))
 
-          bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+        --
+        -- ========== Workspace Loop ==========
+        --
+        -- Maps 1->code:10, 9->code:18, 10->code:19 (the 0 key)
+        for i = 1, 10 do
+            local ws = tostring(i)
+            local keycode = "code:" .. tostring(9 + i)
+            hl.bind(mod .. " + " .. keycode, hl.dsp.focus({ workspace = ws }))
+            hl.bind(mod .. " + SHIFT + " .. keycode, hl.dsp.window.move({ workspace = ws }))
+        end
 
-          animation = [
-            "windows, 1, 7, myBezier"
-            "windowsOut, 1, 7, default, popin 80%"
+        --
+        -- ========== Mouse & Media Binds ==========
+        --
+        hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
+        hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+        hl.bind(mod .. " + SHIFT + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
-            "border, 1, 10, default"
-            "borderangle, 1, 8, default"
+        hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true })
+        hl.bind(mod .. " + SHIFT + L", hl.dsp.exec_cmd("sleep 0.1 && systemctl suspend"), { locked = true })
 
-            "fade, 1, 7, default"
-
-            "workspaces, 1, 6, default"
-          ];
-        };
-
-        dwindle = {
-          pseudotile = true;
-        };
-
-        gesture = [
-          "3, horizontal, workspace"
-        ];
-
-        #
-        # ========== Window Rules ==========
-        #
-        windowrule = [
-          # Dialogs
-          "float, title:^(Open File)(.*)$"
-          "float, title:^(Select a File)(.*)$"
-          "float, title:^(Choose wallpaper)(.*)$"
-          "float, title:^(Open Folder)(.*)$"
-          "float, title:^(Save As)(.*)$"
-          "float, title:^(Library)(.*)$"
-          "float, title:^(Accounts)(.*)$"
-        ];
-
-        windowrulev2 = [
-          "float, class:^(galculator)$"
-          "float, class:^(waypaper)$"
-          "float, class:^(keymapp)$"
-
-          #
-          # ========== Screenshot App =========
-          #
-          "float,        class:^(com.gabm.satty)$"
-          "size 50% 50%, class:^(com.gabm.satty)$"
-          "center,       class:^(com.gabm.satty)$"
-
-          #
-          # ========== Picture-in-Picture ==========
-          #
-          "float,        title:^(Picture-in-Picture)$"
-          "size 30% 30%, title:^(Picture-in-Picture)$"
-          "center,       title:^(Picture-in-Picture)$"
-          "pin,         title:^(Picture-in-Picture)$"
-
-          #
-          # ========== Always opaque ==========
-          #
-          "opaque, class:^([Gg]imp)$"
-          "opaque, class:^([Ff]lameshot)$"
-          "opaque, class:^([Ii]nkscape)$"
-          "opaque, class:^([Bb]lender)$"
-          "opaque, class:^([Oo][Bb][Ss])$"
-          "opaque, class:^([Ss]team)$"
-          "opaque, class:^([Ss]team_app_*)$"
-          "opaque, class:^([Vv]lc)$"
-
-          # Remove transparency from video
-          "opaque, title:^(Netflix)(.*)$"
-          "opaque, title:^(.*YouTube.*)$"
-          "opaque, title:^(Picture-in-Picture)$"
-
-          # Steam rules
-          "stayfocused, title:^()$,class:^([Ss]team)$"
-          "minsize 1 1, title:^()$,class:^([Ss]team)$"
-          "immediate, class:^([Ss]team_app_*)$"
-
-          # JetBrains IDEs
-          "opaque, class:^(jetbrains-.*)$"
-          "noinitialfocus, class:^(jetbrains-.*)$, title:^$, initialTitle:^$, floating:1"
-          "stayfocused, class:^(jetbrains-.*)$, title:^$, floating:1"
-          "nofocus, class:^(jetbrains-.*)$, title:^(win.*)$, floating:1"
-        ];
-
-        bind = [
-          "$mod, B, exec, app.zen_browser.zen"
-          "$mod, T, exec, $terminal"
-          "$mod, Q, killactive,"
-          "$mod, L, exec, hyprlock"
-          "$mod+Shift, L, exec, hyprlock"
-          "$mod, F, exec, $fileManager"
-          "$mod, V, togglefloating,"
-          "$mod, P, pseudo,"
-          "$mod, J, togglesplit,"
-
-          "$mod, left, movefocus, l"
-          "$mod, right, movefocus, r"
-          "$mod, up, movefocus, u"
-          "$mod, down, movefocus, d"
-
-          "$mod, S, togglespecialworkspace, magic"
-          "$mod SHIFT, S, movetoworkspace, special:magic"
-
-          "$mod, mouse_down, workspace, e+1"
-          "$mod, mouse_up, workspace, e-1"
-
-          "$mod Control_L, left, workspace, e-1"
-          "$mod Control_L, right, workspace, e+1"
-          "$mod SHIFT, left, movetoworkspace, e-1"
-          "$mod SHIFT, right, movetoworkspace, e+1"
-
-          "$mod, Tab , cyclenext, "
-          "$mod, Tab, bringactivetotop, "
-
-          "$mod&Alt, F, fullscreen,"
-        ]
-        ++ (builtins.concatLists (
-          builtins.genList (
-            i:
-            let
-              ws = i + 1;
-            in
-            [
-              "$mod, code:1${toString i}, workspace, ${toString ws}"
-              "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
-            ]
-          ) 10
-        ));
-
-        bindm = [
-          "$mod, mouse:272, movewindow"
-          "$mod, mouse:273, resizewindow"
-          "$mod SHIFT, mouse:273, resizewindow 1"
-        ];
-
-        bindl = [
-          ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-          "$mod+Shift, L, exec, sleep 0.1 && systemctl suspend"
-        ];
-
-        bindel = [
-          ", XF86AudioRaiseVolume, exec, nosh volume-up"
-          ", XF86AudioLowerVolume, exec, nosh volume-down"
-          ", XF86MonBrightnessUp, exec, nosh brightness-up"
-          ", XF86MonBrightnessDown, exec, nosh brightness-down"
-
-          ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-          ", Print, exec, $HOME/.config/hypr/scripts/screenshot_utils.sh region"
-          "Alt, Print, exec, $HOME/.config/hypr/scripts/screenshot_utils.sh window"
-          "$mod, Print, exec, $HOME/.config/hypr/scripts/screenshot_utils.sh full"
-        ];
-      };
+        hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), { locked = true, repeating = true })
+        hl.bind("Print", hl.dsp.exec_cmd([[$HOME/.config/hypr/scripts/screenshot_utils.sh region]]), { locked = true, repeating = true })
+        hl.bind("ALT + Print", hl.dsp.exec_cmd([[$HOME/.config/hypr/scripts/screenshot_utils.sh window]]), { locked = true, repeating = true })
+        hl.bind(mod .. " + Print", hl.dsp.exec_cmd([[$HOME/.config/hypr/scripts/screenshot_utils.sh full]]), { locked = true, repeating = true })
+      '';
     };
   };
 }

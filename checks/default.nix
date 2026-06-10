@@ -38,7 +38,7 @@
         types = [ "symlink" ];
       };
 
-      nixfmt-rfc-style = {
+      nixfmt = {
         enable = true;
       };
       shfmt.enable = true;
