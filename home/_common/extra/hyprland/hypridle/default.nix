@@ -34,8 +34,8 @@ in
       Unit = {
         Description = "Hyprland's idle daemon";
         Documentation = "https://wiki.hyprland.org/Hypr-Ecosystem/hypridle";
-        PartOf = "wayland-session@Hyprland.target";
-        After = [ "wayland-session@Hyprland.target" ];
+        PartOf = "wayland-session@hyprland.desktop.target";
+        After = [ "wayland-session@hyprland.desktop.target" ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
@@ -46,13 +46,13 @@ in
       };
 
       Install = {
-        WantedBy = [ "wayland-session@Hyprland.target" ];
+        WantedBy = [ "wayland-session@hyprland.desktop.target" ];
       };
     };
 
     wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
       hl.on("hyprland.start", function()
-          hl.exec_cmd("${scriptPath} reset")
+          hl.exec_cmd("${scriptPath} restore")
       end)
     '';
   };
