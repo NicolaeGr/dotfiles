@@ -5,7 +5,6 @@
   ...
 }:
 {
-
   options.extra.dev.enable = lib.mkEnableOption {
     default = true;
     description = "Enable development tools";

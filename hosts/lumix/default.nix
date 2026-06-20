@@ -39,10 +39,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  services.vscode-server = {
-    enable = true;
-    enableFHS = true;
-  };
+  # services.vscode-server = {
+  #   enable = true;
+  #   enableFHS = true;
+  # };
 
   services.fail2ban = {
     enable = true;
