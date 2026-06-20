@@ -19,7 +19,7 @@
       unstable.gitkraken
     ];
 
-    programs.vscode.enable = true;
+    programs.vscode.enable = lib.mkIf config.extra.gui.enable true;
     programs.vscode.package = pkgs.unstable.vscode.overrideAttrs (oldAttrs: {
       src = (
         builtins.fetchTarball {
