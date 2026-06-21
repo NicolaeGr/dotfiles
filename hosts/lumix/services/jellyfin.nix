@@ -46,7 +46,7 @@ in
         hardwareAcceleration = {
           enable = true;
           type = "qsv";
-          dev = "/dev/dri/renderD128";
+          device = "/dev/dri/renderD128";
         };
 
         cacheDir = "${baseDir}/cache";
