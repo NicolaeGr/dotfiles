@@ -43,12 +43,6 @@ in
         user = "deploy";
         group = "users";
 
-        hardwareAcceleration = {
-          enable = true;
-          type = "qsv";
-          device = "/dev/dri/renderD128";
-        };
-
         cacheDir = "${baseDir}/cache";
         configDir = "${baseDir}/config";
         dataDir = "${baseDir}/data";

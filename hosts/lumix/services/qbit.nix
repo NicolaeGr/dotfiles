@@ -5,6 +5,8 @@ let
 in
 {
   services.qbittorrent = {
+    enable = true;
+
     user = "deploy";
     group = "users";
 
