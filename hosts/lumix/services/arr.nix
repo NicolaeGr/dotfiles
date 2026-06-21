@@ -19,6 +19,7 @@ in
         isReadOnly = false;
       };
     };
+
     module = {
       services.radarr = {
         enable = true;

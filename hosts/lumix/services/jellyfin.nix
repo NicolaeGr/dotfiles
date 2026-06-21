@@ -12,7 +12,6 @@ let
 in
 {
   containers.jellyfin = containerLib.mkServiceContainer {
-    enable = true;
     ip = ip;
 
     mounts = {
@@ -44,12 +43,11 @@ in
         user = "deploy";
         group = "users";
 
-        # TODO: Enable in the next nixos release
-        # hardwareAcceleration = {
-        #   enable = true;
-        #   type = "qsv";
-        #   dev = "/dev/dri/renderD128";
-        # };
+        hardwareAcceleration = {
+          enable = true;
+          type = "qsv";
+          dev = "/dev/dri/renderD128";
+        };
 
         cacheDir = "${baseDir}/cache";
         configDir = "${baseDir}/config";

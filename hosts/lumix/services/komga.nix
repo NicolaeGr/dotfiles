@@ -6,7 +6,6 @@ let
 in
 {
   containers.komga = containerLib.mkServiceContainer {
-    enable = true;
     ip = ip;
 
     mounts = {
@@ -15,6 +14,7 @@ in
         isReadOnly = false;
       };
     };
+
     module = {
       services.komga = {
         enable = true;

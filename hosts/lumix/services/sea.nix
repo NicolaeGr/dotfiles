@@ -11,7 +11,6 @@ let
 in
 {
   containers.seanime = containerLib.mkServiceContainer {
-    enable = true;
     ip = ip;
 
     mounts = {

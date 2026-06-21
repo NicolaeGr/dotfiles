@@ -16,7 +16,7 @@ in
 {
   mkServiceContainer =
     {
-      enable ? true,
+      enable ? false,
       ip,
       mounts ? { },
       module ? { },
