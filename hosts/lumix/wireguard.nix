@@ -49,7 +49,7 @@
         allowedIPs = [ "10.100.0.2/32" ];
       }
       {
-        publicKey = "uTFURev9D7AyDyN5mR5VwZbOM4+UPRjZAfGWdCnzOAo=";
+        publicKey = "vaX2WLPn8thbGr+EEpBLpIMlqybc5uokUnhD0e1NmhA=";
         allowedIPs = [ "10.100.0.3/32" ];
       }
       {
