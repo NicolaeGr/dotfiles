@@ -43,6 +43,12 @@
       overlays = builtins.attrValues outputs.overlays;
       config = {
         allowUnfree = true;
+        # pnpm-10.29.2 is pinned for electron-based apps that haven't
+        # migrated past the 10.29.3 breaking change. Remove once
+        # nixpkgs drops the pnpm_10_29_2 variant.
+        permittedInsecurePackages = [
+          "pnpm-10.29.2"
+        ];
       };
 
       hostPlatform = lib.mkDefault "x86_64-linux";

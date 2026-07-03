@@ -83,7 +83,7 @@
     server.port = 6742;
   };
 
-  boot.kernelPackages = pkgs.unstable.linuxPackages_7_0;
+  boot.kernelPackages = pkgs.unstable.linuxPackages_7_1;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     open = true;
