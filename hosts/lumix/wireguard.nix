@@ -40,6 +40,20 @@
         filtering_enabled = true;
       };
 
+      filtering = {
+        filtering_enabled = true;
+        rewrites = [
+          {
+            domain = "*.electrolit.biz";
+            answer = "10.100.0.1";
+          }
+          {
+            domain = "electrolit.biz";
+            answer = "10.100.0.1";
+          }
+        ];
+      };
+
       users = [ ];
     };
   };
