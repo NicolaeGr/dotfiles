@@ -12,25 +12,36 @@
     format = "yaml";
   };
 
-  services.coredns = {
+  services.adguardhome = {
     enable = true;
-    config = ''
-      electrolit.biz {
-          template IN A {
-              match ^(.*\.)?electrolit\.biz\.$
-              answer "{{ .Name }} 60 IN A 10.100.0.1"
-          }
 
-          errors
-          log
-      }
+    settings = {
+      http = {
+        address = "10.100.0.1:3000";
+      };
+      dns = {
+        bind_addresses = [ "10.100.0.1" ];
+        port = 53;
 
-      . {
-          forward . 1.1.1.1 8.8.8.8
-          cache 30
-          errors
-      }
-    '';
+        upstream_dns = [
+          "https://dns.adguard-dns.com/dns-query"
+          "https://freedns.controld.com/p2"
+          "https://dnsforge.de/dns-query"
+          "https://doh.libredns.gr/noads"
+          "https://doh.mullvad.net/dns-query"
+        ];
+
+        bootstrap_dns = [
+          "9.9.9.9"
+          "1.1.1.1"
+        ];
+
+        protection_enabled = true;
+        filtering_enabled = true;
+      };
+
+      users = [ ];
+    };
   };
 
   networking.wg-quick.interfaces.wg0 = {
@@ -78,4 +89,9 @@
   };
 
   networking.firewall.interfaces."wg0".allowedUDPPorts = [ 53 ];
+  networking.firewall.interfaces."wg0".allowedTCPPorts = [
+    53
+
+    3000
+  ];
 }
