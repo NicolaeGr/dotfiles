@@ -50,14 +50,12 @@ in
 
             users.groups.users.gid = deployGID;
 
+            networking.useHostResolvConf = lib.mkForce false;
+
             networking.nameservers = [ "1.1.1.1" ];
             networking.defaultGateway = "192.168.100.1";
 
-            networking.useHostResolvConf = lib.mkForce false;
-
             networking.interfaces.eth0 = {
-              macAddress = ipToMac ip;
-
               ipv4.addresses = [
                 {
                   address = ip;

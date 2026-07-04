@@ -41,6 +41,24 @@
 
     postUp = ''
       ${pkgs.iptables}/bin/iptables -A INPUT -i wg0 -p udp --dport 53 -j ACCEPT
+
+      # Allow forwarding between WireGuard and the Bridge
+      ${pkgs.iptables}/bin/iptables -A FORWARD -i wg0 -o br0 -j ACCEPT
+      ${pkgs.iptables}/bin/iptables -A FORWARD -i br0 -o wg0 -j ACCEPT
+
+      # NAT traffic going from WireGuard to the Bridge so containers can reply
+      ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -o br0 -j MASQUERADE
+    '';
+
+    preDown = ''
+      ${pkgs.iptables}/bin/iptables -D INPUT -i wg0 -p udp --dport 53 -j ACCEPT
+
+      # Clean up forwarding rules
+      ${pkgs.iptables}/bin/iptables -D FORWARD -i wg0 -o br0 -j ACCEPT
+      ${pkgs.iptables}/bin/iptables -D FORWARD -i br0 -o wg0 -j ACCEPT
+
+      # Clean up NAT rule
+      ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o br0 -j MASQUERADE
     '';
 
     peers = [

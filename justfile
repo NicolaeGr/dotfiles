@@ -26,6 +26,14 @@ post-rebuild:
 		echo "[!] Working tree dirty, not tagging"; \
 	fi
 
+rebuild-boot:
+	@echo "[+] Rebuilding system in boot mode (impure)..."
+	FLAKE_ROOT={{FLAKE_ROOT}} nh os boot path:{{FLAKE_ROOT}} -- --impure
+	@just post-rebuild
+	@echo "[*] Do you want to reboot? (y/n)"
+	@read -r answer && { [ "$answer" = "y" ] && sudo systemctl reboot || echo "[*] Reboot skipped"; }
+
+
 # ===============================
 # Flake management
 # ===============================
