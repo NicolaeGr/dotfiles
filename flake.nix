@@ -152,7 +152,7 @@
     };
 
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
     nosh.url = "github:NicolaeGr/nosh";
     minecraft-manager = {

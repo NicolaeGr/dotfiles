@@ -31,16 +31,18 @@
       libnotify
     ];
 
+    xdg.configFile."uwsm/env".source =
+      "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+
     wayland.windowManager.hyprland = {
       enable = true;
       configType = "lua";
 
-      systemd = {
-        enable = false;
-        variables = [ "--all" ];
-      };
-
+      systemd.enable = false;
       settings = { };
+
+      # package = null;
+      # portalPackage = null;
 
       extraConfig = ''
         --
@@ -51,27 +53,9 @@
         local fileManager = "nautilus"
 
         --
-        -- ========== Environment ==========
-        --
-        hl.config({
-            env = {
-                "QT_QPA_PLATFORMTHEME,qt5ct",
-                "MOZ_ENABLE_WAYLAND,1",
-                "MOZ_WEBRENDER,1",
-                "XDG_SESSION_TYPE,wayland",
-                "WLR_NO_HARDWARE_CURSORS,1",
-                "WLR_RENDERER_ALLOW_SOFTWARE,1",
-                "QT_QPA_PLATFORM,wayland",
-                "GNOME_KEYRING_CONTROL,/run/user/1000/keyring",
-                "SSH_AUTH_SOCK,/run/user/1000/keyring/ssh"
-            }
-        })
-
-        --
         -- ========== Autostart ==========
         --
         hl.on("hyprland.start", function()
-            hl.exec_cmd("${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all")
             hl.exec_cmd([=[${pkgs.bash}/bin/bash -c 'eval "$(${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"']=])
         end)
 

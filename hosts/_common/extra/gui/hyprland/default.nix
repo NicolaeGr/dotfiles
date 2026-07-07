@@ -25,11 +25,22 @@
       enable = true;
       withUWSM = true;
       xwayland.enable = true;
+
+      package = pkgs.unstable.hyprland;
+      portalPackage = pkgs.unstable.xdg-desktop-portal-hyprland;
     };
+
+    xdg.portal.config.hyprland = {
+      default = [
+        "hyprland"
+        "gtk"
+      ];
+    };
+
     services.nosh.enable = true;
 
     services.displayManager = {
-      sessionPackages = with pkgs; [ hyprland ];
+      sessionPackages = with pkgs.unstable; [ hyprland ];
     };
 
     systemd = {
@@ -65,6 +76,14 @@
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
       WLD_NO_HARDWARE_CURSORS = "1";
+
+      QT_QPA_PLATFORM = "wayland";
+      QT_QPA_PLATFORMTHEME = "qt5ct";
+      MOZ_ENABLE_WAYLAND = "1";
+      MOZ_WEBRENDER = "1";
+      WLR_RENDERER_ALLOW_SOFTWARE = "1";
+
+      GDK_BACKEND = "wayland";
     };
   };
 }
