@@ -1,86 +1,26 @@
 FLAKE_ROOT := `pwd`
-SOPS_FILE := "./secrets/secrets.yaml"
+FLAKE_ROOT_FILE := ".flake-root.nix"
 
 default:
-  @just --list
+	@just --list
 
-rebuild:
-	@echo "[+] Rebuilding system (impure)..."
-	FLAKE_ROOT={{FLAKE_ROOT}} nh os switch path:{{FLAKE_ROOT}} -- --impure
-	@just post-rebuild
+build: _write-flake-root
+	@echo "[+] Building and switching system from {{FLAKE_ROOT}} via nh..."
+	FLAKE_ROOT={{FLAKE_ROOT}} nh os switch path:{{FLAKE_ROOT}}
 
-rebuild-trace:
-	@echo "[+] Rebuilding system with trace (impure)..."
-	FLAKE_ROOT={{FLAKE_ROOT}} nh os switch path:{{FLAKE_ROOT}} -- --impure --show-trace
-	@just post-rebuild
+build-boot: _write-flake-root
+	@echo "[+] Building system in boot mode from {{FLAKE_ROOT}} via nh..."
+	FLAKE_ROOT={{FLAKE_ROOT}} nh os boot path:{{FLAKE_ROOT}}
+	@just _ask-reboot
 
-post-rebuild:
-	@if git diff --exit-code >/dev/null && git diff --staged --exit-code >/dev/null; then \
-		if git tag --points-at HEAD | grep -q buildable; then \
-			echo "[*] Current commit already tagged as buildable"; \
-		else \
-			git tag buildable-"$(date +%Y%m%d%H%M%S)" -m ""; \
-			echo "[+] Tagged current commit as buildable"; \
-		fi \
-	else \
-		echo "[!] Working tree dirty, not tagging"; \
-	fi
+_write-flake-root:
+	@new_value='"{{FLAKE_ROOT}}"'; \
+	if [ -f "{{FLAKE_ROOT_FILE}}" ] && [ "$$(cat "{{FLAKE_ROOT_FILE}}")" = "$new_value" ]; then \
+		exit 0; \
+	fi; \
+	printf '%s\n' "$new_value" > "{{FLAKE_ROOT_FILE}}"; \
+	echo "[+] Updated {{FLAKE_ROOT_FILE}}"
 
-rebuild-boot:
-	@echo "[+] Rebuilding system in boot mode (impure)..."
-	FLAKE_ROOT={{FLAKE_ROOT}} nh os boot path:{{FLAKE_ROOT}} -- --impure
-	@just post-rebuild
-	@echo "[*] Do you want to reboot? (y/n)"
-	@read -r answer && { [ "$answer" = "y" ] && sudo systemctl reboot || echo "[*] Reboot skipped"; }
-
-
-# ===============================
-# Flake management
-# ===============================
-update:
-	@echo "[+] Updating flake inputs..."
-	nix flake update
-
-rebuild-update: update rebuild
-
-diff:
-	@git diff ':!flake.lock'
-
-check:
-	@nix flake check --impure --keep-going
-
-check-trace:
-	@nix flake check --impure --show-trace
-
-# ===============================
-# SOPS & secrets management
-# ===============================
-sops:
-	@echo "[*] Editing {{SOPS_FILE}}..."
-	nix-shell -p sops --run "SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt sops {{SOPS_FILE}}"
-
-age-key:
-	nix-shell -p age --run "age-keygen"
-
-rekey:
-	@echo "[*] Rekeying secrets..."
-	cd secrets && ( \
-		sops updatekeys -y secrets.yaml && \
-		(pre-commit run --all-files || true) && \
-		git add -u && (git commit -m 'chore: rekey' || true) && git push \
-	)
-
-update-nix-secrets:
-	(cd ../nix-secrets && git fetch && git rebase) || true
-	nix flake update nix-secrets
-
-check-sops:
-	@echo "[*] Checking SOPS activation..."
-	@SOPS_LOG=$(journalctl --no-pager --no-hostname --since "10 minutes ago" | tac | awk '!flag; /Starting sops-nix activation/{flag=1};' | tac | grep sops); \
-	if [[ ! $SOPS_LOG =~ "Finished sops-nix activation" ]]; then \
-		echo "[!] SOPS-nix failed to activate"; \
-		echo "$SOPS_LOG"; \
-		exit 1; \
-	else \
-		echo "[+] SOPS-nix activation finished"; \
-	fi
+_ask-reboot:
+	@echo "[*] Reboot now? (y/N)"
+	@read -r answer && { [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; } && sudo systemctl reboot || echo "[*] Reboot skipped"

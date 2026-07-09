@@ -1,6 +1,19 @@
 { ... }:
-{ }
-
-# log example
-# builtins.seq
-#     (builtins.trace "log here something" null)
+{
+  defaultUserGroups = [
+    "audio"
+    "video"
+    "input"
+    "users"
+    "power"
+    "render"
+    "docker"
+    "libvirt"
+    "storage"
+    "libvirtd"
+    "adbusers"
+    "vboxusers"
+    "sambashare"
+    "networkmanager"
+  ];
+}

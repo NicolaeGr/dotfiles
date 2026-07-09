@@ -1,0 +1,7 @@
+{
+  "i18n-ally.localesPaths": [
+    "result/system/sw/lib/locale",
+    "result/system/systemd/share/locale",
+    "result/system/sw/share/doc/nix/manual/language"
+  ]
+}

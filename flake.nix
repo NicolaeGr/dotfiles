@@ -1,138 +1,92 @@
 {
-  description = "Pruple Dotfiles v2.0";
+  description = "Pruple Dotfiles v3.0";
 
   outputs =
-    {
+    inputs@{
       self,
       nixpkgs,
-      home-manager,
-      stylix,
+      flake-parts,
+      git-hooks-nix,
+      hjem,
       ...
-    }@inputs:
-    let
-      inherit (self) outputs;
-      forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
-      inherit (nixpkgs) lib;
-      configVars = import ./vars { inherit inputs lib; };
-      configLib = import ./lib { inherit lib; };
-      specialArgs = {
-        inherit
-          inputs
-          outputs
-          configVars
-          configLib
-          nixpkgs
-          ;
-      };
-    in
-    {
-      nixosModules = import ./modules/nixos;
-      homeManagerModules = import ./modules/home-manager;
+    }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
 
-      overlays = import ./overlays { inherit inputs outputs; };
+      imports = [
+        ./nix/pre-commit.nix
+        ./nix/devshell.nix
+      ];
 
-      packages = forAllSystems (
-        system:
+      flake =
         let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        import ./pkgs { inherit pkgs; }
-      );
+          inherit (self) outputs;
+          lib = nixpkgs.lib;
 
-      checks = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        import ./checks { inherit inputs system pkgs; }
-      );
+          flakeRoot = if builtins.pathExists ./.flake-root.nix then import ./.flake-root.nix else null;
 
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
-
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          checks = self.checks.${system};
-        in
-        import ./shelll.nix { inherit checks pkgs; }
-      );
-
-      nixosConfigurations = {
-        odin =
-          let
-            hostSpecialArgs = specialArgs // {
-              hostName = "odin";
-            };
-          in
-          lib.nixosSystem {
-            specialArgs = hostSpecialArgs;
-
-            modules = [
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = hostSpecialArgs;
-              }
-
-              ./hosts/odin
-            ];
+          configVars = (import ./vars { inherit inputs lib; }) // {
+            inherit flakeRoot;
           };
 
-        zoln =
-          let
-            hostSpecialArgs = specialArgs // {
-              hostName = "zoln";
-            };
-          in
-          lib.nixosSystem {
-            specialArgs = hostSpecialArgs;
-
-            modules = [
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = hostSpecialArgs;
-              }
-
-              ./hosts/zoln
-            ];
+          configLib = import ./lib {
+            inherit
+              lib
+              flakeRoot
+              self
+              configVars
+              ;
           };
 
-        lumix =
-          let
-            hostSpecialArgs = specialArgs // {
-              hostName = "lumix";
-            };
-          in
-          lib.nixosSystem {
-            specialArgs = hostSpecialArgs;
-
-            modules = [
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = hostSpecialArgs;
-              }
-
-              ./hosts/lumix
-            ];
+          specialArgs = {
+            inherit
+              inputs
+              outputs
+              configVars
+              configLib
+              nixpkgs
+              self
+              ;
           };
 
-      };
+          mkHost =
+            hostName:
+            lib.nixosSystem {
+              specialArgs = specialArgs // {
+                inherit hostName;
+              };
+              modules = [
+                hjem.nixosModules.default
+                { hjem.extraModules = [ inputs.hjem-rum.hjemModules.default ]; }
+                ./hosts/${hostName}
+              ];
+            };
+        in
+        {
+          nixosConfigurations = {
+            odin = mkHost "odin";
+            zoln = mkHost "zoln";
+            lumix = mkHost "lumix";
+          };
+
+          nixosModules = import ./modules/nixos;
+          overlays = import ./nix/overlays.nix { inherit inputs outputs; };
+          formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+        };
     };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     hardware.url = "github:nixos/nixos-hardware";
 
-    home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
+    hjem.follows = "hjem-rum/hjem";
+    hjem-rum = {
+      url = "github:snugnug/hjem-rum";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -141,25 +95,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    pre-commit-hooks = {
+    git-hooks-nix = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    stylix = {
-      url = "github:danth/stylix/release-26.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
-
-    nosh.url = "github:NicolaeGr/nosh";
-    minecraft-manager = {
-      url = "github:nicolaegr/minecraft.manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    aic8800.url = "github:hoanhxlyn/aic8800-nix";
   };
 }
