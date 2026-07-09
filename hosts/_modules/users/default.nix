@@ -1,39 +1,33 @@
 {
-  lib,
   self,
-  config,
+  inputs,
   ...
 }:
 {
-  options.local.users.nicolae.enable = lib.mkEnableOption "Enable nicolae user";
+  imports = [
+    ./utils.opt.nix
+    ./utils.nix
+  ];
 
   config = {
     hjem = {
-      enable = true;
       clobberByDefault = true;
 
       extraModules = [
+        inputs.hjem-rum.hjemModules.default
         (self + "/home/_common")
       ];
     };
-  }
-  // lib.mkIf config.local.users.nicolae.enable {
-    users.users.nicolae = {
-      isNormalUser = true;
-      home = "/home/nicolae";
-      extraGroups = [
-        "wheel"
-        "docker"
-      ];
-      initialPassword = "nicolae";
-    };
 
-    hjem.users.nicolae = {
+    local.users.nicolae = {
       enable = true;
-      user = "nicolae";
-      directory = "/home/nicolae";
-
-      imports = [ (self + "/home/nicolae") ];
+      initialPassword = "nicolae";
+      extraGroups = [ "wheel" ];
+      trustedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGXCGZ+GCIYb5Kwv73T9GXn0zfF8VORf6HDjx39R+KgP nicolae@odin"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHfDaSjtslSu+N7+NRTVU2dycXsfgpfzzVmNBkgVWJWO nicolae@zoln"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA5NCnQC9er7RFTgS6HD1yVVMkq5eor9EiaDkrTsGZzb nicolae@sweet"
+      ];
     };
   };
 }

@@ -29,14 +29,7 @@
             inherit flakeRoot;
           };
 
-          configLib = import ./lib {
-            inherit
-              lib
-              flakeRoot
-              self
-              configVars
-              ;
-          };
+          configLib = import ./lib { inherit lib flakeRoot; };
 
           specialArgs = {
             inherit
@@ -57,7 +50,6 @@
               };
               modules = [
                 hjem.nixosModules.default
-                { hjem.extraModules = [ inputs.hjem-rum.hjemModules.default ]; }
                 ./hosts/${hostName}
               ];
             };

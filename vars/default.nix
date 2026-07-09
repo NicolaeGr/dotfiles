@@ -1,6 +1,7 @@
 { ... }:
 {
   defaultUserGroups = [
+    "kvm"
     "audio"
     "video"
     "input"
