@@ -11,7 +11,6 @@
   ++ (configLib.scanPaths ./.);
 
   system.stateVersion = "26.05";
-  hardware.enableRedistributableFirmware = true;
 
   boot.initrd.systemd.enable = true;
   boot.loader = {
@@ -21,8 +20,6 @@
     timeout = 3;
     efi.canTouchEfiVariables = true;
   };
-
-  services.fwupd.enable = true;
 
   i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
   time.timeZone = lib.mkDefault "Europe/Chisinau";
