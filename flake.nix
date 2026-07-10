@@ -50,6 +50,7 @@
               };
               modules = [
                 hjem.nixosModules.default
+                { hjem.specialArgs = { inherit configLib configVars; }; }
                 ./hosts/${hostName}
               ];
             };

@@ -25,35 +25,30 @@ in
 
     services.dbus.enable = true;
 
-    services.greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          user = "greeter";
-        };
-      };
-    };
+    # services.greetd = {
+    #   enable = true;
+    #   settings = {
+    #     default_session = {
+    #       user = "greeter";
+    #     };
+    #   };
+    # };
 
-    programs.regreet = {
-      enable = true;
-      cageArgs = [ "-s" ];
-      settings = {
-        background = {
-          fit = "Cover";
-        };
-        GTK = {
-          application_prefer_dark_theme = true;
-          font_name = "Cantarell 16";
-          icon_theme_name = "Adwaita";
-          theme_name = mkDefault "Adwaita-dark";
-        };
-      };
-    };
-
-    systemd.services.greetd.serviceConfig = {
-      Restart = lib.mkForce "always";
-      RestartSec = "3";
-    };
+    # programs.regreet = {
+    #   enable = true;
+    #   cageArgs = [ "-s" ];
+    #   settings = {
+    #     background = {
+    #       fit = "Cover";
+    #     };
+    #     GTK = {
+    #       application_prefer_dark_theme = true;
+    #       font_name = "Cantarell 16";
+    #       icon_theme_name = "Adwaita";
+    #       theme_name = mkDefault "Adwaita-dark";
+    #     };
+    #   };
+    # };
 
     environment.systemPackages = with pkgs; [
       xdg-utils

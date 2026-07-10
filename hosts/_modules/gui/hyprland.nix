@@ -1,6 +1,6 @@
 {
-  config,
   lib,
+  config,
   ...
 }:
 with lib;
@@ -17,19 +17,20 @@ in
       enable = true;
     };
 
-    xdg.portal = {
-      config.hyprland.default = [
+    xdg.portal.config.hyprland = {
+      default = [
         "hyprland"
         "gtk"
       ];
+      "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
     };
 
-    programs.regreet.settings = {
-      remember = true;
-      remember_session = true;
+    # programs.regreet.settings = {
+    #   remember = true;
+    #   remember_session = true;
 
-      default_session.command = "Hyprland";
-    };
+    #   default_session.command = "Hyprland";
+    # };
 
     programs.hyprlock.enable = true;
     services.hypridle.enable = true;
