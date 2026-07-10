@@ -3,6 +3,7 @@
   config,
   lib,
   configLib,
+  configVars,
   ...
 }:
 let
@@ -31,7 +32,7 @@ in
       hashedPasswordFile = config.sops.secrets."passwords/adrian".path;
       packages = [ pkgs.home-manager ];
 
-      extraGroups = configLib.ifUserGroupExists (configLib.defaultUserGroups ++ [ "wheel" ]) config;
+      extraGroups = configLib.ifUserGroupExists (configVars.defaultUserGroups ++ [ "wheel" ]) config;
 
       openssh.authorizedKeys.keys = lib.lists.forEach pubKeys (key: builtins.readFile key);
     };

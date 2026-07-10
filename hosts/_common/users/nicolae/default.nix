@@ -3,6 +3,7 @@
   config,
   lib,
   configLib,
+  configVars,
   ...
 }:
 let
@@ -32,7 +33,7 @@ in
       packages = [ pkgs.home-manager ];
 
       extraGroups = configLib.ifUserGroupExists (
-        configLib.defaultUserGroups
+        configVars.defaultUserGroups
         ++ [
           "kvm"
           "wheel"
