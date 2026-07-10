@@ -43,6 +43,9 @@
       qpwgraph
       pwvucontrol
       easyeffects
+
+      playerctl
+      pamixer
     ];
   };
 }

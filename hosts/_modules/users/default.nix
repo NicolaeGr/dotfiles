@@ -5,7 +5,6 @@
 }:
 {
   imports = [
-    ./utils.opt.nix
     ./utils.nix
   ];
 

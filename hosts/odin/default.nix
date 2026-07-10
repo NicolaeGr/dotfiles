@@ -10,8 +10,5 @@
     (self + "/hosts/_common")
   ];
 
-  local.hw.audio.enable = true;
-  local.hw.bluetooth.enable = true;
-
-  local.hw.splitKb = true;
+  local.gui.hypr.enable = true;
 }

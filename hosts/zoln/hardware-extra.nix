@@ -9,6 +9,10 @@
     inputs.hardware.nixosModules.common-pc-ssd
   ];
 
+  local.hw.audio.enable = true;
+
+  local.hw.splitKb = true;
+
   hardware.nvidia = {
     open = true;
     modesetting.enable = true;
