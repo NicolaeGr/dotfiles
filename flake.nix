@@ -29,7 +29,7 @@
             inherit flakeRoot;
           };
 
-          configLib = import ./lib { inherit lib flakeRoot; };
+          configLib = import ./lib { inherit lib self flakeRoot; };
 
           specialArgs = {
             inherit
@@ -50,7 +50,11 @@
               };
               modules = [
                 hjem.nixosModules.default
-                { hjem.specialArgs = { inherit configLib configVars; }; }
+                {
+                  hjem.specialArgs = specialArgs // {
+                    inherit hostName;
+                  };
+                }
                 ./hosts/${hostName}
               ];
             };
@@ -64,7 +68,7 @@
 
           nixosModules = import ./modules/nixos;
           overlays = import ./nix/overlays.nix { inherit inputs outputs; };
-          formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+          formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
         };
     };
 
@@ -92,5 +96,13 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Personal
+    nosh.url = "github:NicolaeGr/nosh";
   };
 }

@@ -6,5 +6,3 @@ output*
 
 *.qcow
 *.qcow2
-
-.flake-root.nix

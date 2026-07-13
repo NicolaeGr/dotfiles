@@ -1,5 +1,6 @@
 {
   lib,
+  self,
   flakeRoot,
   ...
 }:
@@ -24,7 +25,18 @@
   outOfStorePath =
     storePath:
     let
-      relPath = builtins.head (builtins.match ".*/[^/]+-source/(.*)" (builtins.toString storePath));
+      storePathStr = builtins.toString storePath;
+      selfPathStr = builtins.toString self;
+      flakeRootStr = builtins.toString flakeRoot;
     in
-    if flakeRoot != null && relPath != null then "${flakeRoot}/${relPath}" else storePath;
+    if flakeRootStr == "" then
+      storePath
+    else if lib.hasPrefix selfPathStr storePathStr then
+      flakeRootStr
+      + builtins.substring (builtins.stringLength selfPathStr) (
+        builtins.stringLength storePathStr - builtins.stringLength selfPathStr
+      ) storePathStr
+    else
+      storePath;
+
 }

@@ -1,0 +1,39 @@
+autoload -Uz vcs_info
+precmd() { vcs_info; }
+
+zstyle ':vcs_info:git:*' formats '%F{088}(%b)%f'
+setopt PROMPT_SUBST
+RPROMPT='${vcs_info_msg_0_}'
+
+local ssh_info=""
+if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]]; then
+	ssh_info="@%m"
+fi
+
+PS1="%F{053}[%F{178}%n%F{071}${ssh_info} %F{172}%(3~|%-1~/…/%1~|%2~)%F{053}]%f$ "
+
+export TMPCMD_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/tmpcmd"
+
+if [[ ":$PATH:" != *":$TMPCMD_DIR:"* ]]; then
+	export PATH="$TMPCMD_DIR:$PATH"
+fi
+
+tmpcmd() {
+	if [[ -z "$1" ]]; then
+		echo "Usage: tmpcmd <name>"
+		return 1
+	fi
+
+	mkdir -p "$TMPCMD_DIR"
+
+	find "$TMPCMD_DIR" -type f -mtime +7 -delete 2>/dev/null &|
+
+	local tmpfile="$TMPCMD_DIR/$1"
+
+	if [[ ! -f "$tmpfile" ]]; then
+		echo "#!/usr/bin/env bash" >"$tmpfile"
+		chmod +x "$tmpfile"
+	fi
+
+	${EDITOR:-vim} "$tmpfile"
+}

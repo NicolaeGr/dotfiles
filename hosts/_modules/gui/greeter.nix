@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
@@ -16,20 +17,31 @@ in
     services.greetd = {
       enable = true;
       settings = {
-        terminal = {
-          vt = 1;
-          switch = false;
-        };
         default_session = {
           user = "greeter";
+
+          command = lib.concatStringsSep " " [
+            "${pkgs.tuigreet}/bin/tuigreet"
+            "--time"
+            "--asterisks"
+
+            "--remember"
+            "--remember-session"
+
+            "--sessions ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions:${config.services.displayManager.sessionData.desktops}/share/xsessions"
+          ];
         };
       };
-      useTextGreeter = true;
     };
 
     systemd.services.greetd.serviceConfig = {
-      Restart = lib.mkForce "always";
-      RestartSec = "3";
+      Type = "idle";
+      StandardInput = "tty";
+      StandardOutput = "tty";
+      StandardError = "journal";
+      TTYReset = true;
+      TTYVHangup = true;
+      TTYVTDisallocate = true;
     };
   };
 }
