@@ -39,3 +39,11 @@ _remove-flake-root:
 _ask-reboot:
 	@echo "[*] Reboot now? (y/N)"
 	@read -r answer && { [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; } && sudo systemctl reboot || echo "[*] Reboot skipped"
+
+remote hostname ip=hostname: _write-flake-root
+	@echo "[+] Building and switching {{hostname}} remotely ({{ip}})..."
+	@trap 'just _remove-flake-root' EXIT; \
+	nixos-rebuild switch \
+	  --flake {{FLAKE_ROOT}}#{{hostname}} \
+	  --build-host root@{{ip}} \
+	  --target-host root@{{ip}}

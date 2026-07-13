@@ -1,0 +1,21 @@
+system: "base16"
+name: "Pretty Purple"
+author: "Generated"
+variant: "dark"
+palette:
+  base00: "#241f31" # Default Background (deep purple)
+  base01: "#363141" # Lighter Background (slightly lighter surface)
+  base02: "#332b45" # Selection Background / Highlight
+  base03: "#5e5c64" # Comments, Invisibles, Line Highlight
+  base04: "#c0bfbc" # Dark Foreground (secondary text)
+  base05: "#ffffff" # Default Foreground (main text)
+  base06: "#f6f5f4" # Light Foreground (secondary highlights)
+  base07: "#ffffff" # Light Background (brightest surfaces)
+  base08: "#ff5370" # Red / Pink Accent (errors, strong highlights)
+  base09: "#f8e45c" # Orange / Yellow Accent (warnings, tips)
+  base0A: "#f9f06b" # Yellow Accent (subtle highlights)
+  base0B: "#8ff0a4" # Green Accent (success)
+  base0C: "#26a269" # Cyan Accent (info)
+  base0D: "#9141ac" # Blue / Purple Accent (keywords, functions)
+  base0E: "#f8e45c" # Magenta / Purple Accent (strings, special)
+  base0F: "#ab7967"
