@@ -1,6 +1,7 @@
 {
   self,
   inputs,
+  config,
   ...
 }:
 {
@@ -9,6 +10,12 @@
   ];
 
   config = {
+    sops.secrets = {
+      "passwords/nicolae" = {
+        neededForUsers = true;
+      };
+    };
+
     hjem = {
       clobberByDefault = true;
 
@@ -20,7 +27,7 @@
 
     local.users.nicolae = {
       enable = true;
-      initialPassword = "nicolae";
+      hashedPasswordFile = config.sops.secrets."passwords/nicolae".path;
       extraGroups = [ "wheel" ];
       trustedKeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGXCGZ+GCIYb5Kwv73T9GXn0zfF8VORf6HDjx39R+KgP nicolae@odin"

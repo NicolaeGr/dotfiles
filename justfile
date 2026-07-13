@@ -18,7 +18,7 @@ build-boot: _write-flake-root
 build-vm: _write-flake-root
 	@echo "[+] Building system in VM mode from {{FLAKE_ROOT}} via nh..."
 	@trap 'just _remove-flake-root' EXIT; \
-	nixos-rebuild build-vm --flake {{FLAKE_ROOT}}#zoln
+	nixos-rebuild build-vm --flake {{FLAKE_ROOT}}
 
 _write-flake-root:
 	@new_value='"{{FLAKE_ROOT}}"'; \
