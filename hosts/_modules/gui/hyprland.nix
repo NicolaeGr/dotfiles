@@ -22,18 +22,11 @@ in
 
     programs.hyprland = {
       enable = true;
+      withUWSM = true;
 
       package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
       portalPackage =
         inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-    };
-
-    xdg.portal.config.hyprland = {
-      default = [
-        "hyprland"
-        "gtk"
-      ];
-      "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
     };
 
     programs.hyprlock.enable = true;

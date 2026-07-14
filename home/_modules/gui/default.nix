@@ -22,6 +22,7 @@
       signal-desktop
       fluffychat
 
+      firefox
       obsidian
       obs-studio
     ];

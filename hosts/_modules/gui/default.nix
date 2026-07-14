@@ -19,13 +19,6 @@ in
   config = mkIf cfg.enable {
     hjem.extraModules = [ { local.gui.enable = true; } ];
 
-    xdg.autostart.enable = true;
-    xdg.portal = {
-      enable = true;
-      config.common.default = [ "gtk" ];
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    };
-
     services.dbus.enable = true;
     programs.dconf.enable = true;
 
@@ -34,7 +27,6 @@ in
       shared-mime-info
 
       wl-clipboard
-
     ];
 
     environment.sessionVariables = {
