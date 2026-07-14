@@ -1,14 +1,16 @@
 {
   lib,
   self,
+  outputs,
   configLib,
   ...
 }:
 {
-  imports = [
+  imports = lib.flatten [
     (self + "/hosts/_modules")
-  ]
-  ++ (configLib.scanPaths ./.);
+    (configLib.scanPaths ./.)
+    (builtins.attrValues outputs.nixosModules)
+  ];
 
   system.stateVersion = "26.05";
 

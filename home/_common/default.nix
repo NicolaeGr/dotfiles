@@ -1,7 +1,14 @@
-{ self, configLib, ... }:
 {
-  imports = [
+  lib,
+  self,
+  outputs,
+  configLib,
+  ...
+}:
+{
+  imports = lib.flatten [
     (self + "/home/_modules")
-  ]
-  ++ (configLib.scanPaths ./.);
+    (configLib.scanPaths ./.)
+    (builtins.attrValues outputs.hjemModules)
+  ];
 }

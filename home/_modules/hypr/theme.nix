@@ -1,8 +1,41 @@
-{ lib, pkgs, ... }: {
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+{
   packages = with pkgs; [
     rose-pine-hyprcursor
     kora-icon-theme
   ];
+
+  local.theming = {
+    enable = true;
+    themes = {
+      "pretty-purple" = {
+        variant = "dark";
+        colors = {
+          base00 = "#241f31";
+          base01 = "#363141";
+          base02 = "#332b45";
+          base03 = "#5e5c64";
+          base04 = "#c0bfbc";
+          base05 = "#ffffff";
+          base06 = "#f6f5f4";
+          base07 = "#ffffff";
+          base08 = "#ff5370";
+          base09 = "#f8e45c";
+          base0A = "#f9f06b";
+          base0B = "#8ff0a4";
+          base0C = "#26a269";
+          base0D = "#9141ac";
+          base0E = "#f8e45c";
+          base0F = "#ab7967";
+        };
+      };
+    };
+  };
 
   files = {
     ".config/hypr/hyprland.lua".text = lib.mkAfter ''
@@ -26,22 +59,21 @@
       gtk-font-name = Sans 10
     '';
 
-    # ".config/gtk-3.0/gtk.css".text = ''
-    #   @import url("file:///home/nicolae/.local/state/nosh/active-theme/gtk-3.0/gtk.css");
-    # '';
-    # ".config/gtk-4.0/gtk.css".text = ''
-    #   @import url("file:///home/nicolae/.local/state/nosh/active-theme/gtk-4.0/gtk.css");
-    # '';
+    ".config/kitty/kitty.conf".text = lib.mkAfter ''
+      # Read the currently active theme
+      include ${config.directory}/.config/hjem/themes/active/kitty.conf
 
-    # ".config/kitty/kitty.conf".text = ''
-    #   # Static physical configurations
-    #   font_family      FiraCode Nerd Font
-    #   font_size        11.0
-    #   cursor_shape     underline
-    #   shell_integration disabled
+      # Enable IPC for the live-reload script
+      allow_remote_control yes
+      listen_on unix:/tmp/kitty
+    '';
 
-    #   # Dynamic color override hook
-    #   include /home/nicolae/.local/state/nosh/active-theme/kitty/colors.conf
-    # '';
+    ".config/gtk-3.0/gtk.css".text = ''
+      @import url("file://${config.directory}/.config/hjem/themes/active/gtk.css");
+    '';
+
+    ".config/gtk-4.0/gtk.css".text = ''
+      @import url("file://${config.directory}/.config/hjem/themes/active/gtk.css");
+    '';
   };
 }

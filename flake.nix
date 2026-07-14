@@ -66,7 +66,9 @@
             lumix = mkHost "lumix";
           };
 
+          hjemModules = import ./modules/hjem;
           nixosModules = import ./modules/nixos;
+
           overlays = import ./nix/overlays.nix { inherit inputs outputs; };
           formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
         };
@@ -102,10 +104,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hyprland.url = "github:hyprwm/Hyprland";
+    base16.url = "github:SenchoPens/base16.nix";
 
     # Personal
     nosh.url = "github:NicolaeGr/nosh";

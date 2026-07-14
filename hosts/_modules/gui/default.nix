@@ -19,6 +19,7 @@ in
   config = mkIf cfg.enable {
     hjem.extraModules = [ { local.gui.enable = true; } ];
 
+    xdg.autostart.enable = true;
     xdg.portal = {
       enable = true;
       config.common.default = [ "gtk" ];
@@ -26,6 +27,7 @@ in
     };
 
     services.dbus.enable = true;
+    programs.dconf.enable = true;
 
     environment.systemPackages = with pkgs; [
       xdg-utils

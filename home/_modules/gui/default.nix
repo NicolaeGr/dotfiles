@@ -23,6 +23,7 @@
       fluffychat
 
       obsidian
+      obs-studio
     ];
   };
 }
