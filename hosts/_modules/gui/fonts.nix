@@ -18,6 +18,7 @@ in
         noto-fonts-color-emoji
         nerd-fonts.jetbrains-mono
       ];
+
       fontconfig = {
         enable = true;
         defaultFonts = {

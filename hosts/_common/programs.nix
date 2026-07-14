@@ -1,5 +1,7 @@
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
+    vim
+    neovim
     nixfmt
     nil
     nixpkgs-fmt

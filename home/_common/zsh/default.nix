@@ -1,12 +1,12 @@
 { configLib, ... }:
 {
   files.".config/zsh/config.sh" = {
-    source = configLib.outOfStorePath ./zshrc;
+    source = ./zshrc;
   };
 
-  rum.programs.zsh.initConfig = "
-    if [[ -f \"\$XDG_CONFIG_HOME/zsh/config.sh\" ]]; then
-      source \"\$XDG_CONFIG_HOME/zsh/config.sh\"
+  rum.programs.zsh.initConfig = ''
+    if [[ -f $XDG_CONFIG_HOME/zsh/config.sh ]]; then
+      source $XDG_CONFIG_HOME/zsh/config.sh
     fi
-  ";
+  '';
 }

@@ -32,6 +32,7 @@ in
       shared-mime-info
 
       wl-clipboard
+
     ];
 
     environment.sessionVariables = {

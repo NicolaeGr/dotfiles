@@ -12,6 +12,14 @@ hl.bind(mod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mod .. " + P", hl.dsp.window.pseudo({ action = "toggle" }))
 hl.bind(mod .. " + J", hl.dsp.layout("togglesplit"))
 
+-- Nosh Binds
+hl.bind("SUPER + X", hl.dsp.exec_cmd("nosh app-launcher"))
+
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("nosh volume-up"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("nosh volume-down"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("nosh brightness-up"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("nosh brightness-down"), { locked = true, repeating = true })
+
 -- Move Focus
 hl.bind(mod .. " + left", hl.dsp.focus({ direction = "l" }))
 hl.bind(mod .. " + right", hl.dsp.focus({ direction = "r" }))

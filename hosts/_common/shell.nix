@@ -19,7 +19,6 @@
     shellInit = ''
       export ZDOTDIR="''${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
-      # Prevent the "New User" wizard from creating a ~/.zshrc if it's missing
       export ZSH_NEWUSER_INSTALL="$ZDOTDIR"
     '';
 
