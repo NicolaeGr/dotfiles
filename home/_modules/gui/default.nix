@@ -34,6 +34,8 @@
       obsidian
       obs-studio
       jellyfin-media-player
+
+      kitty
     ];
   };
 }

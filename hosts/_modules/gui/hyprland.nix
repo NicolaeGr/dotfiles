@@ -29,7 +29,6 @@ in
         inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     };
 
-    programs.hyprlock.enable = true;
     services.hypridle.enable = true;
 
     security.pam.services.hyprlock = { };

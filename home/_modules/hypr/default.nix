@@ -15,10 +15,7 @@
     local.gui.enable = true;
 
     packages = with pkgs; [
-      kitty
-
       inputs.nosh.packages.${pkgs.stdenv.hostPlatform.system}.default
-      awww
     ];
 
     files = {
@@ -29,9 +26,6 @@
       };
       ".config/hypr/modules" = {
         source = configLib.outOfStorePath ./modules;
-      };
-      ".config/hypr/backgrounds" = {
-        source = configLib.outOfStorePath ./bgs;
       };
     };
   };
