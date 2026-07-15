@@ -2,9 +2,12 @@
   lib,
   pkgs,
   config,
+  configLib,
   ...
 }:
 {
+  imports = (configLib.scanPaths ./.);
+
   options.local.dev.enable = lib.mkOption {
     type = lib.types.bool;
     default = true;
