@@ -3,8 +3,4 @@
     (configLib.scanPaths ./.)
     (configLib.scanPaths ./hardware)
   ];
-
-  config = {
-    local.users.nicolae.enable = true;
-  };
 }

@@ -14,4 +14,6 @@
 
   local.gui.hypr.enable = true;
 
+  local.gaming.enable = true;
+  local.gaming.jc.enable = true;
 }

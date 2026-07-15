@@ -1,0 +1,102 @@
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+{
+  imports = [ ./jc.nix ];
+
+  options = {
+    local.gaming.enable = lib.mkEnableOption "Enable essentials for gaming support";
+  };
+
+  config = lib.mkIf config.local.gaming.enable {
+    hardware.xpadneo.enable = true;
+
+    programs = {
+      steam = {
+        enable = true;
+        protontricks = {
+          enable = true;
+          package = pkgs.protontricks;
+        };
+        package = pkgs.steam.override {
+          extraPkgs =
+            pkgs:
+            (builtins.attrValues {
+              inherit (pkgs)
+                libXcursor
+                libXi
+                libXinerama
+                libXScrnSaver
+                ;
+
+              inherit (pkgs.stdenv.cc.cc) lib;
+
+              inherit (pkgs)
+                libpng
+                libpulseaudio
+                libvorbis
+                libkrb5
+                keyutils
+                gperftools
+                ;
+            });
+        };
+        extraCompatPackages = [ pkgs.proton-ge-bin ];
+        localNetworkGameTransfers.openFirewall = true;
+        gamescopeSession.enable = true;
+        remotePlay.openFirewall = true;
+        dedicatedServer.openFirewall = true;
+      };
+
+      gamescope = {
+        enable = true;
+        capSysNice = false;
+      };
+
+      gamemode = {
+        enable = true;
+        settings = {
+          general = {
+            softrealtime = "on";
+            inhibit_screensaver = 1;
+          };
+          gpu = {
+            apply_gpu_optimisations = "accept-responsibility";
+            gpu_device = 1; # The DRM device number on the system (usually 0), ie. the number in /sys/class/drm/card0/
+            amd_performance_level = "high";
+          };
+          custom = {
+            start = "${pkgs.libnotify}/bin/notify-send 'GameMode started'";
+            end = "${pkgs.libnotify}/bin/notify-send 'GameMode ended'";
+          };
+        };
+      };
+    };
+
+    environment.systemPackages = with pkgs; [
+      mangohud
+      winetricks
+      protonup-ng
+      wineWow64Packages.staging
+
+      heroic
+
+      stable.prismlauncher
+      stable.bottles
+      stable.lutris
+    ];
+
+    boot.kernelModules = [ "ntsync" ];
+    services.udev.packages = [
+      (pkgs.writeTextDir "lib/udev/rules.d/70-ntsync.rules" ''
+        KERNEL=="ntsync", MODE="0660", TAG+="uaccess"
+      '')
+    ];
+    boot.initrd.kernelModules = [ "ntsync" ];
+
+    environment.sessionVariables.STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
+  };
+}
