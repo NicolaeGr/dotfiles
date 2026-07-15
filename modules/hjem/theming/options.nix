@@ -1,7 +1,7 @@
 { lib, config, ... }:
 with lib;
 let
-  cfg = config.hjem.theming;
+  cfg = config.local.theming;
 
   colorSubmodule = {
     options = listToAttrs (
@@ -59,10 +59,31 @@ in
   options.local.theming = {
     enable = mkEnableOption "custom declarative engine-agnostic system theming";
 
+    iconTheme = {
+      name = mkOption { type = types.str; };
+      package = mkOption { type = types.package; };
+    };
+
+    cursorTheme = {
+      name = mkOption { type = types.str; };
+      package = mkOption { type = types.package; };
+      size = mkOption {
+        type = types.int;
+        default = 24;
+      };
+    };
+
     themes = mkOption {
       type = types.attrsOf (types.submodule themeSubmodule);
       default = { };
       description = "The complete set of pre-compiled system themes.";
     };
+  };
+
+  config = {
+    packages = [
+      cfg.cursorTheme.package
+      cfg.iconTheme.package
+    ];
   };
 }

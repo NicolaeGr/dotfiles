@@ -23,7 +23,6 @@ let
       exit 1
     fi
 
-    # Lookup variant based on Nix configuration
     case "$THEME" in
       ${themeVariants}
       *)
@@ -34,31 +33,29 @@ let
 
     ACTIVE_DIR="$HOME/.config/hjem/themes/active"
 
-    # 1. Update the primary active symlink
     ln -sfn "$HOME/.config/hjem/themes/$THEME" "$ACTIVE_DIR"
 
-    # 2. Update Kvantum symlink
-    # (Kvantum requires the folder name to match the theme name exactly)
-    mkdir -p "$HOME/.config/Kvantum"
-    ln -sfn "$ACTIVE_DIR" "$HOME/.config/Kvantum/HjemTheme"
-
-    # 3. Broadcast Variant via GSettings
-    # GTK and modern Qt (via Kvantum) respect this on the fly
     if [ "$VARIANT" = "dark" ]; then
-      ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+      ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
+      TARGET_THEME="adw-gtk3-dark"
     else
-      ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface color-scheme 'default'
+      ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/color-scheme "'default'"
+      TARGET_THEME="adw-gtk3"
     fi
 
-    # 4. IPC Reload Signals
+    ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/gtk-theme "'HighContrast'"
+    sleep 0.05
+    ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/gtk-theme "'$TARGET_THEME'"
 
-    # Trigger Kvantum redraw, and make sure that our files are symlinked correctly to ~/.config/Kvantum/
-    ln -sfn "$ACTIVE_DIR/HjemTheme.kvconfig" "$HOME/.config/Kvantum/HjemTheme.kvconfig"
-    ln -sfn "$ACTIVE_DIR/HjemTheme.svg" "$HOME/.config/Kvantum/HjemTheme.svg"
+    mkdir -p "$HOME/.config/Kvantum/HjemTheme"
+    ln -sfn "$ACTIVE_DIR/HjemTheme.kvconfig" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.kvconfig"
+    ln -sfn "$ACTIVE_DIR/HjemTheme.svg" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.svg"
 
-    # Trigger Kitty redraw (Requires IPC enabled in kitty.conf)
+    touch "$HOME/.config/Kvantum/kvantum.kvconfig"
+
     if [ -S /tmp/kitty ]; then
-      kitty @ --to unix:/tmp/kitty set-colors -a -c "$ACTIVE_DIR/kitty.conf" || true
+      ${pkgs.kitty}/bin/kitty @ --to unix:/tmp/kitty set-colors -a -c "$ACTIVE_DIR/kitty.conf" || true
+      ${pkgs.kitty}/bin/kitty @ --to unix:/tmp/kitty load-config "$HOME/.config/kitty/kitty.conf" || true
     fi
 
     echo "Successfully switched to $THEME ($VARIANT)"
@@ -67,14 +64,14 @@ in
 {
   config = lib.mkIf cfg.enable {
     environment.sessionVariables = {
-      GTK_THEME = "HjemTheme";
-
       QT_QPA_PLATFORMTHEME = "qt5ct";
       QT_STYLE_OVERRIDE = "kvantum";
     };
 
     packages = [
       switcherScript
+      pkgs.libsForQt5.qtstyleplugin-kvantum
+      pkgs.qt6Packages.qtstyleplugin-kvantum
     ];
   };
 }

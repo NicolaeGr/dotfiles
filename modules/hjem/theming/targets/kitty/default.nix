@@ -30,5 +30,12 @@ in
         };
       }
     ) cfg.themes;
+
+    files.".config/kitty/kitty.conf".text = lib.mkAfter ''
+      include ${config.directory}/.config/hjem/themes/active/kitty.conf
+
+      allow_remote_control yes
+      listen_on unix:/tmp/kitty
+    '';
   };
 }

@@ -5,13 +5,21 @@
   ...
 }:
 {
-  packages = with pkgs; [
-    rose-pine-hyprcursor
-    kora-icon-theme
-  ];
 
   local.theming = {
     enable = true;
+
+    iconTheme = {
+      name = "kora";
+      package = pkgs.kora-icon-theme;
+    };
+
+    cursorTheme = {
+      name = "rose-pine-hyprcursor";
+      package = pkgs.rose-pine-hyprcursor;
+      size = 24;
+    };
+
     themes = {
       "pretty-purple" = {
         variant = "dark";
@@ -56,45 +64,5 @@
         };
       };
     };
-  };
-
-  files = {
-    ".config/hypr/hyprland.lua".text = lib.mkAfter ''
-      hl.env("HYPRCURSOR_THEME", "rose-pine-hyprcursor")
-      hl.env("HYPRCURSOR_SIZE", "24")
-    '';
-
-    ".config/gtk-3.0/settings.ini".text = ''
-      [Settings]
-      gtk-icon-theme-name = kora
-      gtk-cursor-theme-name = rose-pine-hyprcursor
-      gtk-cursor-theme-size = 24
-      gtk-font-name = Sans 10
-    '';
-
-    ".config/gtk-4.0/settings.ini".text = ''
-      [Settings]
-      gtk-icon-theme-name = kora
-      gtk-cursor-theme-name = rose-pine-hyprcursor
-      gtk-cursor-theme-size = 24
-      gtk-font-name = Sans 10
-    '';
-
-    ".config/kitty/kitty.conf".text = lib.mkAfter ''
-      # Read the currently active theme
-      include ${config.directory}/.config/hjem/themes/active/kitty.conf
-
-      # Enable IPC for the live-reload script
-      allow_remote_control yes
-      listen_on unix:/tmp/kitty
-    '';
-
-    ".config/gtk-3.0/gtk.css".text = ''
-      @import url("file://${config.directory}/.config/hjem/themes/active/gtk.css");
-    '';
-
-    ".config/gtk-4.0/gtk.css".text = ''
-      @import url("file://${config.directory}/.config/hjem/themes/active/gtk.css");
-    '';
   };
 }

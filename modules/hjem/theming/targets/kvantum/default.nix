@@ -41,5 +41,10 @@ in
         };
       }
     ) { } (attrNames cfg.themes);
+
+    files.".config/Kvantum/kvantum.kvconfig".text = ''
+      [General]
+      theme=HjemTheme
+    '';
   };
 }
