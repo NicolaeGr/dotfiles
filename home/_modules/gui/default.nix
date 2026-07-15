@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   config,
   ...
 }:
@@ -9,6 +10,7 @@
 
   config = lib.mkIf config.local.gui.enable {
     packages = with pkgs; [
+      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
       gnome-calculator
       gnome-calendar
       gnome-contacts

@@ -99,15 +99,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprland.url = "github:hyprwm/Hyprland";
+    base16.url = "github:SenchoPens/base16.nix";
+
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland.url = "github:hyprwm/Hyprland";
-    base16.url = "github:SenchoPens/base16.nix";
-
-    # Personal
     nosh.url = "github:NicolaeGr/nosh";
   };
 }

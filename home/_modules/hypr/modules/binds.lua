@@ -2,7 +2,7 @@ local vars = require("modules.vars")
 local mod = vars.mod
 
 -- Core Binds
-hl.bind(mod .. " + B", hl.dsp.exec_cmd("app.zen_browser.zen"))
+hl.bind(mod .. " + B", hl.dsp.exec_cmd("zen"))
 hl.bind(mod .. " + T", hl.dsp.exec_cmd(vars.terminal))
 hl.bind(mod .. " + Q", hl.dsp.window.close())
 hl.bind(mod .. " + L", hl.dsp.exec_cmd("hyprlock"))
