@@ -10,23 +10,30 @@
 
   config = lib.mkIf config.local.gui.enable {
     packages = with pkgs; [
+      firefox
       inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-      gnome-calculator
+
       gnome-calendar
       gnome-contacts
-      nautilus
+      gnome-calculator
+
+      loupe
       cheese
       baobab
-      loupe
+      nautilus
+
+      vlc
+      mpv
       libreoffice
 
-      telegram-desktop
-      signal-desktop
+      discord
       fluffychat
+      signal-desktop
+      telegram-desktop
 
-      firefox
       obsidian
       obs-studio
+      jellyfin-media-player
     ];
   };
 }
