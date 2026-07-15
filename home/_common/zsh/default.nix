@@ -1,7 +1,7 @@
 { configLib, ... }:
 {
   files.".config/zsh/config.sh" = {
-    source = ./zshrc;
+    source = configLib.outOfStorePath ./zshrc;
   };
 
   rum.programs.zsh.initConfig = ''

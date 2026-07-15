@@ -6,16 +6,6 @@
   configLib,
   ...
 }:
-let
-  dbusVars = [
-    # "DISPLAY"
-    # "HYPRLAND_INSTANCE_SIGNATURE"
-    # "WAYLAND_DISPLAY"
-    # "XDG_CURRENT_DESKTOP"
-    # "XDG_SESSION_TYPE"
-    "--all"
-  ];
-in
 {
   imports = (configLib.scanPaths ./.);
 
@@ -38,10 +28,10 @@ in
         '';
       };
       ".config/hypr/modules" = {
-        source = ./modules;
+        source = configLib.outOfStorePath ./modules;
       };
       ".config/hypr/backgrounds" = {
-        source = ./bgs;
+        source = configLib.outOfStorePath ./bgs;
       };
     };
   };
