@@ -15,4 +15,7 @@
   local.users.adrian.enable = true;
 
   local.dev.enable = true;
+
+  services.nginx.enable = true;
+  services.croc.enable = true;
 }
