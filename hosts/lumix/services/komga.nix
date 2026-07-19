@@ -34,7 +34,7 @@ in
 
   services.nginx.virtualHosts."komga.electrolit.biz" = {
     forceSSL = true;
-    enableACME = true;
+    useACMEHost = "electrolit.biz";
 
     extraConfig = ''
       set $komga "${ip}:25600";

@@ -1,8 +1,6 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
   environment.shells = [ pkgs.zsh ];
   users.defaultUserShell = pkgs.zsh;
-
-  environment.systemPackages = [ pkgs.fzf ];
 
   programs.zsh = {
     enable = true;

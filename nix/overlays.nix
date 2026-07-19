@@ -5,7 +5,7 @@
   modifications = final: prev: { };
 
   master-hotfixes = final: _prev: {
-    vscode-bleeding = import inputs.nixpkgs-master {
+    master = import inputs.nixpkgs {
       system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     };

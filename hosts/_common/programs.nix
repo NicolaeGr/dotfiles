@@ -14,7 +14,6 @@
     dua
 
     jq
-    tree
 
     wget
     curl

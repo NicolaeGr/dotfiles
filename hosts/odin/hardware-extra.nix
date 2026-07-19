@@ -8,6 +8,11 @@
 
   local.hw.splitKb = true;
 
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
   boot.kernelModules = [ "acpi_call" ];
 

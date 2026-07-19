@@ -1,5 +1,9 @@
 { configLib, ... }:
 {
+  imports = [
+    ./programs.nix
+  ];
+
   files.".config/zsh/config.sh" = {
     source = configLib.outOfStorePath ./zshrc;
   };

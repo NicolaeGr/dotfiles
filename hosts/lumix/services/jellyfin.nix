@@ -53,7 +53,7 @@ in
 
   services.nginx.virtualHosts."jf.electrolit.biz" = {
     forceSSL = true;
-    enableACME = true;
+    useACMEHost = "electrolit.biz";
 
     extraConfig = ''
       client_max_body_size 20M;

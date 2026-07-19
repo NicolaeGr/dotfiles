@@ -30,11 +30,7 @@
           # Tools
           uget
           glow
-          fd
-          ripgrep
-          bat
           fzf
-          eza
           tldr
           tokei
           ngrok
