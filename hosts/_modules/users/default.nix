@@ -11,9 +11,10 @@
 
   config = {
     sops.secrets = {
-      "passwords/nicolae" = {
-        neededForUsers = true;
-      };
+      "passwords/nicolae".neededForUsers = true;
+      "passwords/victor".neededForUsers = true;
+      "passwords/adrian".neededForUsers = true;
+      "passwords/deploy".neededForUsers = true;
     };
 
     hjem = {
