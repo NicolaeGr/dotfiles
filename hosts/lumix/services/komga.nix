@@ -26,9 +26,6 @@ in
         user = "deploy";
         group = "users";
       };
-
-      # Temporary fix to change package on the existing service
-      systemd.services.komga.serviceConfig.ExecStart = lib.mkForce (lib.getExe pkgs.unstable.komga);
     };
   };
 

@@ -91,7 +91,7 @@ in
 
           ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
 
-          ExecStart = "${pkgs.unstable.seanime}/bin/seanime";
+          ExecStart = "${pkgs.seanime}/bin/seanime";
 
           Restart = "on-failure";
 

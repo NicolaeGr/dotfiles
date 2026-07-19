@@ -24,7 +24,7 @@ in
       services.radarr = {
         enable = true;
         openFirewall = true;
-        package = pkgs.unstable.radarr;
+        package = pkgs.radarr;
 
         dataDir = "${baseDir}/radarr";
 
@@ -35,7 +35,7 @@ in
       services.sonarr = {
         enable = true;
         openFirewall = true;
-        package = pkgs.unstable.sonarr;
+        package = pkgs.sonarr;
 
         dataDir = "${baseDir}/sonarr";
 
@@ -46,7 +46,7 @@ in
       services.bazarr = {
         enable = true;
         openFirewall = true;
-        package = pkgs.unstable.bazarr;
+        package = pkgs.bazarr;
 
         user = "deploy";
         group = "users";
@@ -55,7 +55,7 @@ in
       services.lidarr = {
         enable = true;
         openFirewall = true;
-        package = pkgs.unstable.lidarr;
+        package = pkgs.lidarr;
 
         dataDir = "${baseDir}/lidarr";
 
@@ -66,7 +66,7 @@ in
       services.prowlarr = {
         enable = true;
         openFirewall = true;
-        package = pkgs.unstable.prowlarr;
+        package = pkgs.prowlarr;
       };
     };
   };
