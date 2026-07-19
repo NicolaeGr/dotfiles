@@ -80,7 +80,7 @@ in
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     packages = [
       cfg.cursorTheme.package
       cfg.iconTheme.package
