@@ -1,4 +1,6 @@
 { hostName, ... }: {
+  services.resolved.enable = false;
+
   networking = {
     inherit hostName;
     enableIPv6 = false;
