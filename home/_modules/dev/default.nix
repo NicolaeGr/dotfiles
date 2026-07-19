@@ -60,7 +60,7 @@
             src = (
               builtins.fetchTarball {
                 url = "https://update.code.visualstudio.com/latest/linux-x64/stable";
-                sha256 = "sha256:10y1bq1nzak22k0cpv323pi4swqs3jzjmkd0393c2jaz4w1h8p5f";
+                sha256 = "sha256:0drbxdi61i1dkcym8s1mb8mnf8gz25w7m6bzzskpmwzdbygy0zmq";
               }
             );
             version = "latest";
