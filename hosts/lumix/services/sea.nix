@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-
+{ lib, pkgs, ... }:
 let
   containerLib = import ./_util.nix { inherit pkgs lib; };
   ip = "192.168.100.22";
@@ -91,7 +85,7 @@ in
 
           ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
 
-          ExecStart = "${pkgs.seanime}/bin/seanime";
+          ExecStart = "${pkgs.master.seanime}/bin/seanime";
 
           Restart = "on-failure";
 
