@@ -26,7 +26,7 @@ in
             "--asterisks"
 
             "--remember"
-            "--remember-session"
+            "--remember-user-session"
 
             "--sessions ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions:${config.services.displayManager.sessionData.desktops}/share/xsessions"
           ];
