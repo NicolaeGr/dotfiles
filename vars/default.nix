@@ -12,6 +12,7 @@
     "libvirt"
     "storage"
     "libvirtd"
+    "waydroid"
     "adbusers"
     "vboxusers"
     "sambashare"

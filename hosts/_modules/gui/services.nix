@@ -24,5 +24,8 @@ in
     services.tumbler.enable = true;
 
     services.accounts-daemon.enable = true;
+
+    programs.localsend.enable = true;
+    programs.localsend.openFirewall = true;
   };
 }
