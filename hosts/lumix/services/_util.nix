@@ -1,17 +1,9 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
   deployUID = 1002;
   deployGID = 100;
 
-  ipToMac =
-    ip:
-    let
-      parts = lib.splitString "." ip;
-
-      hex = n: lib.toLower (lib.toHexString (lib.toInt n));
-      pad = s: if (lib.stringLength s) == 1 then "0${s}" else s;
-    in
-    "02:00:00:00:${pad (hex (lib.elemAt parts 2))}:${pad (hex (lib.elemAt parts 3))}";
+  stateVersion = config.system.stateVersion;
 in
 {
   mkServiceContainer =
@@ -63,6 +55,8 @@ in
                 }
               ];
             };
+
+            system.stateVersion = stateVersion;
           }
 
           module
