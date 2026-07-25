@@ -33,9 +33,13 @@
 
       obsidian
       obs-studio
-      jellyfin-media-player
+      jellyfin-desktop
 
       kitty
     ];
+
+    environment.sessionVariables = {
+      TERMINAL = "kitty";
+    };
   };
 }
