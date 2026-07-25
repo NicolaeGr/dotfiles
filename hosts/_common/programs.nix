@@ -24,4 +24,13 @@
 
     ffmpeg
   ];
+
+  hjem.extraModules = [
+    {
+      environment.sessionVariables = {
+        EDITOR = "nvim";
+        VISUAL = "nvim";
+      };
+    }
+  ];
 }

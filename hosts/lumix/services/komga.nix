@@ -1,8 +1,7 @@
-{ lib, pkgs, ... }:
+{ containerLib, ... }:
 let
-  containerLib = import ./_util.nix { inherit pkgs lib; };
-  stateDir = "/storage/appdata/komga";
   ip = "192.168.100.12";
+  stateDir = "/storage/appdata/komga";
 in
 {
   containers.komga = containerLib.mkServiceContainer {

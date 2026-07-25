@@ -20,6 +20,11 @@ build-vm: _write-flake-root
 	@trap 'just _remove-flake-root' EXIT; \
 	nixos-rebuild build-vm --flake {{FLAKE_ROOT}}
 
+check HOST:
+	@echo "[+] Checking system for host {{HOST}} from {{FLAKE_ROOT}} via nh..."
+	@trap 'just _remove-flake-root' EXIT; \
+	nh os check path:{{FLAKE_ROOT}} host:{{HOST}}
+
 _write-flake-root:
 	@new_value='"{{FLAKE_ROOT}}"'; \
 	if [ -f "{{FLAKE_ROOT_FILE}}" ] && [ "$$(cat "{{FLAKE_ROOT_FILE}}")" = "$$new_value" ]; then \

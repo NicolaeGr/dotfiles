@@ -1,14 +1,6 @@
+{ containerLib, ... }:
 {
-  lib,
-  pkgs,
-  hostName,
-  ...
-}:
-let
-  cLib = import ./../_util.nix { inherit pkgs lib; };
-in
-{
-  services.nginx.virtualHosts."electrolit.biz" = cLib.withPrivateAccess {
+  services.nginx.virtualHosts."electrolit.biz" = containerLib.withPrivateAccess {
     forceSSL = true;
     useACMEHost = "electrolit.biz";
     serverAliases = [

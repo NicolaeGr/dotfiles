@@ -1,10 +1,5 @@
-{
-  lib,
-  pkgs,
-  ...
-}:
+{ containerLib, ... }:
 let
-  containerLib = import ./_util.nix { inherit pkgs lib; };
   ip = "192.168.100.13";
 in
 {

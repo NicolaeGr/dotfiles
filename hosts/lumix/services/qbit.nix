@@ -1,6 +1,5 @@
-{ lib, pkgs, ... }:
+{ lib, containerLib, ... }:
 let
-  containerLib = import ./_util.nix { inherit pkgs lib; };
   baseDir = "/storage/jellyfin";
 in
 {

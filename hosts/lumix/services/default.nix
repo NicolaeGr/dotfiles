@@ -1,6 +1,8 @@
 { pkgs, lib, ... }:
 {
   imports = [
+    ./_util.nix
+
     # System Pub
     ./jellyfin.nix
 

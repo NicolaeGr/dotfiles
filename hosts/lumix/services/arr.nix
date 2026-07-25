@@ -1,9 +1,7 @@
-{ lib, pkgs, ... }:
+{ pkgs, containerLib, ... }:
 let
-  containerLib = import ./_util.nix { inherit pkgs lib; };
-  baseDir = "/storage/appdata";
-
   ip = "192.168.100.21";
+  baseDir = "/storage/appdata";
 in
 {
   containers.arr = containerLib.mkServiceContainer {

@@ -1,14 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-
+{ pkgs, containerLib, ... }:
 let
-  containerLib = import ./_util.nix { inherit pkgs lib; };
-  baseDir = "/storage/appdata/jellyfin";
   ip = "192.168.100.11";
+  baseDir = "/storage/appdata/jellyfin";
 in
 {
   containers.jellyfin = containerLib.mkServiceContainer {
