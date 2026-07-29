@@ -74,6 +74,8 @@ in
         user = "deploy";
         group = "users";
 
+        environmentFile = "${baseDir}/slskd/slskd.env";
+
         settings = {
           directories.app = "${baseDir}/slskd";
 
@@ -81,10 +83,6 @@ in
           downloads.incomplete = "/storage/downloads/slskd/incomplete";
         };
       };
-
-      systemd.tmpfiles.rules = [
-        "d ${baseDir}/soularr 0755 deploy users -"
-      ];
 
       environment.etc."soularr/config.ini".text = ''
         [Lidarr]
@@ -132,9 +130,6 @@ in
     };
   };
 
-  # ---------------------------------------------------------------------------
-  # Nginx Reverse Proxy Domains
-  # ---------------------------------------------------------------------------
   services.nginx.virtualHosts =
     let
       makeDomainConfig =
