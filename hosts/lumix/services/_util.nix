@@ -57,6 +57,8 @@ in
                 ];
               };
 
+              environment.systemPackages = [ pkgs.kitty ];
+
               system.stateVersion = hostStateVersion;
             }
 

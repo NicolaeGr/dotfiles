@@ -1,4 +1,9 @@
-{ pkgs, containerLib, ... }:
+{
+  lib,
+  pkgs,
+  containerLib,
+  ...
+}:
 let
   ip = "192.168.100.21";
   baseDir = "/storage/appdata";
@@ -77,31 +82,19 @@ in
         environmentFile = "${baseDir}/slskd/slskd.env";
 
         settings = {
-          directories.app = "${baseDir}/slskd";
+          directories.incomplete = "${baseDir}/slskd/incomplete";
+          directories.downloads = "${baseDir}/slskd/downloads";
 
-          downloads.completed = "/storage/downloads/slskd/completed";
-          downloads.incomplete = "/storage/downloads/slskd/incomplete";
+          web = {
+            host = "0.0.0.0";
+            port = 5030;
+          };
         };
       };
 
-      environment.etc."soularr/config.ini".text = ''
-        [Lidarr]
-        host_url = http://127.0.0.1:8686
-        api_key = $LIDARR_API_KEY
-        download_dir = /storage/downloads/slskd/completed
-
-        [Slskd]
-        host_url = http://127.0.0.1:5030
-        api_key = $SLSKD_API_KEY
-        download_dir = /storage/downloads/slskd/completed
-
-        [Settings]
-        script_interval = 300
-        search_type = incrementing_page
-        number_of_albums_to_grab = 5
-        allowed_filetypes = flac, mp3 320, mp3
-        album_prepend_artist = True
-      '';
+      systemd.services.slskd.serviceConfig.Environment = lib.mkAfter [ "APP_DIR=${baseDir}/slskd" ];
+      networking.firewall.allowedUDPPorts = [ 5030 ];
+      networking.firewall.allowedTCPPorts = [ 5030 ];
 
       systemd.services.soularr = {
         description = "Soularr - Lidarr & Slskd Sync Service";
@@ -118,10 +111,7 @@ in
           Group = "users";
           WorkingDirectory = "${baseDir}/soularr";
 
-          EnvironmentFile = "-${baseDir}/soularr/secrets.env";
-
-          ExecStartPre = "${pkgs.coreutils}/bin/ln -sf /etc/soularr/config.ini ${baseDir}/soularr/config.ini";
-          ExecStart = "${pkgs.soularr}/bin/soularr";
+          ExecStart = "${pkgs.soularr}/bin/soularr --config-dir ${baseDir}/soularr";
 
           Restart = "on-failure";
           RestartSec = "10s";

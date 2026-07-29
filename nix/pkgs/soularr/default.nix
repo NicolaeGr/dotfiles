@@ -11,11 +11,12 @@ let
   slskd-api = python3.pkgs.buildPythonPackage rec {
     pname = "slskd-api";
     version = "0.1.5";
-    pyproject = false;
+
+    pyproject = true;
+    build-system = [ python3.pkgs.setuptools ];
 
     src = python3.pkgs.fetchPypi {
-      pname = "slskd-api";
-      inherit version;
+      inherit pname version;
       sha256 = "2e658fedb9cae48562776e79a92d8d18e9b22b31a9525df1b0ee6f8b9b8923cf";
     };
 
@@ -27,34 +28,48 @@ let
         setup.py
     '';
 
-    propagatedBuildInputs = with python3.pkgs; [ requests ];
+    propagatedBuildInputs = [ python3.pkgs.requests ];
     doCheck = false;
+
     meta.license = lib.licenses.agpl3Only;
   };
 
   pyarr = python3.pkgs.buildPythonPackage rec {
     pname = "pyarr";
     version = "5.2.0";
+
     pyproject = true;
+    build-system = [ python3.pkgs.poetry-core ];
 
     src = python3.pkgs.fetchPypi {
       inherit pname version;
       sha256 = "8e571cf4a8f53184ac9ef2642995d75962550f1dca22ea238db1ad97c903529c";
     };
 
-    build-system = with python3.pkgs; [ poetry-core ];
+    nativeBuildInputs = [ python3.pkgs.pythonRelaxDepsHook ];
+    pythonRelaxDeps = [ "types-requests" ];
+
+    postPatch = ''
+      substituteInPlace pyproject.toml \
+        --replace-warn "poetry.masonry.api" "poetry.core.masonry.api"
+    '';
+
     propagatedBuildInputs = with python3.pkgs; [
       requests
       overrides
+      types-requests
     ];
     doCheck = false;
+
     meta.license = lib.licenses.mit;
   };
 
   music-tag = python3.pkgs.buildPythonPackage rec {
     pname = "music-tag";
     version = "0.4.3";
-    pyproject = false;
+
+    pyproject = true;
+    build-system = [ python3.pkgs.setuptools ];
 
     src = python3.pkgs.fetchPypi {
       inherit pname version;
@@ -66,6 +81,7 @@ let
       pillow
     ];
     doCheck = false;
+
     meta.license = lib.licenses.mit;
   };
 
@@ -76,26 +92,27 @@ let
     pyarr
     music-tag
   ]);
+in
+stdenv.mkDerivation {
+  pname = "soularr";
+  inherit version;
 
   src = fetchFromGitHub {
     owner = "mrusse";
     repo = "soularr";
     rev = "v${version}";
-    hash = "sha256-W+O7+MoJp3ZzyTCwJFjkfTP6AokhrD5skpjysyPlGXI=";
+    hash = "sha256-gtz99+DiFjJZuq54qo5C+5Exx++S+ePzldgDM9NHAOA=";
   };
-in
-stdenv.mkDerivation {
-  pname = "soularr";
-  inherit version src;
 
   nativeBuildInputs = [ makeWrapper ];
+
   dontBuild = true;
   dontConfigure = true;
 
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/share/soularr
+    mkdir -p $out/share/soularr $out/bin
     cp -r soularr.py webui resources $out/share/soularr/
 
     makeWrapper ${pythonEnv}/bin/python $out/bin/soularr \
