@@ -67,22 +67,45 @@ in
               hash = "sha256-5ScoNmV91YCQIXW3Cwi6Y/onpk1YXE4EbandXFPf5BM=";
             };
 
-            nativeBuildInputs = [ pkgs.makeWrapper ];
+            dontBuild = true;
+            dontConfigure = true;
+
+            nativeBuildInputs = [
+              pkgs.autoPatchelfHook
+              pkgs.makeWrapper
+            ];
+
+            buildInputs = [
+              pkgs.dotnetCorePackages.aspnetcore_8_0
+              pkgs.sqlite
+              pkgs.zlib
+              pkgs.icu
+              pkgs.openssl
+              pkgs.krb5
+              pkgs.libunwind
+              pkgs.stdenv.cc.cc.lib
+              pkgs.lttng-ust_2_12
+            ];
 
             installPhase = ''
-              mkdir -p $out/bin $out/share/lidarr
-              cp -r * $out/share/lidarr/
+              runHook preInstall
+              mkdir -p $out/share/lidarr $out/bin
+              cp -a . $out/share/lidarr/
 
               makeWrapper $out/share/lidarr/Lidarr $out/bin/Lidarr \
+                --set DOTNET_ROOT ${pkgs.dotnetCorePackages.aspnetcore_8_0} \
                 --prefix LD_LIBRARY_PATH : ${
-                  lib.makeLibraryPath [
-                    pkgs.dotnetCorePackages.aspnetcore_8_0
-                    pkgs.sqlite
-                    pkgs.zlib
+                  pkgs.lib.makeLibraryPath [
                     pkgs.icu
                     pkgs.openssl
+                    pkgs.krb5
+                    pkgs.libunwind
+                    pkgs.sqlite
+                    pkgs.zlib
+                    pkgs.stdenv.cc.cc.lib
                   ]
                 }
+              runHook postInstall
             '';
           };
         in
@@ -90,9 +113,7 @@ in
           enable = true;
           openFirewall = true;
           package = lidarrNightly;
-
           dataDir = "${baseDir}/lidarr";
-
           user = "deploy";
           group = "users";
         };
