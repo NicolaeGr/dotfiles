@@ -64,11 +64,6 @@
               }
             );
             version = "latest";
-            buildInputs = oldAttrs.buildInputs ++ [
-              pkgs.krb5
-              pkgs.libsoup_3
-              pkgs.webkitgtk_4_1
-            ];
           }))
         ];
       })

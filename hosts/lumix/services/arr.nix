@@ -55,16 +55,47 @@ in
         group = "users";
       };
 
-      services.lidarr = {
-        enable = true;
-        openFirewall = true;
-        package = pkgs.lidarr;
+      services.lidarr =
+        let
+          lidarrNightly = pkgs.stdenv.mkDerivation {
+            pname = "lidarr";
+            version = "nightly-3.1.3.4987";
 
-        dataDir = "${baseDir}/lidarr";
+            src = pkgs.fetchurl {
+              name = "lidarr-nightly.tar.gz";
+              url = "https://lidarr.servarr.com/v1/update/nightly/updatefile?os=linux&arch=x64&runtime=netcore";
+              hash = "sha256-5ScoNmV91YCQIXW3Cwi6Y/onpk1YXE4EbandXFPf5BM=";
+            };
 
-        user = "deploy";
-        group = "users";
-      };
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+
+            installPhase = ''
+              mkdir -p $out/bin $out/share/lidarr
+              cp -r * $out/share/lidarr/
+
+              makeWrapper $out/share/lidarr/Lidarr $out/bin/Lidarr \
+                --prefix LD_LIBRARY_PATH : ${
+                  lib.makeLibraryPath [
+                    pkgs.dotnetCorePackages.aspnetcore_8_0
+                    pkgs.sqlite
+                    pkgs.zlib
+                    pkgs.icu
+                    pkgs.openssl
+                  ]
+                }
+            '';
+          };
+        in
+        {
+          enable = true;
+          openFirewall = true;
+          package = lidarrNightly;
+
+          dataDir = "${baseDir}/lidarr";
+
+          user = "deploy";
+          group = "users";
+        };
 
       services.prowlarr = {
         enable = true;
