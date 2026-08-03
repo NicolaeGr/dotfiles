@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }: {
+{ pkgs, ... }: {
   environment.shells = [ pkgs.zsh ];
   users.defaultUserShell = pkgs.zsh;
 
@@ -43,6 +43,11 @@
     {
       rum.programs.zsh = {
         enable = true;
+      };
+
+      rum.programs.fzf = {
+        enable = true;
+        integrations.zsh.enable = true;
       };
 
       files = {

@@ -30,7 +30,6 @@
           # Tools
           uget
           glow
-          fzf
           tldr
           tokei
           ngrok
@@ -55,7 +54,7 @@
 
       (lib.mkIf config.local.gui.enable {
         packages = with pkgs; [
-          insomnia
+          stable.insomnia
           (vscode.overrideAttrs (oldAttrs: {
             src = (
               builtins.fetchTarball {
