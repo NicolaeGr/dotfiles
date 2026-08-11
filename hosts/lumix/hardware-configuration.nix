@@ -20,8 +20,6 @@
   boot.extraModulePackages = [ ];
   boot.initrd.kernelModules = [ ];
 
-  powerManagement.cpuFreqGovernor = "schedutil";
-
   boot.kernelModules = [ "kvm-intel" ];
   boot.kernelParams = [
     "vm.panic_on_oom=1"

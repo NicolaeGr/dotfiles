@@ -82,7 +82,13 @@
       protonup-ng
       wineWow64Packages.staging
 
-      heroic
+      (heroic.override {
+        extraPkgs =
+          pkgs': with pkgs'; [
+            gamescope
+            gamemode
+          ];
+      })
 
       stable.prismlauncher
       stable.bottles
