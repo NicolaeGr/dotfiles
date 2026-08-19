@@ -25,6 +25,18 @@ check HOST:
 	@trap 'just _remove-flake-root' EXIT; \
 	nh os check path:{{FLAKE_ROOT}} host:{{HOST}}
 
+sops-edit FILE="secrets/secrets.yaml":
+    @SOPS_AGE_KEY=$(just _get-age-key) sops {{FILE}}
+
+sops-encrypt FILE:
+    @SOPS_AGE_KEY=$(just _get-age-key) sops -e -i {{FILE}}
+
+sops-decrypt FILE="secrets/secrets.yaml":
+    @SOPS_AGE_KEY=$(just _get-age-key) sops -d {{FILE}}
+
+sops-update-keys FILE="secrets/secrets.yaml":
+    @SOPS_AGE_KEY=$(just _get-age-key) sops updatekeys {{FILE}}
+
 _write-flake-root:
 	@new_value='"{{FLAKE_ROOT}}"'; \
 	if [ -f "{{FLAKE_ROOT_FILE}}" ] && [ "$$(cat "{{FLAKE_ROOT_FILE}}")" = "$$new_value" ]; then \
@@ -44,3 +56,6 @@ _remove-flake-root:
 _ask-reboot:
 	@echo "[*] Reboot now? (y/N)"
 	@read -r answer && { [ "$$answer" = "y" ] || [ "$$answer" = "Y" ]; } && sudo systemctl reboot || echo "[*] Reboot skipped"
+
+_get-age-key:
+    @sudo ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key

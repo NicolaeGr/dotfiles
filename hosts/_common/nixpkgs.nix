@@ -1,16 +1,24 @@
 {
   lib,
+  config,
   inputs,
   outputs,
   ...
 }:
 {
+  sops.secrets."flake_gh_access_key" = { };
+  sops.templates."flake_gh_access_file.nix" = {
+    content = ''
+      access-tokens = github.com=${config.sops.placeholder."flake_gh_access_key"}
+    '';
+    owner = "root";
+    group = "users";
+    mode = "0440";
+  };
+
   nixpkgs = {
     overlays = builtins.attrValues outputs.overlays;
     config.allowUnfree = true;
-
-    # TODO: Remove once nixpkgs no longer requires an insecure pnpm package.
-    config.permittedInsecurePackages = [ "pnpm-10.29.2" ];
   };
 
   programs.nh = {
@@ -46,5 +54,9 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
+
+    extraOptions = ''
+      !include ${config.sops.templates."flake_gh_access_file.nix".path}
+    '';
   };
 }

@@ -13,12 +13,6 @@ creation_rules:
           - *odin
           - *lumix
           - *zoln
-  - path_regex: secrets/cloudflare_cred.json$
-    key_groups:
-      - age:
-          - *nicolae
-          - *odin
-          - *lumix
   - path_regex: secrets/wireguard.yaml$
     key_groups:
       - age:

@@ -13,7 +13,7 @@
     environment.systemPackages = with pkgs; [
       qbittorrent
 
-      dwarfs
+      stable.dwarfs
       fuse-overlayfs
       bubblewrap
 
