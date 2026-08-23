@@ -5,6 +5,7 @@
 
     # System Pub
     ./jellyfin.nix
+    ./expense.nix
 
     # System Priv
     ./webui
