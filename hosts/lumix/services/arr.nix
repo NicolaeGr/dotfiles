@@ -64,7 +64,7 @@ in
             src = pkgs.fetchurl {
               name = "lidarr-nightly.tar.gz";
               url = "https://lidarr.servarr.com/v1/update/nightly/updatefile?os=linux&arch=x64&runtime=netcore";
-              hash = "sha256-5ScoNmV91YCQIXW3Cwi6Y/onpk1YXE4EbandXFPf5BM=";
+              hash = "sha256-OeARu0PtYS4+AJuSgINuR7xT9u4UORkqnok4T8OCFrE=";
             };
 
             dontBuild = true;
