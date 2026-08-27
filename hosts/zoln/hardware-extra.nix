@@ -24,6 +24,11 @@
     nvidiaSettings = lib.mkIf config.local.gui.enable true;
   };
 
+  boot.kernelParams = [
+    "nvidia-drm.modeset=1"
+    "nvidia_drm.fbdev=1"
+  ];
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -36,7 +41,7 @@
   boot.extraModprobeConfig = ''
     options it87 ignore_resource_conflict=1
   '';
-  boot.kernelParams = [ "acpi_enforce_resources=lax" ];
+  # boot.kernelParams = [ "acpi_enforce_resources=lax" ];
 
   hardware.i2c.enable = true;
   boot.extraModulePackages = [ config.boot.kernelPackages.it87 ];
