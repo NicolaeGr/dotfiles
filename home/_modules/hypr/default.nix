@@ -14,7 +14,7 @@
   config = lib.mkIf config.local.gui.hypr.enable {
     local.gui.enable = true;
 
-    packages = with pkgs; [
+    packages = [
       inputs.nosh.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 

@@ -1,3 +1,5 @@
+vars = require("modules.vars")
+
 require("modules.background")
 
 require("modules.autostart")
