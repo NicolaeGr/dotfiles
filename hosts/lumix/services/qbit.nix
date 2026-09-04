@@ -1,4 +1,4 @@
-{ lib, containerLib, ... }:
+{ containerLib, ... }:
 let
   baseDir = "/storage/jellyfin";
 in

@@ -1,6 +1,7 @@
 { ... }:
 {
   defaultUserGroups = [
+    "i2c"
     "kvm"
     "audio"
     "video"
@@ -9,6 +10,7 @@
     "power"
     "render"
     "docker"
+    "openrgb"
     "libvirt"
     "storage"
     "libvirtd"

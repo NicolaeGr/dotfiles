@@ -37,3 +37,29 @@ tmpcmd() {
 
 	${EDITOR:-vim} "$tmpfile"
 }
+
+repo_dump() {
+  local output="${1:-repo.txt}"
+
+  git rev-parse --show-toplevel >/dev/null 2>&1 || {
+    echo "Error: not inside a Git repository." >&2
+    return 1
+  }
+
+  git ls-files -z |
+    while IFS= read -r -d '' file; do
+      [[ "$file" == "$output" ]] && continue
+
+      local mime
+      mime=$(file --brief --mime-type -- "$file")
+
+      case "$mime" in
+        text/*|application/json|application/xml|application/javascript|application/x-sh|application/x-yaml)
+          printf '\n\n===== FILE: %s =====\n\n' "$file"
+          cat -- "$file"
+          ;;
+      esac
+    done > "$output"
+
+  echo "Repository dumped to: $output"
+}

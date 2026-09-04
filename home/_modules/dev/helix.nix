@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -9,5 +8,7 @@
     rum.programs.helix = {
       enable = true;
     };
+
+    environment.sessionVariables.EDITOR = lib.mkDefault "hx";
   };
 }
