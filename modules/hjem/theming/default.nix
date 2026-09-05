@@ -3,6 +3,7 @@
   pkgs,
   inputs,
   config,
+  configLib,
   ...
 }:
 let
@@ -10,12 +11,9 @@ let
 in
 {
   _module.args.base16-lib = inputs.base16.lib { inherit pkgs lib; };
-  imports = [
+  imports = lib.flatten [
     ./options.nix
     ./switcher.nix
-    ./targets/gtk
-    ./targets/gtksourceview
-    ./targets/kvantum
-    ./targets/kitty
+    (configLib.scanPaths ./targets)
   ];
 }

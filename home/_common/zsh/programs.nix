@@ -6,10 +6,6 @@
 with lib;
 {
   packages = with pkgs; [
-    bat
-    bat-extras.batgrep
-    bat-extras.batwatch
-    bat-extras.batman
     delta
     dust
     eza
@@ -21,6 +17,18 @@ with lib;
     hyperfine
   ];
 
+  rum-ext.programs.bat = {
+    enable = true;
+    extraPackages = with pkgs.bat-extras; [
+      batgrep
+      batwatch
+      batman
+    ];
+    settings = {
+      style = "numbers,changes,header";
+    };
+  };
+
   rum.programs.zoxide = {
     enable = true;
     flags = [ "--cmd cd" ];
@@ -28,8 +36,6 @@ with lib;
   };
 
   environment.sessionVariables = {
-    BAT_THEME = "ansi";
-
     LESS = "-RFX";
     LESSHISTFILE = "-";
 

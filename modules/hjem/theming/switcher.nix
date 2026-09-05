@@ -51,6 +51,12 @@ let
     ln -sfn "$ACTIVE_DIR/HjemTheme.kvconfig" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.kvconfig"
     ln -sfn "$ACTIVE_DIR/HjemTheme.svg" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.svg"
 
+    cat <<EOF > "$HOME/.config/Kvantum/kvantum.kvconfig"
+    [General]
+    theme=HjemTheme
+    dark_theme=$(if [ "$VARIANT" = "dark" ]; then echo "true"; else echo "false"; fi)
+    EOF
+
     touch "$HOME/.config/Kvantum/kvantum.kvconfig"
 
     if [ -S /tmp/kitty ]; then
@@ -63,15 +69,8 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
-    environment.sessionVariables = {
-      QT_QPA_PLATFORMTHEME = "qt5ct";
-      QT_STYLE_OVERRIDE = "kvantum";
-    };
-
     packages = [
       switcherScript
-      pkgs.libsForQt5.qtstyleplugin-kvantum
-      pkgs.qt6Packages.qtstyleplugin-kvantum
     ];
   };
 }

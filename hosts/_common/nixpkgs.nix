@@ -26,13 +26,14 @@
     clean.enable = true;
     clean.extraArgs = "--keep-since 20d --keep 10";
   };
-
   nix = {
+    channel.enable = false;
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
 
     settings = {
       connect-timeout = 5;
       auto-optimise-store = true;
+      use-xdg-base-directories = true;
 
       experimental-features = [
         "nix-command"
