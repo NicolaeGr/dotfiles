@@ -10,20 +10,28 @@
   };
 
   config = lib.mkIf config.local.gaming.jc.enable {
+    programs.fuse.userAllowOther = true;
+    boot.kernelModules = [ "fuse" ];
+
+    environment.sessionVariables = {
+      DOTNET_ROOT = "${pkgs.dotnet-runtime_8}/share/dotnet";
+    };
+
     environment.systemPackages = with pkgs; [
       qbittorrent
 
       stable.dwarfs
       fuse-overlayfs
       bubblewrap
+      psmisc
+      zenity
+      aria2
+      zstd
+      p7zip
+      cabextract
 
-      # gst_all_1.gstreamer
-      # gst_all_1.gst-libav
-      # gst_all_1.gst-plugins-bad
-      # gst_all_1.gst-plugins-base
-      # gst_all_1.gst-plugins-good
-      # gst_all_1.gst-plugins-ugly
-      # gst_all_1.gst-vaapi
+      dotnet-sdk_8
+      dotnet-runtime_8
     ];
   };
 }
