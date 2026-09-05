@@ -26,6 +26,8 @@
       mpv
       libreoffice
 
+      gimp
+
       discord
       fluffychat
       signal-desktop

@@ -54,12 +54,12 @@
 
       (lib.mkIf config.local.gui.enable {
         packages = with pkgs; [
-          stable.insomnia
+          stable.bruno
           (vscode.overrideAttrs (oldAttrs: {
             src = (
               builtins.fetchTarball {
                 url = "https://update.code.visualstudio.com/latest/linux-x64/stable";
-                sha256 = "sha256:0drbxdi61i1dkcym8s1mb8mnf8gz25w7m6bzzskpmwzdbygy0zmq";
+                sha256 = "sha256:070famap2mwf278zy4j8bxmzcrc1kcmcnyn08k2gyia54a2qpwmq";
               }
             );
             version = "latest";
