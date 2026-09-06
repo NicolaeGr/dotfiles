@@ -5,21 +5,28 @@
   base16-lib,
   ...
 }:
-with lib;
 let
+  mkTarget = import ../../mkTarget.nix { inherit lib; };
   cfg = config.local.theming;
-  targetCfg = config.local.theming.targets.kvantum;
 in
-{
-  options.local.theming.targets.kvantum = {
-    enable = mkOption {
-      type = types.bool;
-      default = cfg.enable;
-    };
-  };
+mkTarget {
+  name = "kvantum";
+  inherit config;
+  switcherScript = ''
+    mkdir -p "$HOME/.config/Kvantum/HjemTheme"
+    ln -sfn "$ACTIVE_DIR/HjemTheme.kvconfig" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.kvconfig"
+    ln -sfn "$ACTIVE_DIR/HjemTheme.svg" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.svg"
 
-  config = mkIf targetCfg.enable {
-    xdg.config.files = foldl' (
+    cat <<EOF > "$HOME/.config/Kvantum/kvantum.kvconfig"
+    [General]
+    theme=HjemTheme
+    dark_theme=$(if [ "$VARIANT" = "dark" ]; then echo "true"; else echo "false"; fi)
+    EOF
+
+    touch "$HOME/.config/Kvantum/kvantum.kvconfig"
+  '';
+  targetConfig = {
+    xdg.config.files = lib.foldl' (
       acc: themeName:
       let
         theme = cfg.themes.${themeName};
@@ -44,12 +51,7 @@ in
           };
         };
       }
-    ) { } (attrNames cfg.themes);
-
-    # files.".config/Kvantum/kvantum.kvconfig".text = ''
-    #   [General]
-    #   theme=HjemTheme
-    # '';
+    ) { } (lib.attrNames cfg.themes);
 
     files.".config/qt5ct/qt5ct.conf".text = ''
       [Appearance]
@@ -65,7 +67,6 @@ in
 
     environment.sessionVariables = {
       QT_QPA_PLATFORMTHEME = "qt5ct";
-      # QT_STYLE_OVERRIDE = "kvantum";
     };
 
     files.".config/hypr/hyprland.lua".text = lib.mkAfter ''

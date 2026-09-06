@@ -25,6 +25,10 @@ in
       withUWSM = true;
     };
 
+    environment.systemPackages = [
+      pkgs.brightnessctl
+    ];
+
     services.hypridle.enable = true;
 
     security.pam.services.hyprlock = { };

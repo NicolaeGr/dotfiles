@@ -4,26 +4,27 @@
   base16-lib,
   ...
 }:
-with lib;
 let
+  mkTarget = import ../../mkTarget.nix { inherit lib; };
   cfg = config.local.theming;
-  targetCfg = config.local.theming.targets.gtksourceview;
 in
-{
-  options.local.theming.targets.gtksourceview = {
-    enable = mkOption {
-      type = types.bool;
-      default = cfg.enable;
-    };
-  };
+mkTarget {
+  name = "gtksourceview";
+  inherit config;
 
-  config = mkIf targetCfg.enable {
-    xdg.config.files = mapAttrs' (
+  switcherScript = ''
+    mkdir -p "$HOME/.local/share/gtksourceview-4/styles" "$HOME/.local/share/gtksourceview-5/styles"
+    ln -sfn "$ACTIVE_DIR/gtksourceview.xml" "$HOME/.local/share/gtksourceview-4/styles/hjem.xml"
+    ln -sfn "$ACTIVE_DIR/gtksourceview.xml" "$HOME/.local/share/gtksourceview-5/styles/hjem.xml"
+  '';
+
+  targetConfig = {
+    xdg.config.files = lib.mapAttrs' (
       themeName: theme:
       let
         colors = (base16-lib.mkSchemeAttrs theme.colors).override { };
       in
-      nameValuePair "hjem/themes/${themeName}/gtksourceview.xml" {
+      lib.nameValuePair "hjem/themes/${themeName}/gtksourceview.xml" {
         source = colors {
           template = ./gtksourceview.xml.mustache;
           extension = ".xml";

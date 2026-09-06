@@ -1,29 +1,32 @@
 {
   lib,
+  pkgs,
   config,
   base16-lib,
   ...
 }:
-with lib;
 let
+  mkTarget = import ../../mkTarget.nix { inherit lib; };
   cfg = config.local.theming;
-  targetCfg = config.local.theming.targets.bat;
 in
-{
-  options.local.theming.targets.bat = {
-    enable = mkOption {
-      type = types.bool;
-      default = cfg.enable;
-    };
-  };
+mkTarget {
+  name = "bat";
+  inherit config;
+  condition = config.rum-ext.programs.bat.enable;
 
-  config = mkIf (targetCfg.enable && config.rum-ext.programs.bat.enable) {
-    xdg.config.files = mapAttrs' (
+  switcherScript = ''
+    mkdir -p "$HOME/.config/bat/themes"
+    ln -sfn "$ACTIVE_DIR/bat.tmTheme" "$HOME/.config/bat/themes/hjem.tmTheme"
+    ${pkgs.bat}/bin/bat cache --build > /dev/null 2>&1 || true
+  '';
+
+  targetConfig = {
+    xdg.config.files = lib.mapAttrs' (
       themeName: theme:
       let
         colors = (base16-lib.mkSchemeAttrs theme.colors).override { };
       in
-      nameValuePair "hjem/themes/${themeName}/bat.tmTheme" {
+      lib.nameValuePair "hjem/themes/${themeName}/bat.tmTheme" {
         source = colors {
           template = ./base16-stylix.tmTheme.mustache;
           extension = ".tmTheme";

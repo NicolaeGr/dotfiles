@@ -5,26 +5,35 @@
   base16-lib,
   ...
 }:
-with lib;
 let
+  mkTarget = import ../../mkTarget.nix { inherit lib; };
   cfg = config.local.theming;
-  targetCfg = config.local.theming.targets.gtk;
 in
-{
-  options.local.theming.targets.gtk = {
-    enable = mkOption {
-      type = types.bool;
-      default = cfg.enable;
-    };
-  };
+mkTarget {
+  name = "gtk";
+  inherit config;
 
-  config = mkIf targetCfg.enable {
-    xdg.config.files = mapAttrs' (
+  switcherScript = ''
+    if [ "$VARIANT" = "dark" ]; then
+      ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
+      TARGET_THEME="adw-gtk3-dark"
+    else
+      ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/color-scheme "'default'"
+      TARGET_THEME="adw-gtk3"
+    fi
+
+    ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/gtk-theme "'HighContrast'"
+    sleep 0.05
+    ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/gtk-theme "'$TARGET_THEME'"
+  '';
+
+  targetConfig = {
+    xdg.config.files = lib.mapAttrs' (
       themeName: theme:
       let
         colors = (base16-lib.mkSchemeAttrs theme.colors).override { };
       in
-      nameValuePair "hjem/themes/${themeName}/gtk.css" {
+      lib.nameValuePair "hjem/themes/${themeName}/gtk.css" {
         source = colors {
           template = ./gtk.css.mustache;
           extension = ".css";

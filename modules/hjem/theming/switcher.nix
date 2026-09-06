@@ -15,6 +15,13 @@ let
     '') cfg.themes
   );
 
+  targetFragments = lib.concatStringsSep "\n\n" (
+    lib.mapAttrsToList (name: target: ''
+      # ${name}
+      ${target.switcherScript or ""}
+    '') (lib.filterAttrs (_: target: target.enable) cfg.targets)
+  );
+
   switcherScript = pkgs.writeShellScriptBin "hjem-theme" ''
     THEME=$1
     if [ -z "$THEME" ]; then
@@ -32,45 +39,15 @@ let
     esac
 
     ACTIVE_DIR="$HOME/.config/hjem/themes/active"
-
     ln -sfn "$HOME/.config/hjem/themes/$THEME" "$ACTIVE_DIR"
 
-    if [ "$VARIANT" = "dark" ]; then
-      ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
-      TARGET_THEME="adw-gtk3-dark"
-    else
-      ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/color-scheme "'default'"
-      TARGET_THEME="adw-gtk3"
-    fi
-
-    ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/gtk-theme "'HighContrast'"
-    sleep 0.05
-    ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/gtk-theme "'$TARGET_THEME'"
-
-    mkdir -p "$HOME/.config/Kvantum/HjemTheme"
-    ln -sfn "$ACTIVE_DIR/HjemTheme.kvconfig" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.kvconfig"
-    ln -sfn "$ACTIVE_DIR/HjemTheme.svg" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.svg"
-
-    cat <<EOF > "$HOME/.config/Kvantum/kvantum.kvconfig"
-    [General]
-    theme=HjemTheme
-    dark_theme=$(if [ "$VARIANT" = "dark" ]; then echo "true"; else echo "false"; fi)
-    EOF
-
-    touch "$HOME/.config/Kvantum/kvantum.kvconfig"
-
-    if [ -S /tmp/kitty ]; then
-      ${pkgs.kitty}/bin/kitty @ --to unix:/tmp/kitty set-colors -a -c "$ACTIVE_DIR/kitty.conf" || true
-      ${pkgs.kitty}/bin/kitty @ --to unix:/tmp/kitty load-config "$HOME/.config/kitty/kitty.conf" || true
-    fi
+    ${targetFragments}
 
     echo "Successfully switched to $THEME ($VARIANT)"
   '';
 in
 {
   config = lib.mkIf cfg.enable {
-    packages = [
-      switcherScript
-    ];
+    packages = [ switcherScript ];
   };
 }
