@@ -31,7 +31,7 @@
       discord
       fluffychat
       signal-desktop
-      telegram-desktop
+      stable.telegram-desktop
 
       obsidian
       obs-studio
