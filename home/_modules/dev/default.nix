@@ -23,6 +23,13 @@
           integrations.nix-direnv.enable = true;
         };
 
+        rum.programs.helix = {
+          enable = true;
+        };
+
+        environment.sessionVariables.EDITOR = lib.mkForce "hx";
+        environment.sessionVariables.VISUAL = lib.mkForce "hx";
+
         packages = with pkgs; [
           # Terminals
           tmux
@@ -55,15 +62,9 @@
       (lib.mkIf config.local.gui.enable {
         packages = with pkgs; [
           stable.bruno
-          (vscode.overrideAttrs (oldAttrs: {
-            src = (
-              builtins.fetchTarball {
-                url = "https://update.code.visualstudio.com/latest/linux-x64/stable";
-                sha256 = "sha256:070famap2mwf278zy4j8bxmzcrc1kcmcnyn08k2gyia54a2qpwmq";
-              }
-            );
-            version = "latest";
-          }))
+          stable.vscode
+
+          zed-editor-fhs
         ];
       })
     ]
