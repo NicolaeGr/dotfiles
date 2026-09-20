@@ -59,12 +59,12 @@ in
         let
           lidarrNightly = pkgs.stdenv.mkDerivation {
             pname = "lidarr";
-            version = "nightly-3.1.3.4987";
+            version = "nightly-3.1.6.5078";
 
             src = pkgs.fetchurl {
               name = "lidarr-nightly.tar.gz";
               url = "https://lidarr.servarr.com/v1/update/nightly/updatefile?os=linux&arch=x64&runtime=netcore";
-              hash = "sha256-OeARu0PtYS4+AJuSgINuR7xT9u4UORkqnok4T8OCFrE=";
+              hash = "sha256-HYFPI3bKbFxP6R/M2uOksR+xA06zRyC+Sd9wi8+MK4E=";
             };
 
             dontBuild = true;

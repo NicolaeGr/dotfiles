@@ -20,6 +20,10 @@ in
     local.gui.enable = true;
     hjem.extraModules = [ { local.gui.hypr.enable = true; } ];
 
+    services.logind.settings.Login = {
+      HandlePowerKey = "suspend-then-hibernate";
+    };
+
     programs.hyprland = {
       enable = true;
       withUWSM = true;
@@ -28,6 +32,8 @@ in
     environment.systemPackages = [
       pkgs.brightnessctl
     ];
+
+    services.upower.enable = true;
 
     services.hypridle.enable = true;
 
