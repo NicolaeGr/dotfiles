@@ -1,0 +1,19 @@
+{
+  "lsp": {
+    "lua-language-server": {
+      "settings": {
+        "Lua": {
+          "workspace": {
+            "library": [
+              "/usr/share/hypr/stubs",
+              "/run/current-system/sw/share/hypr/stubs",
+            ],
+          },
+          "diagnostics": {
+            "globals": ["hl"],
+          },
+        },
+      },
+    },
+  },
+}

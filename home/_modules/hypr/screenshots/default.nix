@@ -19,7 +19,7 @@
     ".config/hypr/hyprland.lua".text = lib.mkAfter ''
       hl.bind("Print", hl.dsp.exec_cmd([[$HOME/.config/hypr/scripts/screenshot_utils.sh freeze]]))
       hl.bind("ALT + Print", hl.dsp.exec_cmd([[$HOME/.config/hypr/scripts/screenshot_utils.sh window]]))
-      hl.bind(vars.mod .. " + Print", hl.dsp.exec_cmd([[$HOME/.config/hypr/scripts/screenshot_utils.sh full]]))
+      hl.bind(Vars.mod .. " + Print", hl.dsp.exec_cmd([[$HOME/.config/hypr/scripts/screenshot_utils.sh full]]))
     '';
   };
 

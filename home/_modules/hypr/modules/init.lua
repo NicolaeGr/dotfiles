@@ -1,4 +1,4 @@
-vars = require("modules.vars")
+Vars = require("modules.vars")
 
 require("modules.background")
 
