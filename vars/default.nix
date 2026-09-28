@@ -12,6 +12,7 @@
     "docker"
     "openrgb"
     "libvirt"
+    "libvirtd"
     "storage"
     "libvirtd"
     "adbusers"

@@ -21,7 +21,12 @@ in
     hjem.extraModules = [ { local.gui.hypr.enable = true; } ];
 
     services.logind.settings.Login = {
-      HandlePowerKey = "suspend-then-hibernate";
+      HandlePowerKey = "suspend";
+    };
+
+    systemd.sleep.settings.Sleep = {
+      AllowSuspendThenHibernate = "yes";
+      HibernateDelaySec = "30m";
     };
 
     programs.hyprland = {
