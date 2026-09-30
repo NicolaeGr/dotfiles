@@ -55,68 +55,14 @@ in
         group = "users";
       };
 
-      services.lidarr =
-        let
-          lidarrNightly = pkgs.stdenv.mkDerivation {
-            pname = "lidarr";
-            version = "nightly-3.1.6.5078";
-
-            src = pkgs.fetchurl {
-              name = "lidarr-nightly.tar.gz";
-              url = "https://lidarr.servarr.com/v1/update/nightly/updatefile?os=linux&arch=x64&runtime=netcore";
-              hash = "sha256-HYFPI3bKbFxP6R/M2uOksR+xA06zRyC+Sd9wi8+MK4E=";
-            };
-
-            dontBuild = true;
-            dontConfigure = true;
-
-            nativeBuildInputs = [
-              pkgs.autoPatchelfHook
-              pkgs.makeWrapper
-            ];
-
-            buildInputs = [
-              pkgs.dotnetCorePackages.aspnetcore_8_0
-              pkgs.sqlite
-              pkgs.zlib
-              pkgs.icu
-              pkgs.openssl
-              pkgs.krb5
-              pkgs.libunwind
-              pkgs.stdenv.cc.cc.lib
-              pkgs.lttng-ust_2_12
-            ];
-
-            installPhase = ''
-              runHook preInstall
-              mkdir -p $out/share/lidarr $out/bin
-              cp -a . $out/share/lidarr/
-
-              makeWrapper $out/share/lidarr/Lidarr $out/bin/Lidarr \
-                --set DOTNET_ROOT ${pkgs.dotnetCorePackages.aspnetcore_8_0} \
-                --prefix LD_LIBRARY_PATH : ${
-                  pkgs.lib.makeLibraryPath [
-                    pkgs.icu
-                    pkgs.openssl
-                    pkgs.krb5
-                    pkgs.libunwind
-                    pkgs.sqlite
-                    pkgs.zlib
-                    pkgs.stdenv.cc.cc.lib
-                  ]
-                }
-              runHook postInstall
-            '';
-          };
-        in
-        {
-          enable = true;
-          openFirewall = true;
-          package = lidarrNightly;
-          dataDir = "${baseDir}/lidarr";
-          user = "deploy";
-          group = "users";
-        };
+      services.lidarr = {
+        enable = true;
+        openFirewall = true;
+        package = pkgs.lidarr-nightly;
+        dataDir = "${baseDir}/lidarr";
+        user = "deploy";
+        group = "users";
+      };
 
       services.prowlarr = {
         enable = true;

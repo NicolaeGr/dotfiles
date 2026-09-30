@@ -17,7 +17,7 @@ let
 
     src = python3.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "2e658fedb9cae48562776e79a92d8d18e9b22b31a9525df1b0ee6f8b9b8923cf";
+      sha256 = "sha256-LmWP7bnK5IVid255qS2NGOmyKzGpUl3xsO5vi5uJI88=";
     };
 
     postPatch = ''
@@ -43,7 +43,7 @@ let
 
     src = python3.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "8e571cf4a8f53184ac9ef2642995d75962550f1dca22ea238db1ad97c903529c";
+      sha256 = "sha256-jlcc9Kj1MYSsnvJkKZXXWWJVDx3KIuojjbGtl8kDUpw=";
     };
 
     nativeBuildInputs = [ python3.pkgs.pythonRelaxDepsHook ];
@@ -73,7 +73,7 @@ let
 
     src = python3.pkgs.fetchPypi {
       inherit pname version;
-      sha256 = "0aab6e6eeda8df0f5316ec2d2190bd74561b7e03562ab091ce8d5687cdbcfff6";
+      sha256 = "sha256-Cqtubu2o3w9TFuwtIZC9dFYbfgNWKrCRzo1Wh828//Y=";
     };
 
     propagatedBuildInputs = with python3.pkgs; [
@@ -101,7 +101,7 @@ stdenv.mkDerivation {
     owner = "mrusse";
     repo = "soularr";
     rev = "v${version}";
-    hash = "sha256-gtz99+DiFjJZuq54qo5C+5Exx++S+ePzldgDM9NHAOA=";
+    hash = "sha256-gtz99+DiFjJZuq54qo5C+5Exx++S+ePzldgDM9NHAOB=";
   };
 
   nativeBuildInputs = [ makeWrapper ];
