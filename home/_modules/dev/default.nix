@@ -86,7 +86,7 @@
           stable.bruno
           stable.vscode
 
-          zed-editor-fhs
+          zed-editor
         ];
       })
     ]

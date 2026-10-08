@@ -9,7 +9,7 @@ let
 in
 {
   containers.seanime = containerLib.mkServiceContainer {
-    ip = ip;
+    inherit ip;
 
     mounts = {
       "/storage" = {

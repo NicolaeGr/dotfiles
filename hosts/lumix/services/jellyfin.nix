@@ -5,7 +5,7 @@ let
 in
 {
   containers.jellyfin = containerLib.mkServiceContainer {
-    ip = ip;
+    inherit ip;
 
     mounts = {
       "/storage" = {

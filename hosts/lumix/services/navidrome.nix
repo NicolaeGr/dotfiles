@@ -4,7 +4,7 @@ let
 in
 {
   containers.navidrome = containerLib.mkServiceContainer {
-    ip = ip;
+    inherit ip;
 
     mounts = {
       "/storage" = {

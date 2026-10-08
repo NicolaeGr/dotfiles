@@ -18,6 +18,7 @@
     # Containers Priv
     ./arr.nix
     ./sea.nix
+    ./soju.nix
   ];
 
   config = {

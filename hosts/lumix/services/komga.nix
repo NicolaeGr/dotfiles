@@ -5,7 +5,7 @@ let
 in
 {
   containers.komga = containerLib.mkServiceContainer {
-    ip = ip;
+    inherit ip;
 
     mounts = {
       "/storage" = {
