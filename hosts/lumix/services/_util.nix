@@ -4,9 +4,15 @@ let
   deployGID = 100;
 
   hostStateVersion = config.system.stateVersion;
+
+  publicIp = "188.138.145.187";
+  homeIpRange = "192.168.100.0/24";
+  wgIpRange = "10.100.0.0/24";
 in
 {
   _module.args.containerLib = {
+    inherit publicIp homeIpRange wgIpRange;
+
     mkServiceContainer =
       {
         enable ? true,
@@ -71,9 +77,9 @@ in
       cfg
       // {
         extraConfig = (cfg.extraConfig or "") + ''
-          allow 192.168.100.0/24;
-          allow 10.100.0.0/24;
-          allow 188.138.145.187;
+          allow ${homeIpRange};
+          allow ${wgIpRange};
+          allow ${publicIp};
           deny all;
         '';
       };
