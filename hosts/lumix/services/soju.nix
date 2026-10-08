@@ -6,28 +6,19 @@ in
   containers.soju = containerLib.mkServiceContainer {
     inherit ip;
 
-    module =
-      {
-        pkgs,
-        config,
-        lib,
-        ...
-      }:
-      {
-        services.soju = {
-          enable = true;
+    module = {
+      services.soju = {
+        enable = true;
 
-          listen = [
-            "http://${ip}:8080"
-          ];
+        listen = [
+          "http://${ip}:8080"
+        ];
 
-          extraConfig = ''
-            http-origin https://sj.electrolit.biz
-          '';
-        };
-
-        networking.firewall.allowedTCPPorts = [ 8080 ];
+        httpOrigins = [ "https://sj.electrolit.biz" ];
       };
+
+      networking.firewall.allowedTCPPorts = [ 8080 ];
+    };
   };
 
   services.nginx.virtualHosts."sj.electrolit.biz" = containerLib.withPrivateAccess {
