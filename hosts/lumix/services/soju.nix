@@ -20,10 +20,7 @@ in
         ];
 
         httpOrigins = [ "https://${subdomain}" ];
-
-        extraConfig = ''
-          accept-proxy-ip ${containerLib.homeIpRange}
-        '';
+        acceptProxyIP = [ containerLib.homeIpRange ];
       };
 
       networking.firewall.allowedTCPPorts = [
@@ -57,6 +54,10 @@ in
         proxy_pass ${ip}:6667;
 
         proxy_protocol on;
+
+        allow ${containerLib.homeIpRange};
+        allow ${containerLib.wgIpRange};
+        deny all;
 
         ssl_certificate /var/lib/acme/${domain}/fullchain.pem;
         ssl_certificate_key /var/lib/acme/${domain}/key.pem;

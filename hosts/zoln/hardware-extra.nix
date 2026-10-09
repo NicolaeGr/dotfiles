@@ -20,6 +20,18 @@
       boot.kernelPackages = pkgs.linuxPackages_7_2;
     }
     {
+      services.dnsmasq = {
+        enable = true;
+        settings = {
+          cache-size = 1000;
+          server = [ "192.168.100.10" ];
+          address = "/sj.electrolit.biz/192.168.100.10";
+        };
+      };
+
+      networking.nameservers = [ "127.0.0.1" ];
+    }
+    {
       hardware.graphics = {
         enable = true;
         enable32Bit = true;

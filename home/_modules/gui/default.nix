@@ -28,6 +28,7 @@
 
       gimp
 
+      halloy
       discord
       fluffychat
       signal-desktop
