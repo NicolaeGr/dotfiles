@@ -1,6 +1,7 @@
 {
   self,
   config,
+  configVars,
   ...
 }:
 let
@@ -15,7 +16,7 @@ in
   };
 
   networking.wg-quick.interfaces.wg0 = {
-    dns = [ "10.100.0.1" ];
+    dns = [ configVars.net.wg.serverIp ];
     address = [ "10.100.0.2/24" ];
 
     privateKeyFile = config.sops.secrets.odin_wg_private_key.path;
@@ -24,7 +25,7 @@ in
       {
         publicKey = "uT3bM9N2xsDmlMMmIf4mS6PysWUxEcwAfTv3j7x1unc=";
         endpoint = "electrolit.biz:${toString cfg.listenPort}";
-        allowedIPs = [ "10.100.0.0/24" ];
+        allowedIPs = [ configVars.net.wg.subnet ];
 
         persistentKeepalive = 25;
       }

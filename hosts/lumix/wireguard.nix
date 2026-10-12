@@ -2,6 +2,7 @@
   pkgs,
   self,
   config,
+  configVars,
   ...
 }:
 let
@@ -20,10 +21,10 @@ in
 
     settings = {
       http = {
-        address = "10.100.0.1:3000";
+        address = "${configVars.net.wg.serverIp}:3000";
       };
       dns = {
-        bind_addresses = [ "10.100.0.1" ];
+        bind_addresses = [ configVars.net.wg.serverIp ];
         port = 53;
 
         upstream_dns = [
@@ -43,14 +44,16 @@ in
         filtering_enabled = true;
       };
 
-      user_rules = map (domain: "||${domain}^$dnsrewrite=10.100.0.1") config.local.servedDomains;
+      user_rules = map (
+        domain: "||${domain}^$dnsrewrite=${configVars.net.wg.serverIp}"
+      ) config.local.servedDomains;
 
       users = [ ];
     };
   };
 
   networking.wg-quick.interfaces.wg0 = {
-    address = [ "10.100.0.1/24" ];
+    address = [ "${configVars.net.wg.serverIp}/24" ];
     listenPort = cfg.listenPort;
 
     privateKeyFile = config.sops.secrets.lumix_wg_private_key.path;

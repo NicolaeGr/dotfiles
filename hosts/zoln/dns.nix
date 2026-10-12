@@ -1,9 +1,10 @@
 {
   self,
+  configVars,
   ...
 }:
 let
-  serverIp = "192.168.100.10";
+  serverIp = configVars.net.lan.serverIp;
 
   domains = self.nixosConfigurations.lumix.config.local.servedDomains;
 

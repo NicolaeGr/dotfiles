@@ -1,4 +1,4 @@
-{ ... }:
+{ configVars, ... }:
 {
   services.syncthing = {
     enable = true;
@@ -14,7 +14,7 @@
           id = "ICHQARH-ZN7IIUX-3HHHMOB-DKDRM2A-TPBY7LX-LJBOMP3-TQXLTEZ-WJOMMQF";
 
           addresses = [
-            "tcp://192.168.100.10:22000"
+            "tcp://${configVars.net.lan.serverIp}:22000"
             "dynamic"
           ];
         };

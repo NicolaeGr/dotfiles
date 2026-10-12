@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, configVars, ... }:
 {
   networking.networkmanager.enable = lib.mkForce false;
 
@@ -32,8 +32,8 @@
 
     networks."20-br0" = {
       matchConfig.Name = "br0";
-      address = [ "192.168.100.10/24" ];
-      gateway = [ "192.168.100.1" ];
+      address = [ "${configVars.net.lan.serverIp}/24" ];
+      gateway = [ configVars.net.gateway ];
       dns = [ "1.1.1.1" ];
     };
   };

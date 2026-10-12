@@ -1,13 +1,18 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  configVars,
+  ...
+}:
 let
   deployUID = 1002;
   deployGID = 100;
 
   hostStateVersion = config.system.stateVersion;
 
-  publicIp = "188.138.145.187";
-  homeIpRange = "192.168.100.0/24";
-  wgIpRange = "10.100.0.0/24";
+  publicIp = configVars.net.publicIp;
+  homeIpRange = configVars.net.lan.subnet;
+  wgIpRange = configVars.net.wg.subnet;
 in
 {
   _module.args.containerLib = {
@@ -52,7 +57,7 @@ in
               networking.useHostResolvConf = lib.mkForce false;
 
               networking.nameservers = [ "1.1.1.1" ];
-              networking.defaultGateway = "192.168.100.1";
+              networking.defaultGateway = configVars.net.gateway;
 
               networking.interfaces.eth0 = {
                 ipv4.addresses = [

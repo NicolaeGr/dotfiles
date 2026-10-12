@@ -1,11 +1,11 @@
-{ containerLib, ... }:
+{ containerLib, configVars, ... }:
 {
   services.nginx.virtualHosts."electrolit.biz" = containerLib.withPrivateAccess {
     forceSSL = true;
     useACMEHost = "electrolit.biz";
     serverAliases = [
-      "192.168.100.10"
-      "10.100.0.1"
+      configVars.net.lan.serverIp
+      configVars.net.wg.serverIp
     ];
 
     locations."/" = {
