@@ -43,9 +43,7 @@ in
         filtering_enabled = true;
       };
 
-      user_rules = [
-        "||electrolit.biz^$dnsrewrite=10.100.0.1"
-      ];
+      user_rules = map (domain: "||${domain}^$dnsrewrite=10.100.0.1") config.local.servedDomains;
 
       users = [ ];
     };
