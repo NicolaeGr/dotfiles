@@ -59,27 +59,26 @@
           pnpm
         ];
 
-        environment.sessionVariables = {
-          PNPM_HOME = "$HOME/.local/share/pnpm";
+        files = {
+          ".config/environment.d/10-pnpm.conf".text = ''
+            PNPM_HOME=''${HOME}/.local/share/pnpm
+            NPM_CONFIG_USERCONFIG=''${HOME}/.config/npm/npmrc
+            NPM_CONFIG_CACHE=''${HOME}/.cache/npm
+            NPM_CONFIG_DEVDIR=''${HOME}/.cache/node-gyp
+            COREPACK_HOME=''${HOME}/.cache/corepack
+            NODE_REPL_HISTORY=''${HOME}/.local/state/node_repl_history
 
-          NPM_CONFIG_USERCONFIG = "$HOME/.config/npm/npmrc";
-          NPM_CONFIG_CACHE = "$HOME/.cache/npm";
-          NPM_CONFIG_DEVDIR = "$HOME/.cache/node-gyp";
+            # Prepend PNPM_HOME to PATH
+            PATH=''${PNPM_HOME}:''${PATH}
+          '';
 
-          COREPACK_HOME = "$HOME/.cache/corepack";
-          NODE_REPL_HISTORY = "$HOME/.local/state/node_repl_history";
+          ".config/npm/npmrc" = {
+            text = ''
+              prefix=''${HOME}/.local/share/pnpm
+              cache=''${HOME}/.cache/npm
+            '';
+          };
         };
-
-        # TODO: Need to integrate this as well
-
-        # environment.interactiveShellInit = ''
-        #   export PATH="$PNPM_HOME:$PATH"
-        # '';
-
-        # cat <<EOF > ~/.config/npm/npmrc
-        # prefix=${HOME}/.local/share/pnpm
-        # cache=${HOME}/.cache/npm
-        # EOF
       }
       (lib.mkIf config.local.gui.enable {
         packages = with pkgs; [
