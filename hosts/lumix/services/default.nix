@@ -14,6 +14,7 @@
     # Containers Pub
     ./komga.nix
     ./navidrome.nix
+    ./couchdb.nix
 
     # Containers Priv
     ./arr.nix

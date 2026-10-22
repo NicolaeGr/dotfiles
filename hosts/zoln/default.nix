@@ -16,4 +16,6 @@
 
   local.gaming.enable = true;
   local.gaming.jc.enable = true;
+
+  networking.firewall.allowedTCPPorts = [ 8080 ];
 }

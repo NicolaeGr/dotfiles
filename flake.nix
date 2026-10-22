@@ -99,7 +99,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland.url = "github:hyprwm/Hyprland";
     base16.url = "github:SenchoPens/base16.nix";
 
     zen-browser = {

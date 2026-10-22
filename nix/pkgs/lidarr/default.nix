@@ -21,7 +21,7 @@ let
   src = fetchurl {
     name = "${pname}-${version}.tar.gz";
     url = "https://lidarr.servarr.com/v1/update/nightly/updatefile?os=linux&arch=x64&runtime=netcore";
-    hash = "sha256-HYFPI3bKbFxP6R/M2uOksR+xA06zRyC+Sd9wi8+MK4E=";
+    hash = "sha256-J2PA3bwu6auTUpqpeyjZF2Lwggu/OZSEEK7F6nYKZ28=";
   };
 
   rawBinaries = stdenv.mkDerivation {
