@@ -81,7 +81,7 @@ light.color=#{{base03-hex}}
 mid.light.color=#{{base03-hex}}
 dark.color=#{{base00-hex}}
 mid.color=#{{base00-hex}}
-highlight.color=#{{base0E-hex}}
+highlight.color=#{{accent-hex}}
 inactive.highlight.color=#{{base03-hex}}
 tooltip.base.color=#{{base00-hex}}
 text.color=#{{base05-hex}}
@@ -90,7 +90,7 @@ button.text.color=#{{base05-hex}}
 disabled.text.color=#{{base04-hex}}
 tooltip.text.color=#{{base05-hex}}
 highlight.text.color=#{{base00-hex}}
-link.color=#{{base0D-hex}}
+link.color=#{{accent-hex}}
 link.visited.color=#{{base0E-hex}}
 
 

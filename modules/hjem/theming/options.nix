@@ -1,89 +1,133 @@
-{ lib, config, ... }:
+# Options for the ht theming engine.
+#
+# Themes use Omarchy's colors.toml vocabulary. A theme either points at a
+# colors.toml file or declares the same keys inline.
+{
+  lib,
+  ...
+}:
 with lib;
 let
-  cfg = config.local.theming;
+  colorValue = types.oneOf [
+    types.str
+    types.int
+    types.float
+    types.bool
+  ];
 
-  colorSubmodule = {
-    options = listToAttrs (
-      map
-        (num: {
-          name = "base0${num}";
-          value = mkOption {
-            type = types.strMatching "#[0-9a-fA-F]{6}";
-            description = "Base16 color palette coordinate base0${num}.";
-          };
-        })
-        [
-          "0"
-          "1"
-          "2"
-          "3"
-          "4"
-          "5"
-          "6"
-          "7"
-          "8"
-          "9"
-          "A"
-          "B"
-          "C"
-          "D"
-          "E"
-          "F"
-        ]
-    );
-  };
+  themesDir = ./themes;
 
-  themeSubmodule = { name, ... }: {
+  builtinThemes =
+    lib.mapAttrs'
+      (
+        file: _: lib.nameValuePair (lib.removeSuffix ".toml" file) { colorsFile = themesDir + "/${file}"; }
+      )
+      (
+        lib.filterAttrs (name: type: type == "regular" && lib.hasSuffix ".toml" name) (
+          builtins.readDir themesDir
+        )
+      );
+
+  themeSubmodule = types.submodule {
     options = {
-      name = mkOption {
-        type = types.str;
-        default = name;
-        description = "The display name of the theme.";
+      colorsFile = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        description = "Path to a colors.toml file. Takes precedence over colors.";
       };
-      variant = mkOption {
-        type = types.enum [
-          "dark"
-          "light"
-        ];
-        description = "Context indicator for targeting scripts.";
-      };
+
       colors = mkOption {
-        type = types.submodule colorSubmodule;
-        description = "Strict Base16 color palette scheme.";
+        type = types.attrsOf colorValue;
+        default = { };
+        description = ''
+          colors.toml keys. Values may be hex, rgb()/rgba(), gradients, or
+          plain strings such as a mode name.
+        '';
       };
     };
   };
 in
 {
   options.local.theming = {
-    enable = mkEnableOption "custom declarative engine-agnostic system theming";
+    enable = mkEnableOption "Omarchy-compatible theming";
 
-    iconTheme = {
-      name = mkOption { type = types.str; };
-      package = mkOption { type = types.package; };
-    };
-
-    cursorTheme = {
-      name = mkOption { type = types.str; };
-      package = mkOption { type = types.package; };
-      size = mkOption {
-        type = types.int;
-        default = 24;
-      };
+    default = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = "Theme name used by ht reload when no theme is active.";
     };
 
     themes = mkOption {
-      type = types.attrsOf (types.submodule themeSubmodule);
-      default = { };
-      description = "The complete set of pre-compiled system themes.";
+      type = types.attrsOf themeSubmodule;
+      default = builtinThemes;
+      description = "The complete set of themes. Defaults to the TOMLs in ./themes.";
     };
-  };
 
-  config = mkIf cfg.enable {
-    packages = [
-      cfg.cursorTheme.package
-      cfg.iconTheme.package
-    ];
+    iconTheme = {
+      name = mkOption {
+        type = types.str;
+        default = "Adwaita";
+        description = "Icon theme name.";
+      };
+      package = mkOption {
+        type = types.nullOr types.package;
+        default = null;
+        description = "Icon theme package.";
+      };
+    };
+
+    cursorTheme = {
+      name = mkOption {
+        type = types.str;
+        default = "Adwaita";
+        description = "Cursor theme name.";
+      };
+      package = mkOption {
+        type = types.nullOr types.package;
+        default = null;
+        description = "Cursor theme package.";
+      };
+      size = mkOption {
+        type = types.int;
+        default = 24;
+        description = "Cursor size.";
+      };
+    };
+
+    fonts = {
+      sansSerif = mkOption {
+        type = types.str;
+        default = "Noto Sans";
+        description = "Interface font family.";
+      };
+      monospace = mkOption {
+        type = types.str;
+        default = "JetBrainsMono Nerd Font";
+        description = "Terminal and editor font family.";
+      };
+      emoji = mkOption {
+        type = types.str;
+        default = "Noto Color Emoji";
+        description = "Emoji font family.";
+      };
+      sansSize = mkOption {
+        type = types.int;
+        default = 10;
+        description = "Interface font size.";
+      };
+      monospaceSize = mkOption {
+        type = types.int;
+        default = 11;
+        description = "Terminal font size.";
+      };
+    };
+
+    # Filled by mkTarget. One entry exists only while the target is enabled.
+    _targets = mkOption {
+      type = types.attrsOf types.attrs;
+      internal = true;
+      default = { };
+      description = "Enabled target descriptors.";
+    };
   };
 }

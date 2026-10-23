@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<style-scheme id="stylix" _name="Stylix" version="1.0">
-  <author>Stylix</author>
-  <_description>Theme configured via NixOS or Home Manager.</_description>
+<style-scheme id="{{scheme-slug}}" _name="{{scheme-name}}" version="1.0">
+  <author>{{scheme-author}}</author>
+  <_description>{{scheme-description}}</_description>
 
   <color name="base00" value="#{{base00-hex}}"/>
   <color name="base01" value="#{{base01-hex}}"/>

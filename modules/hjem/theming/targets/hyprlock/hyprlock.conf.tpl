@@ -1,17 +1,15 @@
-$text_color = rgba(ede0deFF)
-$entry_background_color = rgba(130F0F11)
-$entry_border_color = rgba(a08c8955)
-$entry_color = rgba(d8c2bfFF)
-$font_family = Noto Sans
-$font_family_clock = Noto Sans
-$font_material_symbols = Material Symbols Rounded
+$text_color = rgba({{ foreground_strip }}ff)
+$entry_background_color = rgba({{ dark_background_strip }}11)
+$entry_border_color = rgba({{ accent_strip }}55)
+$entry_color = rgba({{ foreground_strip }}ff)
 
 background {
-    color = rgba(130F0F77)
+    color = rgba({{ background_strip }}77)
     path = screenshot
     blur_size = 5
     blur_passes = 4
 }
+
 input-field {
     monitor =
     size = 250, 50
@@ -41,6 +39,7 @@ label { # Clock
     halign = center
     valign = center
 }
+
 label { # Greeting
     monitor =
     text = hi $USER !!!
@@ -52,7 +51,8 @@ label { # Greeting
     halign = center
     valign = center
 }
-label { # lock icon
+
+label { # Lock icon
     monitor =
     text = lock
     color = $text_color
@@ -63,7 +63,8 @@ label { # lock icon
     halign = center
     valign = bottom
 }
-label { # "locked" text
+
+label { # Locked text
     monitor =
     text = locked
     color = $text_color

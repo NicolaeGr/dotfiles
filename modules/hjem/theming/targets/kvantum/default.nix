@@ -2,57 +2,52 @@
   lib,
   pkgs,
   config,
-  base16-lib,
   ...
 }:
 let
   mkTarget = import ../../mkTarget.nix { inherit lib; };
-  cfg = config.local.theming;
+
+  qtPluginPath = lib.concatStringsSep ":" [
+    "${pkgs.libsForQt5.qtstyleplugin-kvantum}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}"
+    "${pkgs.qt6Packages.qtstyleplugin-kvantum}/${pkgs.qt6.qtbase.qtPluginPrefix}"
+    "${pkgs.libsForQt5.qt5ct}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}"
+    "${pkgs.qt6Packages.qt6ct}/${pkgs.qt6.qtbase.qtPluginPrefix}"
+  ];
 in
 mkTarget {
   name = "kvantum";
   inherit config;
+
+  templates = {
+    "HjemTheme.kvconfig" = ./kvconfig.tpl;
+    "HjemTheme.svg" = ./kvantum.svg.tpl;
+  };
+
   switcherScript = ''
     mkdir -p "$HOME/.config/Kvantum/HjemTheme"
-    ln -sfn "$ACTIVE_DIR/HjemTheme.kvconfig" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.kvconfig"
-    ln -sfn "$ACTIVE_DIR/HjemTheme.svg" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.svg"
+    ln -sfn "$HT_THEME_DIR/HjemTheme.kvconfig" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.kvconfig"
+    ln -sfn "$HT_THEME_DIR/HjemTheme.svg" "$HOME/.config/Kvantum/HjemTheme/HjemTheme.svg"
 
-    cat <<EOF > "$HOME/.config/Kvantum/kvantum.kvconfig"
+    if [ "''${HT_VARIANT:-dark}" = "dark" ]; then
+      dark_theme="true"
+    else
+      dark_theme="false"
+    fi
+
+    cat >"$HOME/.config/Kvantum/kvantum.kvconfig" <<EOF
     [General]
     theme=HjemTheme
-    dark_theme=$(if [ "$VARIANT" = "dark" ]; then echo "true"; else echo "false"; fi)
+    dark_theme=$dark_theme
     EOF
 
-    touch "$HOME/.config/Kvantum/kvantum.kvconfig"
+    ${pkgs.coreutils}/bin/timeout 5 ${pkgs.qt6Packages.qtstyleplugin-kvantum}/bin/kvantummanager --set HjemTheme >/dev/null 2>&1 || true
+
+    if [ -n "''${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
+      ${pkgs.coreutils}/bin/timeout 2 ${pkgs.dbus}/bin/dbus-send --session --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:0 int32:0 >/dev/null 2>&1 || true
+    fi
   '';
+
   targetConfig = {
-    xdg.config.files = lib.foldl' (
-      acc: themeName:
-      let
-        theme = cfg.themes.${themeName};
-        colors = (base16-lib.mkSchemeAttrs theme.colors).override {
-          variant = theme.variant;
-          is_dark = if theme.variant == "dark" then "true" else "false";
-        };
-      in
-      acc
-      // {
-        "hjem/themes/${themeName}/HjemTheme.kvconfig" = {
-          source = colors {
-            template = ./kvconfig.mustache;
-            extension = ".kvconfig";
-          };
-        };
-
-        "hjem/themes/${themeName}/HjemTheme.svg" = {
-          source = colors {
-            template = ./kvantum.svg.mustache;
-            extension = ".svg";
-          };
-        };
-      }
-    ) { } (lib.attrNames cfg.themes);
-
     files.".config/qt5ct/qt5ct.conf".text = ''
       [Appearance]
       style=kvantum
@@ -65,19 +60,17 @@ mkTarget {
       custom_palette=false
     '';
 
-    environment.sessionVariables = {
-      QT_QPA_PLATFORMTHEME = "qt5ct";
-    };
-
     files.".config/hypr/hyprland.lua".text = lib.mkAfter ''
-      hl.env("QT_QPA_PLATFORMTHEME", "qt5ct")
+      hl.env("QT_STYLE_OVERRIDE", "kvantum")
+      hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
+      hl.env("QT_PLUGIN_PATH", "${qtPluginPath}")
     '';
 
     packages = [
-      pkgs.qt6Packages.qt6ct
-      pkgs.libsForQt5.qt5ct
       pkgs.libsForQt5.qtstyleplugin-kvantum
       pkgs.qt6Packages.qtstyleplugin-kvantum
+      pkgs.libsForQt5.qt5ct
+      pkgs.qt6Packages.qt6ct
     ];
   };
 }

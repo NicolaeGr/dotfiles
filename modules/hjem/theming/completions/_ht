@@ -1,0 +1,63 @@
+#compdef ht ht-set ht-reload ht-list
+# Completion for the ht theming engine. Installed into
+# $out/share/zsh/site-functions, which the user profile puts on fpath.
+
+local -a _ht_actions
+_ht_actions=(
+  'list:list themes and the active one'
+  'set:apply a theme'
+  'reload:reapply the active theme'
+)
+
+_ht_root() {
+  local exe=${commands[ht]:-$words[1]}
+  reply=("${exe:A:h:h}")
+}
+
+_ht_themes() {
+  local root dir
+  local -a themes
+  _ht_root
+  root=$reply[1]
+  for dir in "$root"/themes/*(N/); do
+    themes+=("${dir:t}")
+  done
+  _describe -t themes 'theme' themes
+}
+
+_ht_reload() {
+  _arguments '--if-changed[skip hooks when the theme store path is unchanged]'
+}
+
+_ht() {
+  case $service in
+  ht-set)
+    _ht_themes
+    ;;
+  ht-reload)
+    _ht_reload
+    ;;
+  ht-list)
+    _arguments '(-h --help)'{-h,--help}'[show usage]'
+    ;;
+  *)
+    _arguments -C \
+      '(-h --help)'{-h,--help}'[show usage]' \
+      '1:action:->action' \
+      '*::arg:->args'
+    case $state in
+    action)
+      _describe -t actions 'action' _ht_actions
+      ;;
+    args)
+      case $line[1] in
+      set) _ht_themes ;;
+      reload) _ht_reload ;;
+      esac
+      ;;
+    esac
+    ;;
+  esac
+}
+
+_ht "$@"

@@ -1,0 +1,33 @@
+mode = "dark"
+
+# Muted purple surfaces with a brighter accent so the accent separates
+# from the background instead of sitting on top of it.
+accent = "#b55dd4"
+selection = "#322b41"
+muted = "#5b5962"
+
+background = "#242030"
+dark_background = "#1d1a27"
+darker_background = "#18151f"
+lighter_background = "#332f3d"
+
+foreground = "#e9e8e5"
+dark_foreground = "#757478"
+light_foreground = "#b5b4b0"
+bright_foreground = "#e2dfdc"
+
+red = "#e55c6f"
+yellow = "#e9e381"
+orange = "#eada6e"
+green = "#96e3a5"
+cyan = "#49a072"
+blue = "#b55dd4"
+magenta = "#eada6e"
+brown = "#a67a6b"
+
+bright_red = "#e77a8a"
+bright_yellow = "#eee8a2"
+bright_green = "#b5eac0"
+bright_cyan = "#6dc393"
+bright_blue = "#b278c7"
+bright_magenta = "#eee8a2"
