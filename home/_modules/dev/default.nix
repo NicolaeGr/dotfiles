@@ -83,7 +83,7 @@
       (lib.mkIf config.local.gui.enable {
         packages = with pkgs; [
           stable.bruno
-          stable.vscode
+          vscode
 
           zed-editor
           gram

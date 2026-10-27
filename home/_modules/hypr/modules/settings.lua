@@ -5,7 +5,7 @@ hl.config({
     },
     input = {
         kb_layout = "ro,ru",
-        kb_options = "grp:alt_shift_toggle,lv3:ralt_switch",
+        kb_options = "grp:win_space_toggle,lv3:ralt_switch",
         natural_scroll = false,
         touchpad = {
             natural_scroll = true,

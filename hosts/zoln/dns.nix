@@ -16,10 +16,11 @@ in
 
     settings = {
       cache-size = 1000;
-      server = [ serverIp ];
+      server = [
+        "1.1.1.1"
+        "8.8.8.8"
+      ];
       inherit address;
     };
   };
-
-  networking.nameservers = [ "127.0.0.1" ];
 }

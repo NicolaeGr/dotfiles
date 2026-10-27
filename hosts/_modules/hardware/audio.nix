@@ -18,22 +18,6 @@
       jack.enable = true;
 
       wireplumber.enable = true;
-
-      extraConfig.pipewire = {
-        "99-input-denoising" = {
-          "context.modules" = [
-            {
-              name = "libpipewire-module-echo-cancel";
-              args = {
-                aec.args = {
-                  "webrtc.noise_suppression" = true;
-                  "webrtc.gain_control" = true;
-                };
-              };
-            }
-          ];
-        };
-      };
     };
 
     hardware.firmware = [ pkgs.sof-firmware ];

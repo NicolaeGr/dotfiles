@@ -14,6 +14,7 @@
   config = lib.mkMerge [
     {
       local.hw.audio.enable = true;
+      boot.kernelParams = [ "snd_hda_intel.power_save=0" ];
 
       local.hw.splitKb = true;
 
@@ -43,6 +44,7 @@
     }
     {
       hardware.i2c.enable = true;
+      environment.systemPackages = [ pkgs.ddcutil ];
       boot.extraModulePackages = [ config.boot.kernelPackages.it87 ];
 
       boot.kernelModules = [
@@ -62,6 +64,7 @@
         package = pkgs.openrgb;
         motherboard = "amd";
         server.port = 6742;
+        startupProfile = "default";
       };
     }
   ];
