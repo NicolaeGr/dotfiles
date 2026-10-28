@@ -86,7 +86,7 @@
           vscode
 
           zed-editor
-          gram
+          stable.gram
         ];
       })
     ]

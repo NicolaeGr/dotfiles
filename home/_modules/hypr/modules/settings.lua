@@ -16,6 +16,7 @@ hl.config({
         inactive_timeout = 10,
     },
     misc = {
+        allow_session_lock_restore = true,
         disable_hyprland_logo = true,
         animate_manual_resizes = true,
         animate_mouse_windowdragging = true,

@@ -1,6 +1,5 @@
 hl.on("hyprland.start", function()
     hl.exec_cmd("ht reload")
-    hl.exec_cmd("nosh")
 end)
 
 -- A rebuild rewrites hyprland.lua when the ht store path changes, which makes

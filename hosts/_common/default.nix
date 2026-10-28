@@ -14,7 +14,6 @@
 
   system.stateVersion = "26.05";
 
-  boot.initrd.systemd.enable = true;
   boot.loader = {
     systemd-boot.enable = true;
     systemd-boot.configurationLimit = lib.mkDefault 10;

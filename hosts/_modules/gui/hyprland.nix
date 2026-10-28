@@ -42,6 +42,6 @@ in
 
     services.hypridle.enable = true;
 
-    security.pam.services.hyprlock = { };
+    services.nosh.enable = true;
   };
 }
