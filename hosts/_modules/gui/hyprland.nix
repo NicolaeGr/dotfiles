@@ -42,6 +42,6 @@ in
 
     services.hypridle.enable = true;
 
-    services.nosh.enable = true;
+    services.nosh.withHJEM = true;
   };
 }

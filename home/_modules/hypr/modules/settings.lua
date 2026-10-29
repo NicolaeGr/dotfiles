@@ -24,7 +24,12 @@ hl.config({
     },
     general = {
         gaps_in = 6,
-        gaps_out = 12,
+        gaps_out = {
+          top = 0,
+          left = 12,
+          right = 12,
+          bottom = 12
+        },
         border_size = 1,
         allow_tearing = true,
         resize_on_border = true,
