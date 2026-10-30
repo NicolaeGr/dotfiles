@@ -105,5 +105,7 @@
     };
 
     nosh.url = "github:NicolaeGr/nosh";
+
+    sonora.url = "github:sonorahq/sonora";
   };
 }

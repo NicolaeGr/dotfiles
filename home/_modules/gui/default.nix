@@ -25,6 +25,7 @@
       vlc
       mpv
       libreoffice
+      inputs.sonora.packages.${system}.default
 
       gimp
 
