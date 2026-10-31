@@ -27,6 +27,9 @@
       ".config/hypr/modules" = {
         source = configLib.outOfStorePath ./modules;
       };
+      ".config/nosh" = {
+        source = configLib.outOfStorePath ./nosh;
+      };
     };
   };
 }

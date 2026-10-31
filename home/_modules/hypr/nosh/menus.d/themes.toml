@@ -1,0 +1,40 @@
+schema = 1
+
+[menu.themes]
+title = "Themes"
+placeholder = "Search themes"
+icon = "applications-graphics-symbolic"
+show_in_apps = true
+
+[menu.themes.window]
+namespace = "nosh-menu-themes"
+anchors = ["center"]
+layer = "overlay"
+keyboard = "exclusive"
+width = 720
+height = 540
+
+[menu.themes.view]
+type = "grid"
+columns = 3
+gap = 12
+
+[menu.themes.view.item]
+layout = "card"
+
+[menu.themes.source]
+type = "external"
+command = ["ht", "list", "--json"]
+search = "client"
+timeout_ms = 2000
+
+[menu.themes.template]
+name = "name"
+description = "description"
+preview = { field = "thumbnail", kind = "image" }
+badge = "badge"
+
+[menu.themes.action]
+command = ["ht", "set", "{item.theme}"]
+after = "reload"
+launch = "detached"

@@ -1,7 +1,5 @@
 Vars = require("modules.vars")
 
-require("modules.background")
-
 require("modules.autostart")
 
 require("modules.monitors")

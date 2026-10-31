@@ -1,0 +1,9 @@
+/*
+ * User stylesheet for nosh.
+ *
+ * The marker below is replaced with the built-in stylesheet at startup, so
+ * everything here can extend or override the shell without copying it. Add
+ * your own rules after the marker. Remove the marker to stop including the
+ * built-in rules in this file.
+ */
+/* nosh:builtin-styles */

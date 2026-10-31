@@ -20,7 +20,7 @@ usage() {
 Usage: ht <action>
 
 Actions:
-  list                  List themes and the active one
+  list [--json]         List themes and the active one
   set <theme>           Apply a theme
   reload [--if-changed] Reapply the active theme
 
@@ -28,16 +28,20 @@ The aliases ht-list, ht-set and ht-reload call the same actions.
 EOF
 }
 
-list_themes() {
-	local dir theme selected=""
-
+selected_theme() {
 	# The selected name is stored separately from the active symlink so a
 	# rebuild or GC cannot make an existing selection look unset.
 	if [[ -f $SELECTED ]]; then
-		selected=$(<"$SELECTED")
+		printf '%s' "$(<"$SELECTED")"
 	elif [[ -L $ACTIVE ]]; then
-		selected=$(basename -- "$(readlink -f -- "$ACTIVE" 2>/dev/null || true)")
+		basename -- "$(readlink -f -- "$ACTIVE" 2>/dev/null || true)"
 	fi
+}
+
+list_themes() {
+	local dir theme selected
+
+	selected=$(selected_theme)
 
 	printf 'Themes:\n'
 	for dir in "$THEMES"/*; do
@@ -48,6 +52,56 @@ list_themes() {
 		else
 			printf '  %s\n' "$theme"
 		fi
+	done
+}
+
+json_string() {
+	local value=$1
+	value=${value//\\/\\\\}
+	value=${value//\"/\\\"}
+	value=${value//$'\n'/\\n}
+	value=${value//$'\r'/\\r}
+	value=${value//$'\t'/\\t}
+	printf '"%s"' "$value"
+}
+
+json_fields() {
+	local dir=$1 theme=$2 selected=$3 variant badge
+
+	variant="dark"
+	[[ -f $dir/variant ]] && variant=$(<"$dir/variant")
+
+	badge=""
+	[[ $theme == "$selected" ]] && badge="active"
+
+	printf '{"id":%s,"name":%s,"description":%s,"thumbnail":%s,"badge":%s,"theme":%s}\n' \
+		"$(json_string "$theme")" \
+		"$(json_string "$theme")" \
+		"$(json_string "$variant")" \
+		"$(json_string "$dir/preview.svg")" \
+		"$(json_string "$badge")" \
+		"$(json_string "$theme")"
+}
+
+list_themes_json() {
+	local dir theme selected
+
+	selected=$(selected_theme)
+
+	# The active theme comes first so client-side search shows the current
+	# selection before the rest of the list when the query is empty.
+	for dir in "$THEMES"/*; do
+		[[ -d $dir ]] || continue
+		theme="${dir##*/}"
+		[[ $theme == "$selected" ]] || continue
+		json_fields "$dir" "$theme" "$selected"
+	done
+
+	for dir in "$THEMES"/*; do
+		[[ -d $dir ]] || continue
+		theme="${dir##*/}"
+		[[ $theme != "$selected" ]] || continue
+		json_fields "$dir" "$theme" "$selected"
 	done
 }
 
@@ -118,6 +172,7 @@ apply_theme() {
 
 action=""
 if_changed=0
+json=0
 
 case "${0##*/}" in
 ht-set)
@@ -150,7 +205,16 @@ done
 
 case "$action" in
 list)
-	list_themes
+	for arg in "${args[@]}"; do
+		if [[ $arg == "--json" ]]; then
+			json=1
+		fi
+	done
+	if ((json)); then
+		list_themes_json
+	else
+		list_themes
+	fi
 	;;
 set)
 	apply_theme "${args[0]:-}" 0

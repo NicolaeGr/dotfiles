@@ -2,19 +2,10 @@
   lib,
   pkgs,
   config,
-  configLib,
   ...
 }:
 {
   config = lib.mkIf config.local.gui.hypr.enable {
-    packages = with pkgs; [
-      awww
-    ];
-
-    files.".config/hypr/backgrounds" = {
-      source = configLib.outOfStorePath ./bgs;
-    };
-
     local.theming = {
       enable = true;
       default = "catppuccin-mocha";
