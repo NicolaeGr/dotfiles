@@ -44,7 +44,6 @@
     }
     {
       hardware.i2c.enable = true;
-      environment.systemPackages = [ pkgs.ddcutil ];
       boot.extraModulePackages = [ config.boot.kernelPackages.it87 ];
 
       boot.kernelModules = [

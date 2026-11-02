@@ -34,14 +34,6 @@ in
       withUWSM = true;
     };
 
-    environment.systemPackages = [
-      pkgs.brightnessctl
-    ];
-
-    services.upower.enable = true;
-
-    services.hypridle.enable = true;
-
     services.nosh.withHJEM = true;
   };
 }
