@@ -130,11 +130,12 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 ### Services
 
 | Service     | Kind      | Notes                                           |
-| ----------- | --------- | ----------------------------------------------- |
+| ----------- | --------- |-------------------------------------------------|
 | Jellyfin    | container | Hardware transcoding                            |
 | Komga       | container | Comics                                          |
 | Navidrome   | container | Music                                           |
 | CouchDB     | container | Obsidian LiveSync                               |
+| PostgreSQL  | container | Database                                        |
 | SeaNime     | container | Anime                                           |
 | Soju        | container | IRC bouncer                                     |
 | Arr stack   | container | Radarr, Sonarr, Bazarr, Lidarr, Prowlarr, slskd |
