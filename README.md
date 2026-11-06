@@ -130,7 +130,7 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 ### Services
 
 | Service     | Kind      | Notes                                           |
-| ----------- | --------- |-------------------------------------------------|
+| ----------- | --------- | ----------------------------------------------- |
 | Jellyfin    | container | Hardware transcoding                            |
 | Komga       | container | Comics                                          |
 | Navidrome   | container | Music                                           |
@@ -141,7 +141,7 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 | Arr stack   | container | Radarr, Sonarr, Bazarr, Lidarr, Prowlarr, slskd |
 | qBittorrent | system    | Downloads                                       |
 
-nginx fronts all of it. A wildcard certificate comes from ACME through the Cloudflare DNS challenge, `cloudflare-dyndns` keeps the record current, the catch-all host returns 403, and fail2ban watches the auth and bot logs.
+nginx fronts all of it. A wildcard certificate comes from ACME through the Cloudflare DNS challenge, the catch-all host returns 403, and fail2ban watches the auth and bot logs.
 
 Containers share `mkServiceContainer` from `services/_util.nix`. Each gets a private network on `br0`, a static address, and the `deploy` user with the same uid as the host, so a container writes to `/storage` as the same user as everything else.
 

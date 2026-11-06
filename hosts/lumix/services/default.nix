@@ -24,10 +24,6 @@
   ];
 
   config = {
-    services.cloudflare-dyndns.domains = [
-      "*.electrolit.biz"
-    ];
-
     services.nginx.virtualHosts."_" = {
       default = true;
       locations."/".return = "403";
