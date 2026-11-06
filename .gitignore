@@ -6,3 +6,5 @@ output*
 
 *.qcow
 *.qcow2
+
+.idea/

@@ -20,6 +20,7 @@
     ./arr.nix
     ./sea.nix
     ./soju.nix
+    ./postgresql.nix
   ];
 
   config = {
