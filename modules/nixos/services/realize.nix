@@ -161,6 +161,10 @@ let
 
         networking.useHostResolvConf = lib.mkForce false;
         networking.nameservers = [ "1.1.1.1" ];
+        # Containers resolve the internal names without a DNS server.
+        networking.extraHosts = lib.concatMapStrings (r: "${r.ip} ${r.fqdn}\n") (
+          lib.filter (r: r.host == hostName && r.ip != "127.0.0.1") cfg.internalRecords
+        );
         networking.defaultGateway = configVars.net.gateway;
         networking.interfaces.eth0.ipv4.addresses = [
           {

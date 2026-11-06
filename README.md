@@ -139,6 +139,7 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 | SeaNime     | container | Anime                                           |
 | Soju        | container | IRC bouncer                                     |
 | Arr stack   | container | Radarr, Sonarr, Bazarr, Lidarr, Prowlarr, slskd |
+| Mnemo       | container | Contacts and books                              |
 | qBittorrent | system    | Downloads                                       |
 
 nginx fronts all of it. A wildcard certificate comes from ACME through the Cloudflare DNS challenge, the catch-all host returns 403, and fail2ban watches the auth and bot logs.
@@ -172,6 +173,8 @@ just build
 | `just sops-update-keys` | Re-encrypts for the current keys   |
 
 The dev shell installs `nil`, `nixfmt`, `just`, `sops`, `age`, and the pre-commit hooks. There is no CI.
+
+`mnemo` and `nosh` build from `nicolaegr.cachix.org`. `hosts/_common/nixpkgs.nix` trusts the key and lists the cache, so those builds substitute instead of compiling.
 
 ## Repository layout
 

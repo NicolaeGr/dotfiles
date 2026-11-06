@@ -60,11 +60,11 @@ Keep the top level of a catalog file pure. It may use `lib`, `configVars` and pl
 | `container.mounts` | Passed straight to the container's `bindMounts`. Keys are container paths.                                             |
 | `container.module` | A NixOS module evaluated inside the container. It gets `pkgs`, `lib`, `svc`, `services`, `endpoints` and `configVars`. |
 
-The container itself is named after the service key. That name appears in the systemd unit (`container@navidrome`), in `/etc/nixos-containers/`, and in `nixos-container run`. Pick it once; `seanime` is spelled that way because the unit already was.
+The container itself is named after the service key. That name appears in the systemd unit (`container@navidrome`), in `/etc/nixos-containers/`, and in `nixos-container run`.
 
 ## Adding one
 
-1. Copy an existing file in `catalog/` and rename it. `scanPaths` picks it up, there is no import list.
+1. Copy an existing file in `catalog/` and rename it. `scanPaths` picks it up automatically.
 2. Set `host`, pick an unused `address` on `192.168.100.0/24`, and name the ports.
 3. Write `container.module` as a normal NixOS module. Use `svc.ports.<name>` instead of repeating numbers.
 4. Grant inbound access inside the container with `openFirewall = true` or an explicit `networking.firewall.allowedTCPPorts`.
@@ -78,7 +78,7 @@ nix eval --json .#nixosConfigurations.lumix.config.containers.<name>.path.drvPat
 nix build '.#nixosConfigurations.lumix.config.environment.etc."nginx/nginx.conf".source'
 ```
 
-A container module runs with the host's package set (`nixpkgs.pkgs = pkgs`), so overlay packages such as `pkgs.master.seanime` and `pkgs.soularr` stay available inside. The wrapper also creates the `deploy` user with uid 1002, group `users` gid 100, and the `render` and `video` groups.
+A container module runs with the host's package set (`nixpkgs.pkgs = pkgs`), so overlay packages such as `pkgs.soularr` stay available inside. The wrapper also creates the `deploy` user with uid 1002, group `users` gid 100, and the `render` and `video` groups.
 
 ## Talking to other services
 
@@ -86,14 +86,14 @@ Every container is a private network on `br0` with a static address. Two contain
 
 The serving container still has to accept the connection. PostgreSQL allows the LAN and WireGuard subnets in `authentication`; a smaller service usually just sets `openFirewall = true`.
 
-Inside a container the resolver is `1.1.1.1`, so the `.internal` names do not resolve there yet. A compose stack that talks to Postgres uses the address:
+Every container gets an `/etc/hosts` entry for each internal record on its own machine, so the name resolves without a DNS server:
 
 ```
-DB_HOST=192.168.100.31
+DB_HOST=pg.internal
 DB_PORT=5432
 ```
 
-The names exist for hosts that can resolve them. `domainsByHost` and `internalRecords` are exported on every host, `hosts/zoln/dns.nix` writes them into `/etc/hosts`, and AdGuard rewrites them for VPN clients. `endpoints.<name>` gives a container module the same name and port, which is why `pg-newdb` prints `postgres://user:pw@pg.internal:5432/user`. Treat that URL as information, not as something that works from inside a container today.
+The address still works and is what the record contains. `domainsByHost` and `internalRecords` are exported on every host, `hosts/zoln/dns.nix` writes them into `/etc/hosts`, and AdGuard rewrites them for VPN clients. `endpoints.<name>` gives a container module the name and port, which is why `pg-newdb` prints `postgres://user:pw@pg.internal:5432/user` and why `mnemo` sets `PGHOST` from `endpoints.pg.host`.
 
 ## Kinds of ingress
 
