@@ -1,14 +1,14 @@
 {
-  self,
+  config,
+  lib,
   configVars,
   ...
 }:
 let
-  serverIp = configVars.net.lan.serverIp;
-  domains = self.nixosConfigurations.lumix.config.local.servedDomains;
+  platform = config.local.platform;
 in
 {
-  networking.extraHosts = ''
-    ${serverIp} ${builtins.concatStringsSep " " domains}
-  '';
+  networking.extraHosts =
+    "${configVars.net.lan.serverIp} ${lib.concatStringsSep " " (platform.domainsByHost.lumix or [ ])}\n"
+    + lib.concatMapStrings (r: "${r.ip} ${r.fqdn}\n") platform.internalRecords;
 }

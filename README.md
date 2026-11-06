@@ -49,7 +49,7 @@ The defaults live in two common directories. Each host and each user adds only i
 | Layer           | Path                   | Holds                                                                     |
 | --------------- | ---------------------- | ------------------------------------------------------------------------- |
 | System defaults | `hosts/_common`        | Boot loader, locale, time zone, keymap, sudo, base packages, shell, sops  |
-| Shared system   | `hosts/_modules`       | `dev`, `gaming`, `gui`, `hardware`, `wireguard`, served domains           |
+| Shared system   | `hosts/_modules`       | `dev`, `gaming`, `gui`, `hardware`, `wireguard`                           |
 | User defaults   | `home/_common`         | zsh, git, fastfetch, XDG directories                                      |
 | Shared user     | `home/_modules`        | Hyprland, shell and CLI config                                            |
 | Host            | `hosts/<name>`         | Imports its own directory plus `_common`, then flips the `local.*` flags  |
@@ -125,7 +125,7 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 
 ### VPN and DNS
 
-`wg0` is a hub. It takes the peers, NATs their traffic onto `br0`, and forwards in both directions. AdGuard Home binds DNS on the hub address, filters ads and trackers, and rewrites the names nginx serves to the server address, so a VPN client reaches a service by name. `zoln` gets the same names from `/etc/hosts`, built by `hosts/zoln/dns.nix` from the nginx config.
+`wg0` is a hub. It takes the peers, NATs their traffic onto `br0`, and forwards in both directions. AdGuard Home binds DNS on the hub address, filters ads and trackers, and rewrites the names nginx serves to the server address, so a VPN client reaches a service by name. `zoln` gets the same names from `/etc/hosts`, built by `hosts/zoln/dns.nix` from `local.platform.domainsByHost`.
 
 ### Services
 
@@ -143,7 +143,7 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 
 nginx fronts all of it. A wildcard certificate comes from ACME through the Cloudflare DNS challenge, the catch-all host returns 403, and fail2ban watches the auth and bot logs.
 
-Containers share `mkServiceContainer` from `services/_util.nix`. Each gets a private network on `br0`, a static address, and the `deploy` user with the same uid as the host, so a container writes to `/storage` as the same user as everything else.
+Containers are defined in `modules/nixos/services/catalog/`, one entry per service. The entry carries the container, its ports and its ingress, and only the host named in the entry realizes it. Each container gets a private network on `br0`, a static address, and the `deploy` user with uid 1002, so it writes to `/storage` as the same user as everything else. See [docs/services.md](docs/services.md) for the model and how to add a service.
 
 Syncthing runs on all three machines. `odin` and `zoln` push a Ludusavi game save folder to `lumix`, which keeps five old versions.
 
@@ -182,6 +182,7 @@ The dev shell installs `nil`, `nixfmt`, `just`, `sops`, `age`, and the pre-commi
 | `home/`     | Per-user config and the Hyprland tree           |
 | `modules/`  | The `ht` engine and flake-wide modules          |
 | `secrets/`  | sops files                                      |
+| `docs/`     | Notes, including the service catalog reference  |
 | `nix/`      | Dev shell, overlays, pre-commit checks          |
 
 ## License

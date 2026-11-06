@@ -44,9 +44,11 @@ in
         filtering_enabled = true;
       };
 
-      user_rules = map (
-        domain: "||${domain}^$dnsrewrite=${configVars.net.wg.serverIp}"
-      ) config.local.servedDomains;
+      user_rules =
+        map (domain: "||${domain}^$dnsrewrite=${configVars.net.wg.serverIp}") (
+          config.local.platform.domainsByHost.lumix or [ ]
+        )
+        ++ map (r: "||${r.fqdn}^$dnsrewrite=${r.ip}") config.local.platform.internalRecords;
 
       users = [ ];
     };
