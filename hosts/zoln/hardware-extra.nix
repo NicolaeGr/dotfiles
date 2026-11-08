@@ -14,11 +14,13 @@
   config = lib.mkMerge [
     {
       local.hw.audio.enable = true;
+      local.hw.bluetooth.enable = true;
+      local.hw.aic8800.enable = true;
       boot.kernelParams = [ "snd_hda_intel.power_save=0" ];
 
       local.hw.splitKb = true;
 
-      boot.kernelPackages = pkgs.linuxPackages_7_2;
+      boot.kernelPackages = pkgs.linuxPackages_7_3;
     }
 
     {
