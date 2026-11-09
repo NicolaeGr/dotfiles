@@ -25,7 +25,7 @@
       vlc
       mpv
       libreoffice
-      inputs.sonora.packages.${system}.default
+      inputs.sonora.packages.${pkgs.stdenv.hostPlatform.system}.default
 
       gimp
 

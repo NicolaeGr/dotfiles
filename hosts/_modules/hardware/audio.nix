@@ -15,7 +15,6 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      jack.enable = true;
 
       wireplumber.enable = true;
     };
@@ -23,6 +22,7 @@
     hardware.firmware = [ pkgs.sof-firmware ];
 
     environment.systemPackages = with pkgs; [
+      pipewire.jack
       pavucontrol
       qpwgraph
       pwvucontrol
