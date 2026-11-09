@@ -24,14 +24,15 @@ in
       "aic8800_fdrv"
     ];
 
-    # The WiFi driver reuses the path reported by the loader, so one value has
-    # to serve both lookups. See the firmware layout in the package.
+    # filp_open() cannot read the zstd-compressed firmware under
+    # /run/current-system/firmware, so point at the package's raw tree.
+    # aic8800_fdrv reads the same value through get_fw_path().
     boot.extraModprobeConfig = ''
-      options aic_load_fw aic_fw_path=/run/current-system/firmware
+      options aic_load_fw aic_fw_path=${driver}/lib/firmware
     '';
 
-    # The dongle boots as a read-only mass-storage device and only exposes its
-    # radio interfaces after that disk is ejected.
+    # The dongle starts as a read-only mass-storage device and exposes its
+    # radio interfaces only after that disk is ejected.
     services.udev.extraRules = ''
       ACTION=="add", SUBSYSTEM=="block", ENV{DEVTYPE}=="disk", KERNEL=="sd*", ATTRS{idVendor}=="a69c", ATTRS{idProduct}=="5721", RUN+="${pkgs.util-linux}/bin/eject /dev/%k"
     '';

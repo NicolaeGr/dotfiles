@@ -1,8 +1,8 @@
-# AIC8800D80 WiFi + Bluetooth kernel modules and firmware.
+# AIC8800D80 WiFi and Bluetooth modules plus firmware.
 #
-# The `legacy-mcu1` branch targets hardware that reports `chip_id=7
-# chip_mcu_id=1`. Its aic_load_fw uploads the BT patch table, which makes the
-# chip enumerate as a combo device that btusb can bind.
+# The legacy-mcu1 branch targets hardware reporting chip_id=7, chip_mcu_id=1.
+# aic_load_fw uploads the BT patch table, so the chip enumerates as a combo
+# device that btusb can bind.
 {
   lib,
   stdenv,
@@ -52,18 +52,18 @@ stdenv.mkDerivation (finalAttrs: {
   installPhase = ''
     runHook preInstall
 
-    # modules_install runs the kernel's sign step, which writes the .ko.cer
-    # files the module aggregator needs.
+    # modules_install also writes the .ko.cer signatures the module aggregator
+    # needs.
     for m in aic_load_fw aic8800_fdrv; do
       make -C ${finalAttrs.kdir} M=$PWD/drivers/aic8800/$m $makeFlags modules_install
     done
 
-    # aic_load_fw looks up <aic_fw_path>/<name>, aic8800_fdrv looks up
-    # <aic_fw_path>/aic8800D80/<name>. The links at the top level serve the
-    # first lookup and the subdirectory serves the second.
+    # aic_load_fw opens <aic_fw_path>/<name> with filp_open(), while
+    # aic8800_fdrv also probes <aic_fw_path>/aic8800D80/<name>. Link every
+    # file at the top level so both lookups resolve.
     mkdir -p $out/lib/firmware/aic8800D80
     cp -r fw/aic8800D80/. $out/lib/firmware/aic8800D80/
-    for f in fw/aic8800D80/fw_*.bin; do
+    for f in fw/aic8800D80/*; do
       ln -sf aic8800D80/''${f##*/} $out/lib/firmware/
     done
 
