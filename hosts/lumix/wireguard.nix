@@ -13,8 +13,9 @@ let
   platform = config.local.platform;
 
   webRewrite = domain: [
-    "||${domain}^$dnsrewrite=${net.lan.serverIp},client=${net.lan.subnet}"
-    "||${domain}^$dnsrewrite=${net.wg.serverIp},client=${net.wg.subnet}"
+    "|${domain}^$dnsrewrite=${net.lan.serverIp},client=${net.lan.subnet}"
+    "|${domain}^$dnsrewrite=${net.wg.serverIp},client=${net.wg.subnet}"
+    "|${domain}^$dnsrewrite=${net.lan.serverIp},client=127.0.0.1"
   ];
 
   peers = [
@@ -157,10 +158,7 @@ in
         address = "${net.wg.serverIp}:3000";
       };
       dns = {
-        bind_hosts = [
-          net.wg.serverIp
-          net.lan.serverIp
-        ];
+        bind_hosts = [ "0.0.0.0" ];
         port = 53;
 
         upstream_dns = [

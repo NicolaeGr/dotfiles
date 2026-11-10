@@ -43,7 +43,6 @@
       matchConfig.Name = "br0";
       address = [ "${configVars.net.lan.serverIp}/24" ];
       gateway = [ configVars.net.gateway ];
-      dns = [ "1.1.1.1" ];
     };
 
     networks."20-br-svc" = {
@@ -51,6 +50,11 @@
       address = [ "${configVars.net.svc.serverIp}/24" ];
     };
   };
+
+  networking.nameservers = [
+    "192.168.100.10"
+    "1.1.1.1"
+  ];
 
   networking.firewall = {
     enable = true;
