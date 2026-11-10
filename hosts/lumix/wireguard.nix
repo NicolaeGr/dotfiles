@@ -157,7 +157,7 @@ in
         address = "${net.wg.serverIp}:3000";
       };
       dns = {
-        bind_addresses = [
+        bind_hosts = [
           net.wg.serverIp
           net.lan.serverIp
         ];
