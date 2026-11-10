@@ -15,20 +15,35 @@ in
     format = "yaml";
   };
 
-  networking.wg-quick.interfaces.wg0 = {
-    dns = [ configVars.net.wg.serverIp ];
-    address = [ "10.100.0.2/24" ];
+  sops.templates."wg-nm.env".content = ''
+    WG_PRIVATE_KEY=${config.sops.placeholder.odin_wg_private_key}
+  '';
 
-    privateKeyFile = config.sops.secrets.odin_wg_private_key.path;
+  networking.networkmanager.ensureProfiles = {
+    environmentFiles = [ config.sops.templates."wg-nm.env".path ];
 
-    peers = [
-      {
-        publicKey = "uT3bM9N2xsDmlMMmIf4mS6PysWUxEcwAfTv3j7x1unc=";
-        endpoint = "electrolit.biz:${toString cfg.listenPort}";
-        allowedIPs = [ configVars.net.wg.subnet ];
+    profiles.lumix-vpn = {
+      connection = {
+        id = "lumix-vpn";
+        type = "wireguard";
+        interface-name = "wg0";
+        autoconnect = "true";
+      };
 
-        persistentKeepalive = 25;
-      }
-    ];
+      wireguard.private-key = "$WG_PRIVATE_KEY";
+
+      "wireguard-peer.uT3bM9N2xsDmlMMmIf4mS6PysWUxEcwAfTv3j7x1unc=" = {
+        endpoint = "${configVars.net.wg.endpoint}:${toString cfg.listenPort}";
+        allowed-ips = "${configVars.net.wg.subnet}; ${configVars.net.svc.subnet}; ${configVars.net.lan.subnet};";
+        persistent-keepalive = "25";
+      };
+
+      ipv4 = {
+        method = "manual";
+        address1 = "10.100.0.2/16";
+        dns = "${configVars.net.wg.serverIp};";
+      };
+      ipv6.method = "disabled";
+    };
   };
 }

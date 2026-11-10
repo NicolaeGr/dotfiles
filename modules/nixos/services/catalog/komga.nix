@@ -1,7 +1,7 @@
 {
   local.platform.services.komga = {
     host = "lumix";
-    address = "192.168.100.12";
+    address = "10.200.0.12";
     ports.http = 25600;
 
     ingress.http."komga.electrolit.biz" = {

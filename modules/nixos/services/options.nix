@@ -163,6 +163,30 @@ let
     options.port = mkOption { type = types.str; };
   };
 
+  # Layer-4 ingress for protocols nginx should not proxy (games, databases).
+  # With no `listen` the entry only filters forward traffic to a container.
+  # With `listen` it also DNATs that port on the router.
+  l4Entry = types.submodule {
+    options = {
+      proto = mkOption {
+        type = types.enum [
+          "tcp"
+          "udp"
+        ];
+        default = "tcp";
+      };
+      port = mkOption { type = types.str; };
+      listen = mkOption {
+        type = types.nullOr portType;
+        default = null;
+      };
+      access = mkOption {
+        type = accessType;
+        default = "private";
+      };
+    };
+  };
+
   serviceModule = { ... }: {
     options = {
       host = mkOption { type = types.str; };
@@ -185,6 +209,10 @@ let
         };
         stream = mkOption {
           type = types.attrsOf streamEntry;
+          default = { };
+        };
+        l4 = mkOption {
+          type = types.attrsOf l4Entry;
           default = { };
         };
         internal = mkOption {
@@ -227,9 +255,37 @@ in
       type = types.listOf types.str;
       default = [
         configVars.net.lan.subnet
-        configVars.net.wg.subnet
         configVars.net.publicIp
-      ];
+      ]
+      ++ (configVars.net.tiers.admin or [ ]);
+    };
+    tiers = mkOption {
+      type = types.attrsOf (types.listOf types.str);
+      default = configVars.net.tiers or { };
+      description = "Named source ranges services can use in `access`.";
+    };
+    # Tiers that may reach everything. Other tiers only get what individual
+    # entries grant, plus nginx on 80/443.
+    trustedTiers = mkOption {
+      type = types.listOf types.str;
+      default = [ "admin" ];
+    };
+    router = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Generate the inter-zone firewall and port forwarding on this host.";
+    };
+    wgInterface = mkOption {
+      type = types.str;
+      default = "wg0";
+    };
+    svcInterface = mkOption {
+      type = types.str;
+      default = "br-svc";
+    };
+    lanInterface = mkOption {
+      type = types.str;
+      default = "br0";
     };
     services = mkOption {
       type = types.attrsOf (types.submodule serviceModule);

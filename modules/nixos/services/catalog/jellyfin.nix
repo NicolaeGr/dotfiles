@@ -1,7 +1,7 @@
 {
   local.platform.services.jellyfin = {
     host = "lumix";
-    address = "192.168.100.11";
+    address = "10.200.0.11";
     ports.http = 8096;
 
     ingress.http."jf.electrolit.biz" = {

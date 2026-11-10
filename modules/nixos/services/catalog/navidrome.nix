@@ -1,7 +1,7 @@
 {
   local.platform.services.navidrome = {
     host = "lumix";
-    address = "192.168.100.13";
+    address = "10.200.0.13";
     ports.http = 4533;
 
     ingress.http."music.electrolit.biz" = {

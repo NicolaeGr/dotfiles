@@ -1,7 +1,7 @@
 {
   local.platform.services.couchdb = {
     host = "lumix";
-    address = "192.168.100.24";
+    address = "10.200.0.24";
     ports.http = 5984;
 
     ingress.http."obsidian.electrolit.biz" = {

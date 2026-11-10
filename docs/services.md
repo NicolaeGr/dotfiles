@@ -2,12 +2,12 @@
 
 Everything `lumix` runs lives in one catalog: `modules/nixos/services/catalog/`, one file per service. Every host imports the catalog through `hosts/_common`, so all three evaluate the same data. Only the host named in `local.platform.services.<name>.host` turns an entry into containers, nginx vhosts or systemd units.
 
-| File                                 | Holds                                                     |
-| ------------------------------------ | --------------------------------------------------------- |
-| `modules/nixos/services/options.nix` | Model, settings, and the read-only outputs                |
-| `modules/nixos/services/realize.nix` | Containers, vhosts, stream blocks, firewall, for one host |
-| `modules/nixos/services/lib.nix`     | `portOf`, `isDomainName`, and the flat ingress lists      |
-| `modules/nixos/services/catalog/`    | One entry per service                                     |
+| File                                 | Holds                                                            |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| `modules/nixos/services/options.nix` | Model, settings, and the read-only outputs                       |
+| `modules/nixos/services/realize.nix` | Containers, vhosts, stream and l4 blocks, firewall, for one host |
+| `modules/nixos/services/lib.nix`     | `portOf`, `isDomainName`, and the flat ingress lists             |
+| `modules/nixos/services/catalog/`    | One entry per service                                            |
 
 Keep the top level of a catalog file pure. It may use `lib`, `configVars` and plain values. Anything that needs `pkgs` or host config goes inside `container.module` or behind `platformOwns`.
 
@@ -19,7 +19,7 @@ Keep the top level of a catalog file pure. It may use `lib`, `configVars` and pl
 {
   local.platform.services.navidrome = {
     host = "lumix";
-    address = "192.168.100.13";
+    address = "10.200.0.13";
     ports.http = 4533;
 
     ingress.http."music.electrolit.biz" = {
@@ -55,7 +55,7 @@ Keep the top level of a catalog file pure. It may use `lib`, `configVars` and pl
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
 | `host`             | Which machine realizes the entry. `zoln` and `odin` still read the data.                                               |
 | `enable`           | Turns the whole entry off, data included.                                                                              |
-| `address`          | Container address on `br0`. The default is `127.0.0.1`, so a container needs an explicit address to be reachable.      |
+| `address`          | Container address on `br-svc`. The default is `127.0.0.1`, so a container needs an explicit address to be reachable.   |
 | `ports`            | Named ports. Ingress refers to these names, never to numbers.                                                          |
 | `container.mounts` | Passed straight to the container's `bindMounts`. Keys are container paths.                                             |
 | `container.module` | A NixOS module evaluated inside the container. It gets `pkgs`, `lib`, `svc`, `services`, `endpoints` and `configVars`. |
@@ -65,7 +65,7 @@ The container itself is named after the service key. That name appears in the sy
 ## Adding one
 
 1. Copy an existing file in `catalog/` and rename it. `scanPaths` picks it up automatically.
-2. Set `host`, pick an unused `address` on `192.168.100.0/24`, and name the ports.
+2. Set `host`, pick an unused `address` on `10.200.0.0/24`, and name the ports.
 3. Write `container.module` as a normal NixOS module. Use `svc.ports.<name>` instead of repeating numbers.
 4. Grant inbound access inside the container with `openFirewall = true` or an explicit `networking.firewall.allowedTCPPorts`.
 5. Describe how traffic arrives. Any served name must appear as an `ingress.http` key, or the build fails with `nginx serves a name missing from local.platform`.
@@ -82,9 +82,11 @@ A container module runs with the host's package set (`nixpkgs.pkgs = pkgs`), so 
 
 ## Talking to other services
 
-Every container is a private network on `br0` with a static address. Two containers on the same machine reach each other directly at `address:port`. Nothing else is needed, no port publishing, no host loopback.
+Every container is a private network on `br-svc` with a static address. Two containers on the same machine reach each other directly at `address:port`. Nothing else is needed, no port publishing, no host loopback.
 
-The serving container still has to accept the connection. PostgreSQL allows the LAN and WireGuard subnets in `authentication`; a smaller service usually just sets `openFirewall = true`.
+Lumix is the containers' gateway, and the host routes VPN traffic to them. That keeps the peer's real source address, so the firewall on lumix decides what a peer may reach. Containers may reach the internet through lumix but not the LAN.
+
+The serving container still has to accept the connection. PostgreSQL allows the LAN and the `admin` tier in `authentication`; a smaller service usually just sets `openFirewall = true`.
 
 Every container gets an `/etc/hosts` entry for each internal record on its own machine, so the name resolves without a DNS server:
 
@@ -95,15 +97,18 @@ DB_PORT=5432
 
 The address still works and is what the record contains. `domainsByHost` and `internalRecords` are exported on every host, `hosts/zoln/dns.nix` writes them into `/etc/hosts`, and AdGuard rewrites them for VPN clients. `endpoints.<name>` gives a container module the name and port, which is why `pg-newdb` prints `postgres://user:pw@pg.internal:5432/user` and why `mnemo` sets `PGHOST` from `endpoints.pg.host`.
 
+Container addresses live on `10.200.0.0/24`, so a LAN host needs a route via lumix (`10.200.0.0/24 via 192.168.100.10`) before it can use an internal record directly. Browsers do not need one; nginx reaches the containers itself.
+
 ## Kinds of ingress
 
-There are three, and they do not overlap.
+There are four, and they do not overlap.
 
-| Kind       | Creates                                      | Use for                                      |
-| ---------- | -------------------------------------------- | -------------------------------------------- |
-| `http`     | nginx vhost with TLS and a proxy to the port | Web apps, dashboards, anything browsers open |
-| `stream`   | nginx `stream` server on a raw port          | TLS passthrough for non-HTTP protocols       |
-| `internal` | A name and endpoint, no nginx                | Databases and other services reached by name |
+| Kind       | Creates                                      | Use for                                           |
+| ---------- | -------------------------------------------- | ------------------------------------------------- |
+| `http`     | nginx vhost with TLS and a proxy to the port | Web apps, dashboards, anything browsers open      |
+| `stream`   | nginx `stream` server on a raw port          | TLS passthrough for non-HTTP protocols            |
+| `l4`       | Routed TCP/UDP access, optionally DNAT       | Games, databases, anything nginx should not proxy |
+| `internal` | A name and endpoint, no nginx                | Databases and other services reached by name      |
 
 ### HTTP
 
@@ -111,7 +116,7 @@ There are three, and they do not overlap.
 ingress.http."jf.electrolit.biz" = {
   port = "http";            # key in `ports`; null means no generated "/" location
   tls = true;               # wildcard certificate, forceSSL
-  access = "public";        # or "private", or a list of CIDRs
+  access = "public";        # or "private", a tier name, or a list of either
   aliases = [ ];            # extra server names
   proxyWebsockets = false;
   proxyExtraConfig = "";    # appended inside the generated "/" location
@@ -121,7 +126,9 @@ ingress.http."jf.electrolit.biz" = {
 };
 ```
 
-Private is the default. A private vhost gets `allow` lines for the LAN, the WireGuard subnet and the public address, then `deny all`. Public emits no rules, so nginx allows everyone. `tls = false` serves plain HTTP, which is what `bit.electrolit.biz` does because it never leaves the LAN.
+Private is the default. It means the LAN and the `admin` tier. `access` also takes tier names from `configVars.net.tiers` (`lan`, `admin`, `friends`) or raw CIDRs, mixed freely. A private vhost gets `allow` lines for those sources, then `deny all`. Public emits no rules, so nginx allows everyone. `tls = false` serves plain HTTP, which is what `bit.electrolit.biz` does because it never leaves the LAN.
+
+Every peer may reach nginx on 80 and 443. The vhost's `allow` lines decide what it serves them, which is why moving a service from `public` to `[ "lan" "admin" "friends" ]` is a one-line policy change.
 
 The generated `/` location sets `proxy_set_header Host`, `X-Real-IP`, `X-Forwarded-For` and `X-Forwarded-Proto`, then appends `proxyExtraConfig`. Headers at server level would be shadowed by these, which is why per-service header tweaks belong in `proxyExtraConfig`. Use `extraConfig` for server-level directives such as `client_max_body_size` or `add_header`.
 
@@ -133,12 +140,29 @@ ingress.stream.irc = {
   port = "irc";             # container port
   tls = true;               # certificate from acmeHost
   proxyProtocol = true;
-  access = [ "192.168.100.0/24" "10.100.0.0/24" ];
+  access = [ "lan" "admin" "friends" ];
   extraConfig = "ssl_ciphers HIGH:!aNULL:!MD5;";
 };
 ```
 
 The stream port is added to `networking.firewall.allowedTCPPorts` automatically. Keep `access` narrow: a stream listener is reachable by anything that reaches the host.
+
+### L4
+
+Use this for game servers and anything else where proxying would lose the client address or cost a port on lumix.
+
+```nix
+ingress.l4.minecraft = {
+  port = "game";            # container port
+  proto = "udp";            # tcp or udp
+  access = [ "admin" "friends" ];
+  # listen = 25565;         # also DNAT this port on lumix
+};
+```
+
+Without `listen`, the entry only adds a forward rule on lumix: the listed tiers may reach the container at its own address and port, routed, with the real source address. With `listen`, lumix also DNATs that port to the container, which is how a public or LAN port is published. `access` gates the DNAT only when it lists specific tiers; `public` accepts any source.
+
+The entry needs a routable `address`; loopback fails the build. Duplicate `listen` ports on one host fail the build too.
 
 ### Internal
 
@@ -215,4 +239,4 @@ The `mkMerge` is required because a module cannot mix a top-level `local` attrib
 - two vhosts on the same host serving the same name,
 - two `ingress.internal` entries with the same name.
 
-`realize.nix` adds one more: every domain-shaped `server_name` on the machine must come from an entry's `ingress.http` key or `aliases`.
+`realize.nix` adds three more on the owning host: every domain-shaped `server_name` must come from an entry's `ingress.http` key or `aliases`, an `l4` entry must not use a loopback address, and two `l4` entries may not share a `listen` port.

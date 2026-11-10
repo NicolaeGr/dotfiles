@@ -1,12 +1,11 @@
 { configVars, ... }:
 let
-  net = configVars.net;
   domain = "sj.electrolit.biz";
 in
 {
   local.platform.services.soju = {
     host = "lumix";
-    address = "192.168.100.23";
+    address = "10.200.0.23";
     ports = {
       http = 8080;
       irc = 6667;
@@ -22,8 +21,9 @@ in
         port = "irc";
         proxyProtocol = true;
         access = [
-          net.lan.subnet
-          net.wg.subnet
+          "lan"
+          "admin"
+          "friends"
         ];
         extraConfig = ''
           ssl_ciphers HIGH:!aNULL:!MD5;
@@ -46,7 +46,10 @@ in
           ];
 
           httpOrigins = [ "https://${domain}" ];
-          acceptProxyIP = [ configVars.net.lan.subnet ];
+          acceptProxyIP = [
+            configVars.net.lan.subnet
+            configVars.net.svc.subnet
+          ];
         };
 
         networking.firewall.allowedTCPPorts = [

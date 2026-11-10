@@ -23,7 +23,7 @@ in
 {
   local.platform.services.arr = {
     host = "lumix";
-    address = "192.168.100.21";
+    address = "10.200.0.21";
     inherit ports;
 
     ingress.http = lib.mapAttrs' (

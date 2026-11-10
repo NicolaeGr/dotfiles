@@ -13,7 +13,7 @@ in
     {
       local.platform.services.postgresql = {
         host = "lumix";
-        address = "192.168.100.31";
+        address = "10.200.0.31";
         ports.postgres = 5432;
         ingress.internal.pg.port = "postgres";
 
@@ -73,7 +73,8 @@ in
 
                 authentication = ''
                   host all all ${net.lan.subnet} scram-sha-256
-                  host all all ${net.wg.subnet} scram-sha-256
+                  host all all ${net.svc.subnet} scram-sha-256
+                  ${lib.concatMapStrings (c: "host all all ${c} scram-sha-256\n") configVars.net.tiers.admin}
                   host all all ${net.publicIp}/32 scram-sha-256
                 '';
               };

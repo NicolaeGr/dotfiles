@@ -18,18 +18,9 @@
   };
 
   config = lib.mkIf config.local.wireguard.enable {
-    networking.firewall.trustedInterfaces = lib.mkAfter [ "wg0" ];
-
-    networking.wg-quick.interfaces.wg0 = {
-      postUp = ''
-        sysctl -w net.ipv4.conf.all.rp_filter=0
-        sysctl -w net.ipv4.conf.default.rp_filter=0
-        sysctl -w net.ipv4.conf.wg0.rp_filter=0
-      '';
-
-      postDown = ''
-        sysctl -w net.ipv4.conf.wg0.rp_filter=2
-      '';
+    boot.kernel.sysctl = {
+      "net.ipv4.conf.all.rp_filter" = lib.mkDefault 0;
+      "net.ipv4.conf.default.rp_filter" = lib.mkDefault 0;
     };
   };
 }

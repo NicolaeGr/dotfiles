@@ -37,6 +37,7 @@ in
   flat = {
     http = each (s: s.ingress.http);
     stream = each (s: s.ingress.stream);
+    l4 = each (s: s.ingress.l4);
     internal = each (s: s.ingress.internal);
   };
 }

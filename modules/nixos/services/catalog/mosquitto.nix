@@ -1,7 +1,7 @@
 {
   local.platform.services.mosquitto = {
     host = "lumix";
-    address = "192.168.100.32";
+    address = "10.200.0.32";
     ports.mqtt = 1883;
     ingress.internal.mqtt.port = "mqtt";
 

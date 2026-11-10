@@ -1,7 +1,7 @@
 {
   local.platform.services.seanime = {
     host = "lumix";
-    address = "192.168.100.22";
+    address = "10.200.0.22";
     ports.http = 43211;
 
     ingress.http."sea.electrolit.biz" = {

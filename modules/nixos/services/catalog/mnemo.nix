@@ -2,7 +2,7 @@
 {
   local.platform.services.mnemo = {
     host = "lumix";
-    address = "192.168.100.26";
+    address = "10.200.0.26";
     ports.http = 8080;
 
     ingress.http."mnemo.electrolit.biz" = {
@@ -11,7 +11,6 @@
     };
 
     container = {
-      # Holds mnemo.env with PGPASSWORD and SESSION_SECRET.
       mounts."/var/lib/mnemo" = {
         hostPath = "/storage/appdata/mnemo";
         isReadOnly = true;
