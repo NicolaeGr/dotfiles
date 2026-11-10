@@ -15,7 +15,6 @@ in
 
         ingress.http."bit.electrolit.biz" = {
           port = "http";
-          tls = false;
         };
       };
     }

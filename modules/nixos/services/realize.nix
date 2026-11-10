@@ -283,7 +283,9 @@ in
           ${lib.concatStringsSep "\n          " (map l4Forward l4Entries)}
           iifname "${cfg.wgInterface}" drop
 
-          # Containers may reach the internet through lumix, not the LAN.
+          # Containers may reach the internet through lumix, not the LAN. A
+          # LAN host that routes the service subnet here may still connect.
+          iifname "${cfg.svcInterface}" oifname "${cfg.lanInterface}" ip daddr ${configVars.net.lan.subnet} ct state established,related accept
           iifname "${cfg.svcInterface}" oifname "${cfg.lanInterface}" ip daddr ${configVars.net.lan.subnet} drop
         }
       '';

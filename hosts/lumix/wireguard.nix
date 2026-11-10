@@ -78,7 +78,7 @@ let
             conf=$(printf '[Interface]\nPrivateKey = %s\nAddress = %s/16\nDNS = %s\n\n[Peer]\nPublicKey = %s\nEndpoint = %s\nAllowedIPs = %s\nPersistentKeepalive = 25\n' \
               "$priv" "$ip" "${net.wg.serverIp}" "$server" \
               "${net.wg.endpoint}:${toString cfg.listenPort}" \
-              "${net.wg.subnet}, ${net.svc.subnet}, ${net.lan.subnet}")
+              "${net.wg.subnet}, ${net.svc.subnet}")
             printf '%s\n' "$conf"
             qrencode -t ansiutf8 <<<"$conf"
           fi

@@ -34,7 +34,7 @@ in
 
       "wireguard-peer.uT3bM9N2xsDmlMMmIf4mS6PysWUxEcwAfTv3j7x1unc=" = {
         endpoint = "${configVars.net.wg.endpoint}:${toString cfg.listenPort}";
-        allowed-ips = "${configVars.net.wg.subnet}; ${configVars.net.svc.subnet}; ${configVars.net.lan.subnet};";
+        allowed-ips = "${configVars.net.wg.subnet}; ${configVars.net.svc.subnet};";
         persistent-keepalive = "25";
       };
 
