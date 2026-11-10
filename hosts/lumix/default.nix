@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   self,
   configLib,
   ...
@@ -18,4 +19,12 @@
 
   services.nginx.enable = true;
   services.croc.enable = true;
+
+  hjem.extraModules = [
+    {
+      files.".zed_server" = {
+        source = "${pkgs.zed-editor.remote_server}/bin";
+      };
+    }
+  ];
 }

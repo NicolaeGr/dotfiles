@@ -272,7 +272,7 @@ in
           ${streamMark}
           iifname "${cfg.wgInterface}" udp dport 53 meta mark set 0x100
           iifname "${cfg.wgInterface}" tcp dport 53 meta mark set 0x100
-          iifname "${cfg.wgInterface}" drop
+          iifname "${cfg.wgInterface}" meta mark != 0x100 drop
         }
 
         chain forward {
