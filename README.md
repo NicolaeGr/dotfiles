@@ -116,21 +116,33 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 
 ### Network
 
-| Part       | Setting                              |
-| ---------- | ------------------------------------ |
-| Bridge     | `br0` over `enp2s0` and `enp3s0`     |
-| Manager    | systemd-networkd, NetworkManager off |
-| Forwarding | IPv4 on                              |
-| Firewall   | Trusts `br0` and `wg0`               |
+| Part       | Setting                                                   |
+| ---------- | --------------------------------------------------------- |
+| Bridges    | `br0` over `enp2s0` and `enp3s0`, `br-svc` for containers |
+| Manager    | systemd-networkd, NetworkManager off                      |
+| Forwarding | IPv4 on                                                   |
+| Firewall   | Trusts `br0`; VPN peers pass the tier chain               |
 
 ### VPN and DNS
 
-`wg0` is a hub. It takes the peers, NATs their traffic onto `br0`, and forwards in both directions. AdGuard Home binds DNS on the hub address, filters ads and trackers, and rewrites the names nginx serves to the server address, so a VPN client reaches a service by name. `zoln` gets the same names from `/etc/hosts`, built by `hosts/zoln/dns.nix` from `local.platform.domainsByHost`.
+`wg0` is a hub with declarative peers in `hosts/lumix/wireguard.nix`. A peer's address picks its tier. `10.100.0.0/24` is admin and reaches every container. `10.100.1.0/24` is friends and only gets what a service lists in `access`, plus nginx on 80 and 443 and AdGuard on 53.
+
+`wg-peer` covers the day to day:
+
+| Command                  | Does                                          |
+| ------------------------ | --------------------------------------------- |
+| `wg-peer config NAME IP` | Prints a client config and QR code            |
+| `wg-peer list`           | Shows peers, handshakes, and temporary grants |
+| `wg-peer elevate IP 8h`  | Adds an address to the temporary admin set    |
+
+The issued configs route the WireGuard pool and the service subnet. They leave out the LAN, so a peer reaches services but not the machines around them. Add the LAN prefix to `AllowedIPs` for the session if you need it.
+
+AdGuard Home binds DNS on `0.0.0.0:53`. It filters ads and trackers, rewrites every served name to the server address for the client's subnet, and answers internal records such as `pg.internal`. The LAN router hands out `192.168.100.10` as DNS and routes `10.200.0.0/24` to lumix, so a LAN host uses those names with no client-side config.
 
 ### Services
 
 | Service     | Kind      | Notes                                           |
-|-------------| --------- |-------------------------------------------------|
+| ----------- | --------- | ----------------------------------------------- |
 | Jellyfin    | container | Hardware transcoding                            |
 | Komga       | container | Comics                                          |
 | Navidrome   | container | Music                                           |
@@ -145,7 +157,7 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 
 nginx fronts all of it. A wildcard certificate comes from ACME through the Cloudflare DNS challenge, the catch-all host returns 403, and fail2ban watches the auth and bot logs.
 
-Containers are defined in `modules/nixos/services/catalog/`, one entry per service. The entry carries the container, its ports and its ingress, and only the host named in the entry realizes it. Each container gets a private network on `br0`, a static address, and the `deploy` user with uid 1002, so it writes to `/storage` as the same user as everything else. See [docs/services.md](docs/services.md) for the model and how to add a service.
+Containers are defined in `modules/nixos/services/catalog/`, one entry per service. The entry carries the container, its ports and its ingress, and only the host named in the entry realizes it. Each container gets a private network on `br-svc` with a static address on `10.200.0.0/24`, and the `deploy` user with uid 1002, so it writes to `/storage` as the same user as everything else. A LAN host that wants the internal names directly adds a route: `10.200.0.0/24 via 192.168.100.10`. See [docs/services.md](docs/services.md) for the model and how to add a service.
 
 Syncthing runs on all three machines. `odin` and `zoln` push a Ludusavi game save folder to `lumix`, which keeps five old versions.
 

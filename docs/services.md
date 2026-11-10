@@ -84,7 +84,9 @@ A container module runs with the host's package set (`nixpkgs.pkgs = pkgs`), so 
 
 Every container is a private network on `br-svc` with a static address. Two containers on the same machine reach each other directly at `address:port`. Nothing else is needed, no port publishing, no host loopback.
 
-Lumix is the containers' gateway, and the host routes VPN traffic to them. That keeps the peer's real source address, so the firewall on lumix decides what a peer may reach. Containers may reach the internet through lumix but not the LAN.
+Lumix is the containers' gateway. It routes VPN traffic to them and keeps the peer's real source address, so the tier chain on lumix decides what a peer may reach. Peers in `trustedTiers` (`admin` by default) reach every container. Other peers only get what an entry's `access` lists, plus nginx on 80 and 443 and AdGuard on 53.
+
+Containers may reach the internet through lumix, but they cannot start connections to the LAN. The other direction works: a LAN host that routes `10.200.0.0/24` through lumix reaches a container, and lumix accepts the replies because they belong to a connection the LAN opened. A connection the container opens toward the LAN is still dropped.
 
 The serving container still has to accept the connection. PostgreSQL allows the LAN and the `admin` tier in `authentication`; a smaller service usually just sets `openFirewall = true`.
 
@@ -95,9 +97,22 @@ DB_HOST=pg.internal
 DB_PORT=5432
 ```
 
-The address still works and is what the record contains. `domainsByHost` and `internalRecords` are exported on every host, `hosts/zoln/dns.nix` writes them into `/etc/hosts`, and AdGuard rewrites them for VPN clients. `endpoints.<name>` gives a container module the name and port, which is why `pg-newdb` prints `postgres://user:pw@pg.internal:5432/user` and why `mnemo` sets `PGHOST` from `endpoints.pg.host`.
+The address still works and is what the record contains. `endpoints.<name>` gives a container module the name and port, which is why `pg-newdb` prints `postgres://user:pw@pg.internal:5432/user` and why `mnemo` sets `PGHOST` from `endpoints.pg.host`. Every other client resolves the name through AdGuard, described under [DNS](#dns).
 
-Container addresses live on `10.200.0.0/24`, so a LAN host needs a route via lumix (`10.200.0.0/24 via 192.168.100.10`) before it can use an internal record directly. Browsers do not need one; nginx reaches the containers itself.
+Container addresses live on `10.200.0.0/24`. The LAN router hands out AdGuard as DNS and routes that prefix to lumix, so any LAN host resolves internal names and reaches container ports directly. Without that route only browsers work, because nginx proxies on the host's behalf.
+
+## DNS
+
+AdGuard Home on lumix is the resolver for every platform name. It binds `0.0.0.0:53`, so it answers on the LAN address and the WireGuard address alike.
+
+`hosts/lumix/wireguard.nix` generates two kinds of rule:
+
+- Served names (`domainsByHost`) get an exact-host rewrite per client subnet. A LAN client resolves `music.electrolit.biz` to `192.168.100.10`, a VPN client to `10.100.0.1`, and the host itself to `192.168.100.10`.
+- Internal records (`internalRecords`) get a wildcard rewrite to the service address, so `pg.internal` answers `10.200.0.31` for every client that asks.
+
+The served-name rules use `|name^`, not `||name^`, so a name is rewritten only when an entry or alias declares it exactly. A subdomain that nothing lists falls through to the upstream resolvers, which do not know the name.
+
+`internalDomain` defaults to `internal`. Peers that use AdGuard as their resolver get the internal names, and the issued configs set `DNS = 10.100.0.1`. Containers need no DNS at all because the module writes `/etc/hosts`.
 
 ## Kinds of ingress
 
@@ -126,7 +141,7 @@ ingress.http."jf.electrolit.biz" = {
 };
 ```
 
-Private is the default. It means the LAN and the `admin` tier. `access` also takes tier names from `configVars.net.tiers` (`lan`, `admin`, `friends`) or raw CIDRs, mixed freely. A private vhost gets `allow` lines for those sources, then `deny all`. Public emits no rules, so nginx allows everyone. `tls = false` serves plain HTTP, which is what `bit.electrolit.biz` does because it never leaves the LAN.
+Private is the default. It means the LAN and the `admin` tier. `access` also takes tier names from `configVars.net.tiers` (`lan`, `admin`, `friends`) or raw CIDRs, mixed freely. A private vhost gets `allow` lines for those sources, then `deny all`. Public emits no rules, so nginx allows everyone. `tls = false` serves plain HTTP, for a name that never leaves the LAN.
 
 Every peer may reach nginx on 80 and 443. The vhost's `allow` lines decide what it serves them, which is why moving a service from `public` to `[ "lan" "admin" "friends" ]` is a one-line policy change.
 
