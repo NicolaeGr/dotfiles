@@ -105,7 +105,10 @@ in
 {
   local.wireguard.enable = true;
 
-  environment.systemPackages = [ wg-peer ];
+  environment.systemPackages = [
+    wg-peer
+    pkgs.wireguard-tools
+  ];
 
   sops.secrets.lumix_wg_private_key = {
     sopsFile = (self + "/secrets/wireguard.yaml");
