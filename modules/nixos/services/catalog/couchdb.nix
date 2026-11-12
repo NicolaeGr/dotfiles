@@ -24,6 +24,9 @@
         services.couchdb = {
           enable = true;
           bindAddress = "0.0.0.0";
+
+          user = "deploy";
+          group = "users";
         };
 
         networking.firewall.allowedTCPPorts = [ 5984 ];
