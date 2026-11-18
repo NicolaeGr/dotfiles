@@ -13,7 +13,7 @@
         "lumix" = {
           id = "ICHQARH-ZN7IIUX-3HHHMOB-DKDRM2A-TPBY7LX-LJBOMP3-TQXLTEZ-WJOMMQF";
           addresses = [
-            "tcp://10.0.0.1:22000"
+            "tcp://10.100.0.1:22000"
             "dynamic"
           ];
         };

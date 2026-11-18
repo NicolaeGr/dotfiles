@@ -22,6 +22,10 @@ hl.config({
         animate_mouse_windowdragging = true,
         middle_click_paste = false,
     },
+    debug = {
+        disable_logs = false,
+        enable_stdout_logs = true,
+    },
     general = {
         gaps_in = 6,
         gaps_out = {
