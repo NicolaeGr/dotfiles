@@ -69,14 +69,35 @@ let
     name: theme:
     let
       data = themeData theme;
-      bg = colorOr data [ "background" "color0" ] "#1d2021";
-      panel = colorOr data [ "color8" "color0" ] "#282828";
-      fg = colorOr data [ "foreground" "color7" ] "#ebdbb2";
-      muted = colorOr data [ "color8" "color7" ] "#928374";
-      accent = colorOr data [ "accent" "color4" "color6" ] "#83a598";
-      red = colorOr data [ "color1" "color9" ] "#fb4934";
-      green = colorOr data [ "color2" "color10" ] "#b8bb26";
-      yellow = colorOr data [ "color3" "color11" ] "#fabd2f";
+      isLight = variantFor theme == "light";
+      bg = colorOr data [ "background" "color0" ] (if isLight then "#f5f0f0" else "#1d2021");
+      # Surfaces sit above the background: a step darker on light themes,
+      # a step lighter on dark themes.
+      panel = colorOr data (
+        if isLight then
+          [
+            "dark_background"
+            "selection"
+            "lighter_background"
+            "color8"
+            "color0"
+          ]
+        else
+          [
+            "lighter_background"
+            "color8"
+            "dark_background"
+            "color0"
+          ]
+      ) bg;
+      fg = colorOr data [ "foreground" "color7" ] (if isLight then "#1f1a20" else "#ebdbb2");
+      muted = colorOr data [ "muted" "dark_foreground" "color8" "color7" ] (
+        if isLight then "#6b5f68" else "#928374"
+      );
+      accent = colorOr data [ "accent" "blue" "color4" "color6" ] "#83a598";
+      red = colorOr data [ "red" "color1" "color9" ] "#fb4934";
+      green = colorOr data [ "green" "color2" "color10" ] "#b8bb26";
+      yellow = colorOr data [ "yellow" "color3" "color11" ] "#fabd2f";
     in
     ''
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 220" width="360" height="220">

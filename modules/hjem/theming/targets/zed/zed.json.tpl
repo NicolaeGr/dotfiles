@@ -199,7 +199,10 @@
           "constructor": { "color": "{{ blue }}" },
           "embedded": { "color": "{{ foreground }}" },
           "emphasis": { "color": "{{ foreground }}", "font_style": "italic" },
-          "emphasis.strong": { "color": "{{ foreground }}", "font_weight": 700 },
+          "emphasis.strong": {
+            "color": "{{ foreground }}",
+            "font_weight": 700
+          },
           "enum": { "color": "{{ cyan }}" },
           "function": { "color": "{{ blue }}" },
           "hint": { "color": "{{ cyan }}" },
