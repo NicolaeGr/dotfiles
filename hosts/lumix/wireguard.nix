@@ -20,6 +20,11 @@ let
 
   peers = [
     {
+      name = "klubnika";
+      key = "c3fiKmwdHHvTwwdmHtcYf9OyWFFESWNre8rW/K52wjc=";
+      ip = "10.100.0.10";
+    }
+    {
       name = "odin";
       key = "DoB3CnXKA7eo+YR7FHzdk9SBzDde4mZBRWWubrSxfTU=";
       ip = "10.100.0.2";
@@ -33,6 +38,21 @@ let
       name = "phoneAdrian";
       key = "9rMvLrNfoIBT18kycuIpZhNmtjYraJ5ihUahDd5PdSs=";
       ip = "10.100.0.4";
+    }
+    {
+      name = "victor-laptop";
+      key = "L6NSLzq3bvaoq4qEWnikxIjMKAG3+J1ywLwtomaEzjc=";
+      ip = "10.100.0.5";
+    }
+    {
+      name = "victor-phone";
+      key = "RkwTWoDKjKqDBO/rD1UycsSIcSgV2ORiopKYchpb8QU=";
+      ip = "10.100.0.6";
+    }
+    {
+      name = "dima";
+      key = "LLYk6l41QTbsnzarPNloXB7rjiF+Zowd+nk5t2sTvTk=";
+      ip = "10.100.0.7";
     }
   ];
 
