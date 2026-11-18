@@ -32,16 +32,6 @@
           svc,
           ...
         }:
-        let
-          # Go 1.27 drops the legacy http2 transport that anacrolix/torrent
-          # still uses, and the JSON v2 symbols go-json-experiment aliases.
-          # Build with 1.26 until seanime's vendored deps catch up.
-          seanime = pkgs.master.seanime.override {
-            buildGoModule = pkgs.master.buildGoModule.override {
-              go = pkgs.master.go_1_26;
-            };
-          };
-        in
         {
           hardware.graphics = {
             enable = true;
@@ -103,7 +93,7 @@
 
               ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
 
-              ExecStart = "${seanime}/bin/seanime";
+              ExecStart = "${pkgs.seanime}/bin/seanime";
 
               Restart = "on-failure";
 
