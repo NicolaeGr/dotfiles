@@ -12,7 +12,19 @@ let
   platformLib = import ./lib.nix {
     inherit lib cfg;
   };
-  inherit (platformLib) flat isDomainName;
+  inherit (platformLib) flat isDomainName dups;
+
+  mkOpt = type: default: mkOption { inherit type default; };
+  mkReq = type: mkOption { inherit type; };
+  mkOptDesc =
+    type: default: description:
+    mkOption { inherit type default description; };
+  mkReadOnly =
+    type:
+    mkOption {
+      inherit type;
+      readOnly = true;
+    };
 
   portType = types.ints.between 1 65535;
 
@@ -20,6 +32,10 @@ let
     "public"
     "private"
   ]) (types.listOf types.str);
+
+  accessOpt = mkOpt accessType "private";
+  tlsOpt = mkOpt types.bool true;
+  linesOpt = mkOpt types.lines "";
 
   domainsByHost = lib.mapAttrs (
     _: es: lib.unique (lib.filter isDomainName (lib.concatMap (e: [ e.n ] ++ e.v.aliases) es))
@@ -43,20 +59,16 @@ let
     ) internalRecords
   );
 
-  namedServices = lib.mapAttrsToList (name: svc: { inherit name svc; }) (
-    lib.filterAttrs (_: s: s.enable) cfg.services
-  );
+  namedServices = lib.mapAttrsToList (name: svc: { inherit name svc; }) platformLib.enabled;
 
-  dups = xs: lib.unique (lib.filter (x: lib.count (y: y == x) xs > 1) xs);
+  duplicateCheck = label: names: {
+    assertion = dups names == [ ];
+    message = "local.platform: ${label}: ${lib.concatStringsSep ", " (dups names)}";
+  };
 
   # Only silent failures: duplicate addresses, server names and internal names.
   checks = [
-    {
-      assertion = lib.length internalRecords == lib.length (lib.unique (map (r: r.name) internalRecords));
-      message = "local.platform: duplicate ingress.internal names: ${
-        lib.concatStringsSep ", " (dups (map (r: r.name) internalRecords))
-      }";
-    }
+    (duplicateCheck "duplicate ingress.internal names" (map (r: r.name) internalRecords))
   ]
   ++
     lib.mapAttrsToList
@@ -71,24 +83,15 @@ let
           lib.filter (e: e.svc.container != null) namedServices
         )
       )
-  ++ lib.mapAttrsToList (host: es: {
-    assertion = dups (map (e: e.n) es) == [ ];
-    message = "local.platform: ${host} serves duplicate names: ${
-      lib.concatStringsSep ", " (dups (map (e: e.n) es))
-    }";
-  }) (lib.groupBy (e: e.svc.host) flat.http);
+  ++ lib.mapAttrsToList (
+    host: es: duplicateCheck "${host} serves duplicate names" (map (e: e.n) es)
+  ) (lib.groupBy (e: e.svc.host) flat.http);
 
   pathEntry = types.submodule {
     options = {
       # Null inherits the server-level rules.
-      access = mkOption {
-        type = types.nullOr accessType;
-        default = null;
-      };
-      extraConfig = mkOption {
-        type = types.lines;
-        default = "";
-      };
+      access = mkOpt (types.nullOr accessType) null;
+      extraConfig = linesOpt;
     };
   };
 
@@ -96,71 +99,32 @@ let
     options = {
       # Key into the service's `ports`. Null generates no "/" location, so a
       # static-file vhost can use `vhost` alone.
-      port = mkOption {
-        type = types.nullOr types.str;
-        default = "http";
-      };
-      tls = mkOption {
-        type = types.bool;
-        default = true;
-      };
-      access = mkOption {
-        type = accessType;
-        default = "private";
-      };
-      aliases = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-      };
-      extraConfig = mkOption {
-        type = types.lines;
-        default = "";
-      };
-      proxyExtraConfig = mkOption {
-        type = types.lines;
-        default = "";
-      };
-      proxyWebsockets = mkOption {
-        type = types.bool;
-        default = false;
-      };
-      paths = mkOption {
-        type = types.attrsOf pathEntry;
-        default = { };
-      };
+      port = mkOpt (types.nullOr types.str) "http";
+      tls = tlsOpt;
+      access = accessOpt;
+      aliases = mkOpt (types.listOf types.str) [ ];
+      extraConfig = linesOpt;
+      proxyExtraConfig = linesOpt;
+      proxyWebsockets = mkOpt types.bool false;
+      paths = mkOpt (types.attrsOf pathEntry) { };
       # Raw nginx vhost attributes, merged as a second module.
-      vhost = mkOption {
-        type = types.attrsOf types.unspecified;
-        default = { };
-      };
+      vhost = mkOpt (types.attrsOf types.unspecified) { };
     };
   };
 
   streamEntry = types.submodule {
     options = {
-      listen = mkOption { type = portType; };
-      port = mkOption { type = types.str; };
-      tls = mkOption {
-        type = types.bool;
-        default = true;
-      };
-      access = mkOption {
-        type = accessType;
-        default = "private";
-      };
-      proxyProtocol = mkOption {
-        type = types.bool;
-        default = false;
-      };
-      extraConfig = mkOption {
-        type = types.lines;
-        default = "";
-      };
+      listen = mkReq portType;
+      port = mkReq types.str;
+      tls = tlsOpt;
+      access = accessOpt;
+      proxyProtocol = mkOpt types.bool false;
+      extraConfig = linesOpt;
     };
   };
 
   internalEntry = types.submodule {
-    options.port = mkOption { type = types.str; };
+    options.port = mkReq types.str;
   };
 
   # Layer-4 ingress for protocols nginx should not proxy (games, databases).
@@ -168,146 +132,67 @@ let
   # With `listen` it also DNATs that port on the router.
   l4Entry = types.submodule {
     options = {
-      proto = mkOption {
-        type = types.enum [
-          "tcp"
-          "udp"
-        ];
-        default = "tcp";
-      };
-      port = mkOption { type = types.str; };
-      listen = mkOption {
-        type = types.nullOr portType;
-        default = null;
-      };
-      access = mkOption {
-        type = accessType;
-        default = "private";
-      };
+      proto = mkOpt (types.enum [
+        "tcp"
+        "udp"
+      ]) "tcp";
+      port = mkReq types.str;
+      listen = mkOpt (types.nullOr portType) null;
+      access = accessOpt;
     };
   };
 
-  serviceModule = { ... }: {
+  serviceModule = {
     options = {
-      host = mkOption { type = types.str; };
-      enable = mkOption {
-        type = types.bool;
-        default = true;
-      };
-      address = mkOption {
-        type = types.str;
-        default = "127.0.0.1";
-      };
-      ports = mkOption {
-        type = types.attrsOf portType;
-        default = { };
-      };
+      host = mkReq types.str;
+      enable = mkOpt types.bool true;
+      address = mkOpt types.str "127.0.0.1";
+      ports = mkOpt (types.attrsOf portType) { };
       ingress = {
-        http = mkOption {
-          type = types.attrsOf httpEntry;
-          default = { };
-        };
-        stream = mkOption {
-          type = types.attrsOf streamEntry;
-          default = { };
-        };
-        l4 = mkOption {
-          type = types.attrsOf l4Entry;
-          default = { };
-        };
-        internal = mkOption {
-          type = types.attrsOf internalEntry;
-          default = { };
-        };
+        http = mkOpt (types.attrsOf httpEntry) { };
+        stream = mkOpt (types.attrsOf streamEntry) { };
+        l4 = mkOpt (types.attrsOf l4Entry) { };
+        internal = mkOpt (types.attrsOf internalEntry) { };
       };
-      container = mkOption {
-        type = types.nullOr (
-          types.submodule {
-            options = {
-              mounts = mkOption {
-                type = types.attrsOf types.unspecified;
-                default = { };
-              };
-              module = mkOption {
-                type = types.deferredModule;
-                default = { };
-              };
-            };
-          }
-        );
-        default = null;
-        description = "NixOS container for this service; null means it runs natively.";
-      };
+      container = mkOptDesc (types.nullOr (
+        types.submodule {
+          options = {
+            mounts = mkOpt (types.attrsOf types.unspecified) { };
+            module = mkOpt types.deferredModule { };
+          };
+        }
+      )) null "NixOS container for this service; null means it runs natively.";
     };
   };
 in
 {
   options.local.platform = {
-    acmeHost = mkOption {
-      type = types.str;
-      default = "electrolit.biz";
-    };
-    internalDomain = mkOption {
-      type = types.str;
-      default = "internal";
-    };
-    privateCidrs = mkOption {
-      type = types.listOf types.str;
-      default = [
+    acmeHost = mkOpt types.str "electrolit.biz";
+    internalDomain = mkOpt types.str "internal";
+    privateCidrs = mkOpt (types.listOf types.str) (
+      [
         configVars.net.lan.subnet
         configVars.net.publicIp
       ]
-      ++ (configVars.net.tiers.admin or [ ]);
-    };
-    tiers = mkOption {
-      type = types.attrsOf (types.listOf types.str);
-      default = configVars.net.tiers or { };
-      description = "Named source ranges services can use in `access`.";
-    };
+      ++ (configVars.net.tiers.admin or [ ])
+    );
+    tiers = mkOptDesc (types.attrsOf (types.listOf types.str)) (configVars.net.tiers or { }
+    ) "Named source ranges services can use in `access`.";
     # Tiers that may reach everything. Other tiers only get what individual
     # entries grant, plus nginx on 80/443.
-    trustedTiers = mkOption {
-      type = types.listOf types.str;
-      default = [ "admin" ];
-    };
-    router = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Generate the inter-zone firewall and port forwarding on this host.";
-    };
-    wgInterface = mkOption {
-      type = types.str;
-      default = "wg0";
-    };
-    svcInterface = mkOption {
-      type = types.str;
-      default = "br-svc";
-    };
-    lanInterface = mkOption {
-      type = types.str;
-      default = "br0";
-    };
-    services = mkOption {
-      type = types.attrsOf (types.submodule serviceModule);
-      default = { };
-    };
+    trustedTiers = mkOpt (types.listOf types.str) [ "admin" ];
+    router =
+      mkOptDesc types.bool false
+        "Generate the inter-zone firewall and port forwarding on this host.";
+    wgInterface = mkOpt types.str "wg0";
+    svcInterface = mkOpt types.str "br-svc";
+    lanInterface = mkOpt types.str "br0";
+    services = mkOpt (types.attrsOf (types.submodule serviceModule)) { };
 
-    domainsByHost = mkOption {
-      type = types.attrsOf (types.listOf types.str);
-      readOnly = true;
-    };
-    internalRecords = mkOption {
-      type = types.listOf types.attrs;
-      readOnly = true;
-    };
-    endpoints = mkOption {
-      type = types.attrsOf types.attrs;
-      readOnly = true;
-    };
-    checks = mkOption {
-      type = types.listOf types.attrs;
-      readOnly = true;
-    };
+    domainsByHost = mkReadOnly (types.attrsOf (types.listOf types.str));
+    internalRecords = mkReadOnly (types.listOf types.attrs);
+    endpoints = mkReadOnly (types.attrsOf types.attrs);
+    checks = mkReadOnly (types.listOf types.attrs);
   };
 
   config = {

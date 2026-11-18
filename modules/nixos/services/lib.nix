@@ -1,6 +1,8 @@
 { lib, cfg }:
 let
-  isDomainName = n: lib.hasInfix "." n && builtins.match "[0-9.]+" n == null;
+  isIpv4 = s: builtins.match "[0-9.]+" s != null;
+
+  isDomainName = n: lib.hasInfix "." n && !(isIpv4 n);
 
   portOf =
     sn: svc: p:
@@ -12,6 +14,8 @@ let
       throw "local.platform.services.${sn}: ingress references undefined port '${p}'";
 
   enabled = lib.filterAttrs (_: s: s.enable) cfg.services;
+
+  dups = xs: lib.unique (lib.filter (x: lib.count (y: y == x) xs > 1) xs);
 
   # [{ sn, svc, n, v, port }] for one ingress kind over all enabled services.
   each =
@@ -32,12 +36,13 @@ let
     );
 in
 {
-  inherit isDomainName portOf;
+  inherit
+    isDomainName
+    isIpv4
+    portOf
+    enabled
+    dups
+    ;
 
-  flat = {
-    http = each (s: s.ingress.http);
-    stream = each (s: s.ingress.stream);
-    l4 = each (s: s.ingress.l4);
-    internal = each (s: s.ingress.internal);
-  };
+  flat = lib.genAttrs [ "http" "stream" "l4" "internal" ] (kind: each (s: s.ingress.${kind}));
 }

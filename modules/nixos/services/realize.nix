@@ -12,9 +12,9 @@ let
   platformLib = import ./lib.nix {
     inherit lib cfg;
   };
-  inherit (platformLib) isDomainName;
+  inherit (platformLib) isDomainName isIpv4 dups;
 
-  mine = lib.filterAttrs (_: s: s.enable && s.host == hostName) cfg.services;
+  mine = lib.filterAttrs (_: s: s.host == hostName) platformLib.enabled;
   mineFlat = sel: lib.filter (e: e.svc.host == hostName) platformLib.flat.${sel};
 
   httpEntries = mineFlat "http";
@@ -27,7 +27,7 @@ let
     access:
     lib.concatMap (
       a:
-      if lib.hasInfix "/" a || builtins.match "[0-9.]+" a != null then
+      if lib.hasInfix "/" a || isIpv4 a then
         a
       else
         cfg.tiers.${a} or (throw "local.platform: unknown tier '${a}' in access")
@@ -226,7 +226,6 @@ let
     e:
     "${saddrOf e.v.access}${e.v.proto} dport ${toString e.v.listen} dnat ip to ${e.svc.address}:${toString e.port}";
 
-  dups = xs: lib.unique (lib.filter (x: lib.count (y: y == x) xs > 1) xs);
 in
 {
   config = {
