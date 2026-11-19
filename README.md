@@ -135,7 +135,7 @@ The themes are Catppuccin in four flavors, Nord, Osaka Jade, Ristretto, and Pret
 | `wg-peer list`           | Shows peers, handshakes, and temporary grants |
 | `wg-peer elevate IP 8h`  | Adds an address to the temporary admin set    |
 
-The issued configs route the WireGuard pool and the service subnet. They leave out the LAN, so a peer reaches services but not the machines around them. Add the LAN prefix to `AllowedIPs` for the session if you need it.
+The issued configs route the WireGuard pool, the service subnet, and the kl subnet. They leave out the LAN, so a peer reaches services but not the machines around them. Add the LAN prefix to `AllowedIPs` for the session if you need it.
 
 AdGuard Home binds DNS on `0.0.0.0:53`. It filters ads and trackers, rewrites every served name to the server address for the client's subnet, and answers internal records such as `pg.internal`. The LAN router hands out `192.168.100.10` as DNS and routes `10.200.0.0/24` to lumix, so a LAN host uses those names with no client-side config.
 

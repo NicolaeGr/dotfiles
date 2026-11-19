@@ -131,6 +131,7 @@ There are four, and they do not overlap.
 ingress.http."jf.electrolit.biz" = {
   port = "http";            # key in `ports`; null means no generated "/" location
   tls = true;               # wildcard certificate, forceSSL
+  upstreamTls = false;      # speak HTTPS to the backend
   access = "public";        # or "private", a tier name, or a list of either
   aliases = [ ];            # extra server names
   proxyWebsockets = false;
@@ -141,7 +142,7 @@ ingress.http."jf.electrolit.biz" = {
 };
 ```
 
-Private is the default. It means the LAN and the `admin` tier. `access` also takes tier names from `configVars.net.tiers` (`lan`, `admin`, `friends`) or raw CIDRs, mixed freely. A private vhost gets `allow` lines for those sources, then `deny all`. Public emits no rules, so nginx allows everyone. `tls = false` serves plain HTTP, for a name that never leaves the LAN.
+Private is the default. It means the LAN and the `admin` tier. `access` also takes tier names from `configVars.net.tiers` (`lan`, `admin`, `friends`, `kl`) or raw CIDRs, mixed freely. A private vhost gets `allow` lines for those sources, then `deny all`. Public emits no rules, so nginx allows everyone. `tls = false` serves plain HTTP, for a name that never leaves the LAN.
 
 Every peer may reach nginx on 80 and 443. The vhost's `allow` lines decide what it serves them, which is why moving a service from `public` to `[ "lan" "admin" "friends" ]` is a one-line policy change.
 

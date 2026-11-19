@@ -15,14 +15,31 @@ let
   webRewrite = domain: [
     "|${domain}^$dnsrewrite=${net.lan.serverIp},client=${net.lan.subnet}"
     "|${domain}^$dnsrewrite=${net.wg.serverIp},client=${net.wg.subnet}"
+    "|${domain}^$dnsrewrite=${net.wg.serverIp},client=${net.kl.subnet}"
     "|${domain}^$dnsrewrite=${net.lan.serverIp},client=127.0.0.1"
   ];
+
+  # NAT only when anl4 listener on a kl address exists.
+  klPrefix =
+    lib.concatStringsSep "." (
+      lib.take 3 (lib.splitString "." (lib.head (lib.splitString "/" net.kl.subnet)))
+    )
+    + ".";
+
+  klL4Published = lib.any (
+    s:
+    s.enable
+    && s.host == "lumix"
+    && lib.hasPrefix klPrefix s.address
+    && lib.any (e: e.listen != null) (lib.attrValues s.ingress.l4)
+  ) (lib.attrValues platform.services);
 
   peers = [
     {
       name = "klubnika";
       key = "c3fiKmwdHHvTwwdmHtcYf9OyWFFESWNre8rW/K52wjc=";
       ip = "10.100.0.10";
+      routes = [ net.kl.subnet ];
     }
     {
       name = "odin";
@@ -98,7 +115,7 @@ let
             conf=$(printf '[Interface]\nPrivateKey = %s\nAddress = %s/16\nDNS = %s\n\n[Peer]\nPublicKey = %s\nEndpoint = %s\nAllowedIPs = %s\nPersistentKeepalive = 25\n' \
               "$priv" "$ip" "${net.wg.serverIp}" "$server" \
               "${net.wg.endpoint}:${toString cfg.listenPort}" \
-              "${net.wg.subnet}, ${net.svc.subnet}")
+              "${net.wg.subnet}, ${net.svc.subnet}, ${net.kl.subnet}")
             printf '%s\n' "$conf"
             qrencode -t ansiutf8 <<<"$conf"
           fi
@@ -150,13 +167,14 @@ in
       };
       wireguardPeers = map (p: {
         PublicKey = p.key;
-        AllowedIPs = [ "${p.ip}/32" ];
+        AllowedIPs = [ "${p.ip}/32" ] ++ (p.routes or [ ]);
       }) peers;
     };
 
     networks."30-wg0" = {
       matchConfig.Name = "wg0";
       address = [ "${net.wg.serverIp}/16" ];
+      routes = map (r: { Destination = r; }) (lib.concatMap (p: p.routes or [ ]) peers);
     };
   };
 
@@ -166,6 +184,7 @@ in
       chain post {
         type nat hook postrouting priority srcnat; policy accept;
         oifname "br0" masquerade
+        ${lib.optionalString klL4Published ''iifname "br0" oifname "wg0" masquerade''}
       }
     '';
   };

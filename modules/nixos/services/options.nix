@@ -101,6 +101,8 @@ let
       # static-file vhost can use `vhost` alone.
       port = mkOpt (types.nullOr types.str) "http";
       tls = tlsOpt;
+      # Speak TLS to the upstream, for a backend with a self-signed cert.
+      upstreamTls = mkOpt types.bool false;
       access = accessOpt;
       aliases = mkOpt (types.listOf types.str) [ ];
       extraConfig = linesOpt;

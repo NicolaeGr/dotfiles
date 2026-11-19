@@ -70,7 +70,9 @@ let
       extra,
     }:
     {
-      proxyPass = "http://${entry.svc.address}:${toString entry.port}";
+      proxyPass = "${
+        if entry.v.upstreamTls then "https" else "http"
+      }://${entry.svc.address}:${toString entry.port}";
       extraConfig = lib.concatStringsSep "\n" (
         lib.filter (l: l != "") (
           accessLines {

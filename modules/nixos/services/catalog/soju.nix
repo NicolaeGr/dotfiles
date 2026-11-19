@@ -1,4 +1,4 @@
-{ configVars, ... }:
+{ ... }:
 let
   domain = "sj.electrolit.biz";
 in
